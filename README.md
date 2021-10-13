@@ -5,10 +5,20 @@
 * Maven
 
 ## Compiler
-Dans le dossier du projet: ``nvm package``
-Pour lancer le jeu: ``java -jar target/ProjetACL-1.0-SNAPSHOT.jar``
+
+Dans le dossier du projet : 
+```bash
+nvm compile
+```
+
+Pour lancer le jeu :
+```bash
+nvm exec:java
+```
+
+
 ## Auteurs / Autrices
-* **CLEMENT Sven**
-* **BONTE Émeline**
-* **MARCOLET Pierre**
-* **BAUDON Nicolas**
+* **CLEMENT Sven** *(clementsven)*
+* **BONTE Émeline** *(Emeline45)*
+* **MARCOLET Pierre** *(AlasDiablo)*
+* **BAUDON Nicolas** *(NikolasBdn)*
