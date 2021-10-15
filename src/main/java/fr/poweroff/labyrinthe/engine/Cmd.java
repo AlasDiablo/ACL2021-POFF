@@ -1,4 +1,4 @@
-package engine;
+package fr.poweroff.labyrinthe.engine;
 
 /**
  * @author Horatiu Cirstea

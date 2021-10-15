@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.lab.game</groupId>
-    <artifactId>ProjetACL</artifactId>
+    <groupId>fr.poweroff.labyrinthe</groupId>
+    <artifactId>LabyrintheGame</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -23,7 +23,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>start.Main</mainClass>
+                            <mainClass>fr.poweroff.labyrinthe.Labyrinthe</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -34,10 +34,19 @@
                 <version>3.0.0</version>
                 <configuration>
                     <executable>java</executable>
-                    <mainClass>start.Main</mainClass>
+                    <mainClass>fr.poweroff.labyrinthe.Labyrinthe</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>
