@@ -1,16 +1,15 @@
-package model;
+package fr.poweroff.labyrinthe.model;
+
+import fr.poweroff.labyrinthe.engine.Cmd;
+import fr.poweroff.labyrinthe.engine.GameController;
 
 import java.awt.event.KeyEvent;
-
-import engine.Cmd;
-import engine.GameController;
 
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
- *
+ * <p>
  * controleur de type KeyListener
- * 
  */
 public class PacmanController implements GameController {
 

@@ -1,4 +1,4 @@
-package engine;
+package fr.poweroff.labyrinthe.engine;
 
 import java.awt.image.BufferedImage;
 

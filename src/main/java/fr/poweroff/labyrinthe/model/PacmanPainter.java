@@ -1,10 +1,9 @@
-package model;
+package fr.poweroff.labyrinthe.model;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import fr.poweroff.labyrinthe.engine.GamePainter;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
-
-import engine.GamePainter;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas

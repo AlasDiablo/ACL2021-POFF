@@ -1,19 +1,17 @@
-package engine;
+package fr.poweroff.labyrinthe.engine;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
- *
  */
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class DrawingPanel extends JPanel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 

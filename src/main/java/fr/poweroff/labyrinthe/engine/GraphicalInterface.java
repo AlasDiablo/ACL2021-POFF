@@ -1,6 +1,6 @@
-package engine;
+package fr.poweroff.labyrinthe.engine;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 
 /**

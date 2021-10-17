@@ -1,11 +1,11 @@
-package model;
+package fr.poweroff.labyrinthe.model;
+
+import fr.poweroff.labyrinthe.engine.Cmd;
+import fr.poweroff.labyrinthe.engine.Game;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
-import engine.Cmd;
-import engine.Game;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
