@@ -16,6 +16,8 @@ import java.io.IOException;
  */
 public class PacmanGame implements Game {
 
+	private Coordinate pacmanPosition = new Coordinate(0,0);
+
 	/**
 	 * constructeur avec fichier source pour le help
 	 * 
@@ -32,6 +34,14 @@ public class PacmanGame implements Game {
 		} catch (IOException e) {
 			System.out.println("Help not available");
 		}
+	}
+
+	/**
+	 * Renvoie les coordonnees du pacman
+	 * @return les coordonnee du pacman
+	 */
+	public Coordinate getPacmanPosition() {
+		return pacmanPosition;
 	}
 
 	/**
