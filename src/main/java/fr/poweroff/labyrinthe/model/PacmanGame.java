@@ -21,6 +21,7 @@ public class PacmanGame implements Game {
 	 */
 	protected int SPEEDMOVE = 4;
 
+	private String direction = "RIGHT";
 	private final Coordinate pacmanPosition = new Coordinate(0,0);
 	private boolean finish = false;
 
@@ -66,23 +67,35 @@ public class PacmanGame implements Game {
 			case UP:
 				this.pacmanPosition.setCoorY(y - SPEEDMOVE);
 				System.out.println("Position Pacman :  "+this.pacmanPosition);
+				this.direction = commande.name();
 				break;
 			case DOWN:
 				this.pacmanPosition.setCoorY(y + SPEEDMOVE);
 				System.out.println("Position Pacman :  "+this.pacmanPosition);
+				this.direction = commande.name();
 				break;
 			case LEFT:
 				this.pacmanPosition.setCoorX(x - SPEEDMOVE);
 				System.out.println("Position Pacman :  "+this.pacmanPosition);
+				this.direction = commande.name();
 				break;
 			case RIGHT:
 				this.pacmanPosition.setCoorX(x + SPEEDMOVE);
 				System.out.println("Position Pacman :  "+this.pacmanPosition);
+				this.direction = commande.name();
 				break;
 			case EXIT:
 				this.setFinish(true);
 				break;
 		}
+	}
+
+	/**
+	 * Renvoie de la propriete de direction
+	 * @return la direction du pacman
+	 */
+	public String getDirection() {
+		return direction;
 	}
 
 	/**
