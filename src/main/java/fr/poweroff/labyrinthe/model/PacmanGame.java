@@ -16,6 +16,11 @@ import java.io.IOException;
  */
 public class PacmanGame implements Game {
 
+	/**
+	 * La vitesse de dépalcement du personnage
+	 */
+	protected int SPEEDMOVE = 4;
+
 	private final Coordinate pacmanPosition = new Coordinate(0,0);
 	private boolean finish = false;
 
@@ -59,19 +64,19 @@ public class PacmanGame implements Game {
 		//Modification des coordonnees du pacman ou arret du jeu
 		switch (commande) {
 			case UP:
-				this.pacmanPosition.setCoorY(y - 1);
+				this.pacmanPosition.setCoorY(y - SPEEDMOVE);
 				System.out.println("Position Pacman :  "+this.pacmanPosition);
 				break;
 			case DOWN:
-				this.pacmanPosition.setCoorY(y + 1);
+				this.pacmanPosition.setCoorY(y + SPEEDMOVE);
 				System.out.println("Position Pacman :  "+this.pacmanPosition);
 				break;
 			case LEFT:
-				this.pacmanPosition.setCoorX(x - 1);
+				this.pacmanPosition.setCoorX(x - SPEEDMOVE);
 				System.out.println("Position Pacman :  "+this.pacmanPosition);
 				break;
 			case RIGHT:
-				this.pacmanPosition.setCoorX(x + 1);
+				this.pacmanPosition.setCoorX(x + SPEEDMOVE);
 				System.out.println("Position Pacman :  "+this.pacmanPosition);
 				break;
 			case EXIT:

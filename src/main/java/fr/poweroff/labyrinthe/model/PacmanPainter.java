@@ -16,16 +16,19 @@ public class PacmanPainter implements GamePainter {
 	/**
 	 * la taille des cases
 	 */
-	protected static final int WIDTH = 100;
-	protected static final int HEIGHT = 100;
+	protected static final int WIDTH = 500;
+	protected static final int HEIGHT = 500;
+
+	private PacmanGame pacmanGame;
 
 	/**
 	 * appelle constructeur parent
 	 * 
-	 * @param game
+	 * @param pacmanGame
 	 *            le jeutest a afficher
 	 */
-	public PacmanPainter() {
+	public PacmanPainter(PacmanGame pacmanGame) {
+		this.pacmanGame = pacmanGame;
 	}
 
 	/**
@@ -35,7 +38,8 @@ public class PacmanPainter implements GamePainter {
 	public void draw(BufferedImage im) {
 		Graphics2D crayon = (Graphics2D) im.getGraphics();
 		crayon.setColor(Color.blue);
-		crayon.fillOval(0,0,10,10);
+		//Modification de la position du personnage selon ses coordonnées
+		crayon.fillOval(pacmanGame.getPacmanPosition().getCoorX(),pacmanGame.getPacmanPosition().getCoorY(), 10,10);
 	}
 
 	@Override
