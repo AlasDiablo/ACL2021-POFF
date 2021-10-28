@@ -66,22 +66,22 @@ public class PacmanGame implements Game {
 		switch (commande) {
 			case UP:
 				this.pacmanPosition.setCoorY(y - SPEEDMOVE);
-				System.out.println("Position Pacman :  "+this.pacmanPosition);
+				//System.out.println("Position Pacman :  "+this.pacmanPosition);
 				this.direction = commande.name();
 				break;
 			case DOWN:
 				this.pacmanPosition.setCoorY(y + SPEEDMOVE);
-				System.out.println("Position Pacman :  "+this.pacmanPosition);
+				//System.out.println("Position Pacman :  "+this.pacmanPosition);
 				this.direction = commande.name();
 				break;
 			case LEFT:
 				this.pacmanPosition.setCoorX(x - SPEEDMOVE);
-				System.out.println("Position Pacman :  "+this.pacmanPosition);
+				//System.out.println("Position Pacman :  "+this.pacmanPosition);
 				this.direction = commande.name();
 				break;
 			case RIGHT:
 				this.pacmanPosition.setCoorX(x + SPEEDMOVE);
-				System.out.println("Position Pacman :  "+this.pacmanPosition);
+				//System.out.println("Position Pacman :  "+this.pacmanPosition);
 				this.direction = commande.name();
 				break;
 			case EXIT:
