@@ -13,4 +13,9 @@
       <module name="Projet-ACL-M1" target="11" />
     </bytecodeTargetLevel>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Projet-ACL-M1" options="--add-modules java.desktop,java.base" />
+    </option>
+  </component>
 </project>
