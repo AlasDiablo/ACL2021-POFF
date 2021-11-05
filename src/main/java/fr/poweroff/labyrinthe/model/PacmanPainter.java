@@ -40,7 +40,10 @@ public class PacmanPainter implements GamePainter {
 		Graphics2D crayon = (Graphics2D) im.getGraphics();
 		crayon.setColor(Color.blue);
 		crayon.fillOval(0,0,10,10);
-		crayon.drawString(pacmanGame.getCountdown(), WIDTH/2, 10);
+
+		Font font = new Font("Courier New", 1, 17);
+		crayon.setFont(font);
+		crayon.drawString(pacmanGame.getCountdown(), WIDTH/2, 20);
 	}
 
 	@Override
