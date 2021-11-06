@@ -17,6 +17,11 @@ import java.io.IOException;
 public class PacmanGame implements Game {
 
 	/**
+	 * Minuteur du niveau
+	 */
+	private Countdown countdown;
+
+	/**
 	 * La vitesse de dépalcement du personnage
 	 */
 	protected int SPEEDMOVE = 4;
@@ -27,7 +32,6 @@ public class PacmanGame implements Game {
 
 	/**
 	 * constructeur avec fichier source pour le help
-	 * 
 	 */
 	public PacmanGame(String source) {
 		BufferedReader helpReader;
@@ -41,6 +45,8 @@ public class PacmanGame implements Game {
 		} catch (IOException e) {
 			System.out.println("Help not available");
 		}
+		countdown = new Countdown(62);
+		countdown.start();
 	}
 
 	/**
@@ -114,4 +120,11 @@ public class PacmanGame implements Game {
 		return this.finish;
 	}
 
+	/**
+	 * Convertit en minutes et secondes le temps restant du minuteur
+	 * @return string minutes:secondes
+	 */
+	public Countdown getCountdown(){
+		return countdown;
+	}
 }
