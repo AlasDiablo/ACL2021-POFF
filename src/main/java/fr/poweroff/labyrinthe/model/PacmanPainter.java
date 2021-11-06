@@ -2,10 +2,8 @@ package fr.poweroff.labyrinthe.model;
 
 import fr.poweroff.labyrinthe.engine.GamePainter;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
@@ -41,9 +39,9 @@ public class PacmanPainter implements GamePainter {
 		crayon.setColor(Color.blue);
 		crayon.fillOval(0,0,10,10);
 
-		Font font = new Font("Courier New", 1, 17);
+		Font font = new Font("Courier New", Font.BOLD, 17);
 		crayon.setFont(font);
-		crayon.drawString(pacmanGame.getCountdown(), WIDTH/2, 20);
+		crayon.drawString(pacmanGame.getCountdown().getMinutesSeconds(), WIDTH/2, 20);
 	}
 
 	@Override

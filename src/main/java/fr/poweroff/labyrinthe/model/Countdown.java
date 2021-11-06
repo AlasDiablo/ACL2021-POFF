@@ -1,7 +1,6 @@
 package fr.poweroff.labyrinthe.model;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -13,19 +12,19 @@ public class Countdown {
     private Timer timer;
 
     /**
+     * Delai de une seconde
+     */
+    private final int DELAY = 1000;
+
+    /**
      * Duree du decompte
      */
-    private int timeLimit;
+    private final int timeLimit;
 
     /**
      * Temps restant
      */
     private int time;
-
-    /**
-     * Delai de une seconde
-     */
-    private int DELAY = 1000;
 
     public Countdown( int timeLimit) {
         this.timeLimit = timeLimit;
@@ -60,5 +59,21 @@ public class Countdown {
      */
     public boolean isFinish(){
         return this.time == 0;
+    }
+
+    /**
+     * @return une chaine contenant le nombre de minutes et de secondes restantes
+     */
+    public String getMinutesSeconds(){
+        String minuteString = "";
+        String secondString = "";
+
+        long minute = TimeUnit.SECONDS.toMinutes(time) - TimeUnit.SECONDS.toMinutes(TimeUnit.SECONDS.toHours(time) * 60);
+        long second = TimeUnit.SECONDS.toSeconds(time) - TimeUnit.SECONDS.toSeconds(TimeUnit.SECONDS.toMinutes(time) * 60);
+
+        if (minute < 10) {minuteString = "0" + minute;}else{minuteString = Long.toString(minute);}
+        if (second < 10) {secondString = "0" + second;}else{secondString = Long.toString(second);}
+
+        return minuteString + ":" + secondString;
     }
 }

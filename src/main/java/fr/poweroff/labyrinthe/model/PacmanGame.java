@@ -6,7 +6,6 @@ import fr.poweroff.labyrinthe.engine.Game;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
@@ -38,7 +37,7 @@ public class PacmanGame implements Game {
 		} catch (IOException e) {
 			System.out.println("Help not available");
 		}
-		countdown = new Countdown(90);
+		countdown = new Countdown(62);
 		countdown.start();
 	}
 
@@ -65,10 +64,7 @@ public class PacmanGame implements Game {
 	 * Convertit en minutes et secondes le temps restant du minuteur
 	 * @return string minutes:secondes
 	 */
-	public String getCountdown(){
-		int time = this.countdown.getTime();
-		long minute = TimeUnit.SECONDS.toMinutes(time) - TimeUnit.SECONDS.toMinutes(TimeUnit.SECONDS.toHours(time) * 60);
-        long second = TimeUnit.SECONDS.toSeconds(time) - TimeUnit.SECONDS.toSeconds(TimeUnit.SECONDS.toMinutes(time) * 60);
-        return minute + ":" + second;
+	public Countdown getCountdown(){
+		return countdown;
 	}
 }
