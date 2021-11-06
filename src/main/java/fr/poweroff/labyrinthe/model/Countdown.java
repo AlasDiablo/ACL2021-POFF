@@ -49,9 +49,16 @@ public class Countdown {
 
     /**
      *
-     * @return le
+     * @return le temps restant
      */
     public int getTime() {
         return this.time;
+    }
+
+    /**
+     * @return True si le le decompte est a zero
+     */
+    public boolean isFinish(){
+        return this.time == 0;
     }
 }
