@@ -40,10 +40,10 @@ public class PacmanPainter implements GamePainter {
 	 */
 	@Override
 	public void draw(BufferedImage im) {
-		/*Graphics2D crayon = (Graphics2D) im.getGraphics();
+		Graphics2D crayon = (Graphics2D) im.getGraphics();
 		crayon.setColor(Color.blue);
 		//Modification de la position du personnage selon ses coordonnées
-		crayon.fillOval(pacmanGame.getPacmanPosition().getCoorX(),pacmanGame.getPacmanPosition().getCoorY(), 10,10);*/
+		//crayon.fillOval(pacmanGame.getPacmanPosition().getCoorX(),pacmanGame.getPacmanPosition().getCoorY(), 10,10);
 
 		String nameFile = "pacmanRight.png";
 
@@ -73,6 +73,10 @@ public class PacmanPainter implements GamePainter {
 		catch (IOException e) {
 			surface.drawString("Image inexistante", 10, 10);
 		}
+    
+    		Font font = new Font("Courier New", Font.BOLD, 17);
+		crayon.setFont(font);
+		crayon.drawString(pacmanGame.getCountdown().getMinutesSeconds(), WIDTH/2, 20);
 	}
 
 	@Override
