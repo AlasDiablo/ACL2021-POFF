@@ -22,8 +22,16 @@ public class PacmanGame implements Game {
 	private Countdown countdown;
 
 	/**
-	 * constructeur avec fichier source pour le help et creation du decompte
-	 * 
+	 * La vitesse de dépalcement du personnage
+	 */
+	protected int SPEEDMOVE = 4;
+
+	private String direction = "RIGHT";
+	private final Coordinate pacmanPosition = new Coordinate(0,0);
+	private boolean finish = false;
+
+	/**
+	 * constructeur avec fichier source pour le help
 	 */
 	public PacmanGame(String source) {
 		BufferedReader helpReader;
@@ -42,13 +50,66 @@ public class PacmanGame implements Game {
 	}
 
 	/**
+	 * Renvoie les coordonnees du pacman
+	 * @return les coordonnee du pacman
+	 */
+	public Coordinate getPacmanPosition() {
+		return pacmanPosition;
+	}
+
+	/**
 	 * faire evoluer le jeu suite a une commande
 	 * 
-	 * @param commande
+	 * @param commande la commande faite par le joueur
 	 */
 	@Override
 	public void evolve(Cmd commande) {
-		System.out.println("Execute "+commande);
+		//System.out.println("Execute "+commande);
+		//récupération des coordonnes du pacman
+		int x = this.pacmanPosition.getCoorX();
+		int y = this.pacmanPosition.getCoorY();
+		//Modification des coordonnees du pacman ou arret du jeu
+		switch (commande) {
+			case UP:
+				this.pacmanPosition.setCoorY(y - SPEEDMOVE);
+				//System.out.println("Position Pacman :  "+this.pacmanPosition);
+				this.direction = commande.name();
+				break;
+			case DOWN:
+				this.pacmanPosition.setCoorY(y + SPEEDMOVE);
+				//System.out.println("Position Pacman :  "+this.pacmanPosition);
+				this.direction = commande.name();
+				break;
+			case LEFT:
+				this.pacmanPosition.setCoorX(x - SPEEDMOVE);
+				//System.out.println("Position Pacman :  "+this.pacmanPosition);
+				this.direction = commande.name();
+				break;
+			case RIGHT:
+				this.pacmanPosition.setCoorX(x + SPEEDMOVE);
+				//System.out.println("Position Pacman :  "+this.pacmanPosition);
+				this.direction = commande.name();
+				break;
+			case EXIT:
+				this.setFinish(true);
+				break;
+		}
+	}
+
+	/**
+	 * Renvoie de la propriete de direction
+	 * @return la direction du pacman
+	 */
+	public String getDirection() {
+		return direction;
+	}
+
+	/**
+	 * Modifie le jeu (jeu en marche ou à l'arret)
+	 * @param finish l'etat du jeu
+	 */
+	public void setFinish(boolean finish) {
+		this.finish = finish;
 	}
 
 	/**
@@ -56,8 +117,7 @@ public class PacmanGame implements Game {
 	 */
 	@Override
 	public boolean isFinished() {
-		// le jeu n'est jamais fini
-		return false;
+		return this.finish;
 	}
 
 	/**
