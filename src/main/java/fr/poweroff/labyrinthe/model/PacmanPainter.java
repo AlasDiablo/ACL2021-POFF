@@ -25,7 +25,6 @@ public class PacmanPainter implements GamePainter {
 
 	private PacmanGame pacmanGame;
 
-	private PacmanGame pacmanGame;
 	/**
 	 * appelle constructeur parent
 	 * 
