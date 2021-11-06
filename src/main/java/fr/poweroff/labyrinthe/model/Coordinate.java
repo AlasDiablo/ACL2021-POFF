@@ -1,5 +1,7 @@
 package fr.poweroff.labyrinthe.model;
 
+import java.util.Objects;
+
 /**
  * @author emeline
  */
@@ -57,6 +59,19 @@ public class Coordinate {
                 "coorX=" + coorX +
                 ", coorY=" + coorY +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Coordinate)) return false;
+        Coordinate that = (Coordinate) o;
+        return getCoorX() == that.getCoorX() && getCoorY() == that.getCoorY();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCoorX(), getCoorY());
     }
 }
 
