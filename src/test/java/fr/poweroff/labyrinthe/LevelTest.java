@@ -2,6 +2,7 @@ package fr.poweroff.labyrinthe;
 
 import com.google.common.collect.ImmutableMap;
 import fr.poweroff.labyrinthe.level.Level;
+import fr.poweroff.labyrinthe.model.Coordinate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,22 +12,22 @@ import static org.junit.Assert.assertEquals;
 
 public class LevelTest {
 
-    public Level                    level;
-    public Map<Level.Pair, Integer> entries;
+    public Level level;
+    public Map<Coordinate, Integer> entries;
 
     @Before
     public void setup() {
         this.level   = new Level();
         this.entries = ImmutableMap.of(
-                new Level.Pair(0, 0), 1,
-                new Level.Pair(1, 0), 1,
-                new Level.Pair(2, 0), 1,
-                new Level.Pair(0, 1), 1,
-                new Level.Pair(1, 1), 0,
-                new Level.Pair(2, 1), 1,
-                new Level.Pair(0, 2), 1,
-                new Level.Pair(1, 2), 1,
-                new Level.Pair(2, 2), 1
+                new Coordinate(0, 0), 1,
+                new Coordinate(1, 0), 1,
+                new Coordinate(2, 0), 1,
+                new Coordinate(0, 1), 1,
+                new Coordinate(1, 1), 0,
+                new Coordinate(2, 1), 1,
+                new Coordinate(0, 2), 1,
+                new Coordinate(1, 2), 1,
+                new Coordinate(2, 2), 1
         );
     }
 
@@ -34,10 +35,10 @@ public class LevelTest {
     public void same_level() {
         var levelEntrySet = this.level.getLevelDisposition().entrySet();
 
-        levelEntrySet.forEach(pairIntegerEntry -> {
-            var pair  = pairIntegerEntry.getKey();
-            var value = pairIntegerEntry.getValue();
-            assertEquals("", this.entries.get(pair), value);
+        levelEntrySet.forEach(coordinateIntegerEntry -> {
+            var coordinate = coordinateIntegerEntry.getKey();
+            var value      = coordinateIntegerEntry.getValue();
+            assertEquals("", this.entries.get(coordinate), value);
         });
     }
 }
