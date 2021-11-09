@@ -4,23 +4,21 @@ import java.awt.image.BufferedImage;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
- * 
+ * <p>
  * represente la maniere de dessiner sur un JPanel
- * 
  */
 public interface GamePainter {
 
-	/**
-	 * methode dessiner a completer. Elle construit une image correspondant au
-	 * jeu. Game est un attribut de l'afficheur
-	 * 
-	 * @param image
-	 *            image sur laquelle dessiner
-	 */
-	public abstract void draw(BufferedImage image);
+    /**
+     * methode dessiner a completer. Elle construit une image correspondant au
+     * jeu. Game est un attribut de l'afficheur
+     *
+     * @param image image sur laquelle dessiner
+     */
+    void draw(BufferedImage image);
 
-	public abstract int getWidth();
+    int getWidth();
 
-	public abstract int getHeight();
-	
+    int getHeight();
+
 }
