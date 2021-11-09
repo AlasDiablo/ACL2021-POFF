@@ -13,11 +13,11 @@ public interface Game {
      *
      * @param userCmd commande utilisateur
      */
-	void evolve(Cmd userCmd);
+    void evolve(Cmd userCmd);
 
     /**
      * @return true si et seulement si le jeu est fini
      */
-	boolean isFinished();
+    boolean isFinished();
 
 }

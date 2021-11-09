@@ -1,4 +1,4 @@
-package fr.poweroff.labyrinthe.model;
+package fr.poweroff.labyrinthe.utils;
 
 import java.util.Objects;
 
@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public class Coordinate {
 
-    private int coorX;
-    private int coorY;
+    private int x;
+    private int y;
 
     /**
      * Constructeur des coordonnees du joueur
@@ -18,8 +18,8 @@ public class Coordinate {
      * @param y position verticale
      */
     public Coordinate(int x, int y) {
-        this.coorX = x;
-        this.coorY = y;
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -27,17 +27,17 @@ public class Coordinate {
      *
      * @return la coordonnee horizontale
      */
-    public int getCoorX() {
-        return coorX;
+    public int getX() {
+        return x;
     }
 
     /**
      * Definit de la propriete de position horizontale
      *
-     * @param coorX la coordonnee horizontale
+     * @param x la coordonnee horizontale
      */
-    public void setCoorX(int coorX) {
-        this.coorX = coorX;
+    public void setX(int x) {
+        this.x = x;
     }
 
     /**
@@ -45,24 +45,24 @@ public class Coordinate {
      *
      * @return la coordonnee verticale
      */
-    public int getCoorY() {
-        return coorY;
+    public int getY() {
+        return y;
     }
 
     /**
      * Definit de la propriete de position verticale
      *
-     * @param coorY la coordonnee verticale
+     * @param y la coordonnee verticale
      */
-    public void setCoorY(int coorY) {
-        this.coorY = coorY;
+    public void setY(int y) {
+        this.y = y;
     }
 
     @Override
     public String toString() {
         return "Coordinate{" +
-                "coorX=" + coorX +
-                ", coorY=" + coorY +
+                "x=" + x +
+                ", y=" + y +
                 '}';
     }
 
@@ -71,12 +71,12 @@ public class Coordinate {
         if (this == o) return true;
         if (!(o instanceof Coordinate)) return false;
         Coordinate that = (Coordinate) o;
-        return getCoorX() == that.getCoorX() && getCoorY() == that.getCoorY();
+        return getX() == that.getX() && getY() == that.getY();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCoorX(), getCoorY());
+        return Objects.hash(getX(), getY());
     }
 }
 

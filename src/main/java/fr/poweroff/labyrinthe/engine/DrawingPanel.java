@@ -19,22 +19,19 @@ public class DrawingPanel extends JPanel {
      * la clase chargee de Dessiner
      */
     private final GamePainter painter;
-
-    /**
-     * image suivante est l'image cachee sur laquelle dessiner
-     */
-    private BufferedImage nextImage;
-
-    /**
-     * image en cours est l'image entrain d'etre affichee
-     */
-    private BufferedImage currentImage;
-
     /**
      * la taille des images
      */
     private final int width;
-	private final int height;
+    private final int height;
+    /**
+     * image suivante est l'image cachee sur laquelle dessiner
+     */
+    private BufferedImage nextImage;
+    /**
+     * image en cours est l'image entrain d'etre affichee
+     */
+    private BufferedImage currentImage;
 
     /**
      * constructeur Il construit les images pour doublebuffering ainsi que le

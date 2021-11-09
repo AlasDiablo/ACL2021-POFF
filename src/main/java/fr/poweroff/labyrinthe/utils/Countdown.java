@@ -1,4 +1,4 @@
-package fr.poweroff.labyrinthe.model;
+package fr.poweroff.labyrinthe.utils;
 
 import javax.swing.*;
 import java.util.concurrent.TimeUnit;
