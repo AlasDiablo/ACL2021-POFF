@@ -1,33 +1,34 @@
 package fr.poweroff.labyrinthe.model;
 
-import com.sun.jdi.IntegerType;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Case {
-    private final String NOTYPE = "NONE"; // a case with no type
     public static int SIZE_CASE = 11; // size of a case
     public static int SIZE_PIXEL = 2; // Size of a pixel
-    private int coordX,coordY; //Coordonnées of this case
+    private final String NOTYPE = "NONE"; // a case with no type
+    private final int coordX;
+    private final int coordY; //Coordonnées of this case
 
-    private BufferedImage sprite;
-    private String type;
+    private final BufferedImage sprite;
+    private final String type;
 
     //------------------------------------------------
-    public Case(){
+    public Case() {
         this.coordY = -1;
         this.coordX = -1;
         this.sprite = null;
         this.type = NOTYPE;
     }
-    public Case(int x,int y,String type){
+
+    public Case(int x, int y, String type) {
         this.sprite = null;
         this.coordX = x;
         this.coordY = y;
         this.type = type;
     }
-    public Case(BufferedImage sp,int x,int y,String t){
+
+    public Case(BufferedImage sp, int x, int y, String t) {
         this.sprite = sp;
         this.coordX = x;
         this.coordY = y;
@@ -36,11 +37,13 @@ public abstract class Case {
     //------------------------------------------------
 
     public abstract void draw(Graphics2D crayon);
+
     public abstract boolean OnCaseEvent();
 
     public BufferedImage getSprite() {
         return sprite;
     }
+
     public int getCoordX() {
         return coordX;
     }
@@ -50,7 +53,7 @@ public abstract class Case {
     }
 
     public String getType() {
-        return new String(type);
+        return type;
     }
     /*
     public void modifyCase(String t,BufferedImage sp){

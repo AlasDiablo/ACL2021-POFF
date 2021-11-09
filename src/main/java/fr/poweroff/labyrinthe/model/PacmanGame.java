@@ -9,122 +9,123 @@ import java.io.IOException;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
- *
- *         Version avec personnage qui peut se deplacer. A completer dans les
- *         versions suivantes.
- * 
+ * <p>
+ * Version avec personnage qui peut se deplacer. A completer dans les
+ * versions suivantes.
  */
 public class PacmanGame implements Game {
 
-	/**
-	 * Minuteur du niveau
-	 */
-	private Countdown countdown;
+    private final Coordinate pacmanPosition = new Coordinate(0, 0);
+    /**
+     * La vitesse de dépalcement du personnage
+     */
+    protected int SPEEDMOVE = 4;
+    /**
+     * Minuteur du niveau
+     */
+    private final Countdown countdown;
+    private String direction = "RIGHT";
+    private boolean finish = false;
 
-	/**
-	 * La vitesse de dépalcement du personnage
-	 */
-	protected int SPEEDMOVE = 4;
+    /**
+     * constructeur avec fichier source pour le help
+     */
+    public PacmanGame(String source) {
+        BufferedReader helpReader;
+        try {
+            helpReader = new BufferedReader(new FileReader(source));
+            String ligne;
+            while ((ligne = helpReader.readLine()) != null) {
+                System.out.println(ligne);
+            }
+            helpReader.close();
+        } catch (IOException e) {
+            System.out.println("Help not available");
+        }
+        countdown = new Countdown(62);
+        countdown.start();
+    }
 
-	private String direction = "RIGHT";
-	private final Coordinate pacmanPosition = new Coordinate(0,0);
-	private boolean finish = false;
+    /**
+     * Renvoie les coordonnees du pacman
+     *
+     * @return les coordonnee du pacman
+     */
+    public Coordinate getPacmanPosition() {
+        return pacmanPosition;
+    }
 
-	/**
-	 * constructeur avec fichier source pour le help
-	 */
-	public PacmanGame(String source) {
-		BufferedReader helpReader;
-		try {
-			helpReader = new BufferedReader(new FileReader(source));
-			String ligne;
-			while ((ligne = helpReader.readLine()) != null) {
-				System.out.println(ligne);
-			}
-			helpReader.close();
-		} catch (IOException e) {
-			System.out.println("Help not available");
-		}
-		countdown = new Countdown(62);
-		countdown.start();
-	}
+    /**
+     * faire evoluer le jeu suite a une commande
+     *
+     * @param commande la commande faite par le joueur
+     */
+    @Override
+    public void evolve(Cmd commande) {
+        //System.out.println("Execute "+commande);
+        //récupération des coordonnes du pacman
+        int x = this.pacmanPosition.getCoorX();
+        int y = this.pacmanPosition.getCoorY();
+        //Modification des coordonnees du pacman ou arret du jeu
+        switch (commande) {
+            case UP:
+                this.pacmanPosition.setCoorY(y - SPEEDMOVE);
+                //System.out.println("Position Pacman :  "+this.pacmanPosition);
+                this.direction = commande.name();
+                break;
+            case DOWN:
+                this.pacmanPosition.setCoorY(y + SPEEDMOVE);
+                //System.out.println("Position Pacman :  "+this.pacmanPosition);
+                this.direction = commande.name();
+                break;
+            case LEFT:
+                this.pacmanPosition.setCoorX(x - SPEEDMOVE);
+                //System.out.println("Position Pacman :  "+this.pacmanPosition);
+                this.direction = commande.name();
+                break;
+            case RIGHT:
+                this.pacmanPosition.setCoorX(x + SPEEDMOVE);
+                //System.out.println("Position Pacman :  "+this.pacmanPosition);
+                this.direction = commande.name();
+                break;
+            case EXIT:
+                this.setFinish(true);
+                break;
+        }
+    }
 
-	/**
-	 * Renvoie les coordonnees du pacman
-	 * @return les coordonnee du pacman
-	 */
-	public Coordinate getPacmanPosition() {
-		return pacmanPosition;
-	}
+    /**
+     * Renvoie de la propriete de direction
+     *
+     * @return la direction du pacman
+     */
+    public String getDirection() {
+        return direction;
+    }
 
-	/**
-	 * faire evoluer le jeu suite a une commande
-	 * 
-	 * @param commande la commande faite par le joueur
-	 */
-	@Override
-	public void evolve(Cmd commande) {
-		//System.out.println("Execute "+commande);
-		//récupération des coordonnes du pacman
-		int x = this.pacmanPosition.getCoorX();
-		int y = this.pacmanPosition.getCoorY();
-		//Modification des coordonnees du pacman ou arret du jeu
-		switch (commande) {
-			case UP:
-				this.pacmanPosition.setCoorY(y - SPEEDMOVE);
-				//System.out.println("Position Pacman :  "+this.pacmanPosition);
-				this.direction = commande.name();
-				break;
-			case DOWN:
-				this.pacmanPosition.setCoorY(y + SPEEDMOVE);
-				//System.out.println("Position Pacman :  "+this.pacmanPosition);
-				this.direction = commande.name();
-				break;
-			case LEFT:
-				this.pacmanPosition.setCoorX(x - SPEEDMOVE);
-				//System.out.println("Position Pacman :  "+this.pacmanPosition);
-				this.direction = commande.name();
-				break;
-			case RIGHT:
-				this.pacmanPosition.setCoorX(x + SPEEDMOVE);
-				//System.out.println("Position Pacman :  "+this.pacmanPosition);
-				this.direction = commande.name();
-				break;
-			case EXIT:
-				this.setFinish(true);
-				break;
-		}
-	}
+    /**
+     * Modifie le jeu (jeu en marche ou à l'arret)
+     *
+     * @param finish l'etat du jeu
+     */
+    public void setFinish(boolean finish) {
+        this.finish = finish;
+    }
 
-	/**
-	 * Renvoie de la propriete de direction
-	 * @return la direction du pacman
-	 */
-	public String getDirection() {
-		return direction;
-	}
+    /**
+     * verifier si le jeu est fini
+     */
+    @Override
+    public boolean isFinished() {
+        return this.finish;
+    }
 
-	/**
-	 * Modifie le jeu (jeu en marche ou à l'arret)
-	 * @param finish l'etat du jeu
-	 */
-	public void setFinish(boolean finish) {
-		this.finish = finish;
-	}
-
-	/**
-	 * verifier si le jeu est fini
-	 */
-	@Override
-	public boolean isFinished() {
-		return this.finish;
-	}
-
-	/**
-	 * Convertit en minutes et secondes le temps restant du minuteur
-	 * @return string minutes:secondes
-	 */
-	public Countdown getCountdown(){
-		return countdown;
-	}
+    /**
+     * Convertit en minutes et secondes le temps restant du minuteur
+     *
+     * @return string minutes:secondes
+     */
+    public Countdown getCountdown() {
+        return countdown;
+    }
 }

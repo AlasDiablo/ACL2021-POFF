@@ -11,82 +11,79 @@ import java.util.Objects;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
- *
+ * <p>
  * afficheur graphique pour le game
- * 
  */
 public class PacmanPainter implements GamePainter {
 
-	/**
-	 * la taille des cases
-	 */
-	protected static final int WIDTH = 500;
-	protected static final int HEIGHT = 500;
+    /**
+     * la taille des cases
+     */
+    protected static final int WIDTH = 500;
+    protected static final int HEIGHT = 500;
 
-	private PacmanGame pacmanGame;
+    private final PacmanGame pacmanGame;
 
-	/**
-	 * appelle constructeur parent
-	 * 
-	 * @param pacmanGame
-	 *            le jeutest a afficher
-	 */
-	public PacmanPainter(PacmanGame pacmanGame) {
-		this.pacmanGame = pacmanGame;
-	}
+    /**
+     * appelle constructeur parent
+     *
+     * @param pacmanGame le jeutest a afficher
+     */
+    public PacmanPainter(PacmanGame pacmanGame) {
+        this.pacmanGame = pacmanGame;
+    }
 
-	/**
-	 * methode  redefinie de Afficheur retourne une image du jeu
-	 */
-	@Override
-	public void draw(BufferedImage im) {
-		Graphics2D crayon = (Graphics2D) im.getGraphics();
-		crayon.setColor(Color.blue);
-		//Modification de la position du personnage selon ses coordonnées
-		//crayon.fillOval(pacmanGame.getPacmanPosition().getCoorX(),pacmanGame.getPacmanPosition().getCoorY(), 10,10);
+    /**
+     * methode  redefinie de Afficheur retourne une image du jeu
+     */
+    @Override
+    public void draw(BufferedImage im) {
+        Graphics2D crayon = (Graphics2D) im.getGraphics();
+        crayon.setColor(Color.blue);
+        //Modification de la position du personnage selon ses coordonnées
+        //crayon.fillOval(pacmanGame.getPacmanPosition().getCoorX(),pacmanGame.getPacmanPosition().getCoorY(), 10,10);
 
-		String nameFile = "pacmanRight.png";
+        String nameFile = "pacmanRight.png";
 
-		switch (pacmanGame.getDirection()){
-			case "UP":
-				nameFile = "pacmanUp.png";
-				break;
-			case "DOWN":
-				nameFile = "pacmanDown.png";
-				break;
-			case "LEFT":
-				nameFile = "pacmanLeft.png";
-				break;
-			case "RIGHT":
-				nameFile = "pacmanRight.png";
-				break;
-		}
+        switch (pacmanGame.getDirection()) {
+            case "UP":
+                nameFile = "pacmanUp.png";
+                break;
+            case "DOWN":
+                nameFile = "pacmanDown.png";
+                break;
+            case "LEFT":
+                nameFile = "pacmanLeft.png";
+                break;
+            case "RIGHT":
+                nameFile = "pacmanRight.png";
+                break;
+        }
 
 
-		Graphics2D surface = (Graphics2D) im.getGraphics();
-		try {
-			Image image = ImageIO.read(new File(Objects.requireNonNull(getClass().getClassLoader().getResource(nameFile)).getFile()));
-			int positionX = pacmanGame.getPacmanPosition().getCoorX();
-			int positionY = pacmanGame.getPacmanPosition().getCoorY();
-			surface.drawImage(image, positionX, positionY, 20, 20, null);
-		}
-		catch (IOException e) {
-			surface.drawString("Image inexistante", 10, 10);
-		}
-    
-    		Font font = new Font("Courier New", Font.BOLD, 17);
-		crayon.setFont(font);
-		crayon.drawString(pacmanGame.getCountdown().getMinutesSeconds(), WIDTH/2, 20);
-	}
+        Graphics2D surface = (Graphics2D) im.getGraphics();
+        try {
+            Image image = ImageIO.read(new File(Objects.requireNonNull(getClass().getClassLoader().getResource(nameFile)).getFile()));
+            int positionX = pacmanGame.getPacmanPosition().getCoorX();
+            int positionY = pacmanGame.getPacmanPosition().getCoorY();
+            surface.drawImage(image, positionX, positionY, 20, 20, null);
+        } catch (IOException e) {
+            surface.drawString("Image inexistante", 10, 10);
+        }
 
-	@Override
-	public int getWidth() {
-		return WIDTH;
-	}
+        Font font = new Font("Courier New", Font.BOLD, 17);
+        crayon.setFont(font);
+        crayon.drawString(pacmanGame.getCountdown().getMinutesSeconds(), WIDTH / 2, 20);
+    }
 
-	@Override
-	public int getHeight() {
-		return HEIGHT;
-	}
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
+    }
 
 }

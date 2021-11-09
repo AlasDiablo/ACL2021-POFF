@@ -13,16 +13,18 @@ public class Coordinate {
 
     /**
      * Constructeur des coordonnees du joueur
+     *
      * @param x position horizontale
      * @param y position verticale
      */
-    public Coordinate(int x, int y){
+    public Coordinate(int x, int y) {
         this.coorX = x;
         this.coorY = y;
     }
 
     /**
      * Renvoie de la propriete de position horizontale
+     *
      * @return la coordonnee horizontale
      */
     public int getCoorX() {
@@ -30,15 +32,8 @@ public class Coordinate {
     }
 
     /**
-     * Renvoie de la propriete de position verticale
-     * @return la coordonnee verticale
-     */
-    public int getCoorY() {
-        return coorY;
-    }
-
-    /**
      * Definit de la propriete de position horizontale
+     *
      * @param coorX la coordonnee horizontale
      */
     public void setCoorX(int coorX) {
@@ -46,7 +41,17 @@ public class Coordinate {
     }
 
     /**
+     * Renvoie de la propriete de position verticale
+     *
+     * @return la coordonnee verticale
+     */
+    public int getCoorY() {
+        return coorY;
+    }
+
+    /**
      * Definit de la propriete de position verticale
+     *
      * @param coorY la coordonnee verticale
      */
     public void setCoorY(int coorY) {
