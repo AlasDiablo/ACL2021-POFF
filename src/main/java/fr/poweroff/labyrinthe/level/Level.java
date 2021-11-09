@@ -95,12 +95,15 @@ public class Level {
         private List<Tile> tiles;
 
         public boolean canGoHere(int x, int y, int w, int h) {
-            var filtered = tiles.stream().filter(tile -> !(x + w < tile.getCoordinate().getX() ||
-                    tile.getCoordinate().getX() + TITLE_SIZE < x ||
-                    y + h < tile.getCoordinate().getY() ||
-                    tile.getCoordinate().getY() + TITLE_SIZE < y));
-
-            return filtered.findAny().isEmpty();
+            return tiles
+                    .stream()
+                    .filter(tile -> !(x + w < tile.getCoordinate().getX() ||
+                            tile.getCoordinate().getX() + TITLE_SIZE < x ||
+                            y + h < tile.getCoordinate().getY() ||
+                            tile.getCoordinate().getY() + TITLE_SIZE < y)
+                    )
+                    .findAny()
+                    .isEmpty();
         }
     }
 }
