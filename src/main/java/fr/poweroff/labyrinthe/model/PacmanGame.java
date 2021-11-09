@@ -20,6 +20,8 @@ import java.io.IOException;
 public class PacmanGame implements Game {
 
     final Level level;
+    private int score;
+
     private final Coordinate pacmanPosition = new Coordinate(0, 0);
     /**
      * Minuteur du niveau
@@ -51,6 +53,7 @@ public class PacmanGame implements Game {
         }
         countdown = new Countdown(60);
         countdown.start();
+        score = 0;
     }
 
     /**
@@ -102,6 +105,9 @@ public class PacmanGame implements Game {
 
         //Tester si le timer est fini
         this.setFinish(countdown.isFinish());
+
+
+
     }
 
     /**
