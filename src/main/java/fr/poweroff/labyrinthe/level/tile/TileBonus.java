@@ -25,12 +25,12 @@ public class TileBonus extends Tile{
     }
 
     @Override
-    public Event onTileEvent(Event event) {
+    public Type getType() {
         return null;
     }
 
     @Override
-    public Type getType() {
-        return null;
+    public Event onEvent(Event event) {
+        return event;
     }
 }
