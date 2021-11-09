@@ -49,7 +49,7 @@ public class PacmanGame implements Game {
         } catch (IOException e) {
             System.out.println("Help not available");
         }
-        countdown = new Countdown(62);
+        countdown = new Countdown(10);
         countdown.start();
     }
 
@@ -99,6 +99,9 @@ public class PacmanGame implements Game {
                 this.setFinish(true);
                 break;
         }
+
+        //Tester si le timer est fini
+        this.setFinish(countdown.isFinish());
     }
 
     /**
