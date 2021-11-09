@@ -30,6 +30,10 @@ public class Level {
         ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
 
+        Coordinate tb1  = new Coordinate(10, 10);
+        Coordinate tb2  = new Coordinate(20, 15);
+        Coordinate tb3  = new Coordinate(10, 20);
+
         var sizeX = (int) Math.floor((float) width / (float) TITLE_SIZE);
         var sizeY = (int) Math.floor((float) height / (float) TITLE_SIZE);
 
@@ -51,7 +55,9 @@ public class Level {
                 Tile currentTile;
                 var  rx = x * TITLE_SIZE;
                 var  ry = y * TITLE_SIZE;
-                if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
+                if((x == tb1.getX() && y == tb1.getY()) || (x == tb2.getX() && y == tb2.getY()) || (x == tb3.getX() && y == tb3.getY())) {
+                    currentTile = new TileBonus(rx, ry);
+                } else if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
                     currentTile = new TileWall(rx, ry);
                     wallBuilder.add(currentTile);
                 } else {
