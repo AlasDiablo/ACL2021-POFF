@@ -1,6 +1,7 @@
 package fr.poweroff.labyrinthe.level.entity;
 
 import fr.poweroff.labyrinthe.engine.Cmd;
+import fr.poweroff.labyrinthe.level.Level.LevelEvolve;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.ImageUtils;
 
@@ -40,26 +41,34 @@ public class Player extends Entity {
     }
 
     @Override
-    public void evolve(Cmd cmd) {
+    public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         var x = this.coordinate.getX();
         var y = this.coordinate.getY();
         switch (cmd) {
-            case UP:
-                this.coordinate.setY(y - MOVE_SPEED);
+            case UP: {
+                var newY = y - MOVE_SPEED;
+                if (levelEvolve.canGoHere(x, newY, 20, 20)) this.coordinate.setY(newY);
                 this.direction = cmd.name();
                 break;
-            case DOWN:
-                this.coordinate.setY(y + MOVE_SPEED);
+            }
+            case DOWN: {
+                var newY = y + MOVE_SPEED;
+                if (levelEvolve.canGoHere(x, newY, 20, 20)) this.coordinate.setY(newY);
                 this.direction = cmd.name();
                 break;
-            case LEFT:
-                this.coordinate.setX(x - MOVE_SPEED);
+            }
+            case LEFT: {
+                var newX = x - MOVE_SPEED;
+                if (levelEvolve.canGoHere(newX, y, 20, 20)) this.coordinate.setX(newX);
                 this.direction = cmd.name();
                 break;
-            case RIGHT:
-                this.coordinate.setX(x + MOVE_SPEED);
+            }
+            case RIGHT: {
+                var newX = x + MOVE_SPEED;
+                if (levelEvolve.canGoHere(newX, y, 20, 20)) this.coordinate.setX(newX);
                 this.direction = cmd.name();
                 break;
+            }
         }
     }
 }

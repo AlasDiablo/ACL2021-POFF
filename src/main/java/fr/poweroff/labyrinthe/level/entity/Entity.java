@@ -1,6 +1,7 @@
 package fr.poweroff.labyrinthe.level.entity;
 
 import fr.poweroff.labyrinthe.engine.Cmd;
+import fr.poweroff.labyrinthe.level.Level.LevelEvolve;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 
 import java.awt.*;
@@ -31,5 +32,5 @@ public abstract class Entity {
 
     public abstract void draw(Graphics2D graphics);
 
-    public abstract void evolve(Cmd cmd);
+    public abstract void evolve(Cmd cmd, LevelEvolve levelEvolve);
 }
