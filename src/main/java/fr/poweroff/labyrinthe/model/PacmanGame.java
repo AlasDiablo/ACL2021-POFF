@@ -49,7 +49,7 @@ public class PacmanGame implements Game {
         } catch (IOException e) {
             System.out.println("Help not available");
         }
-        countdown = new Countdown(10);
+        countdown = new Countdown(60);
         countdown.start();
     }
 
