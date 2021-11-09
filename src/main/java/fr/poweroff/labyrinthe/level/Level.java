@@ -2,6 +2,7 @@ package fr.poweroff.labyrinthe.level;
 
 import com.google.common.collect.ImmutableMap;
 import fr.poweroff.labyrinthe.level.tile.Tile;
+import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.level.tile.TileGround;
 import fr.poweroff.labyrinthe.level.tile.TileWall;
 import fr.poweroff.labyrinthe.utils.Coordinate;
@@ -26,7 +27,10 @@ public class Level {
                 Tile currentTile;
                 var rx = x * TITLE_SIZE;
                 var ry = y * TITLE_SIZE;
-                if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
+
+                if(x == 10 && y == 10) {
+                    currentTile = new TileBonus(rx, ry);
+                }else if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
                     currentTile = new TileWall(rx, ry);
                 } else {
                     currentTile = new TileGround(rx, ry);
