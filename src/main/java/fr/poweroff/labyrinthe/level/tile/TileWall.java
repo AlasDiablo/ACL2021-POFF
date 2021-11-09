@@ -25,15 +25,14 @@ public class TileWall extends Tile {
     }
 
     @Override
-    public Event onTileEvent(Event event) {
-        return event;
-    }
-
-    @Override
     public Type getType() {
         return Type.WALL;
     }
 
+    @Override
+    public Event onEvent(Event event) {
+        return event;
+    }
 }
 
 

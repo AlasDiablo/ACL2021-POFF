@@ -12,20 +12,20 @@ public class Countdown {
     /**
      * Delai de une seconde
      */
-    private final int DELAY = 1000;
+    private final int   DELAY = 1000;
     /**
      * Duree du decompte
      */
-    private final int timeLimit;
+    private final int   timeLimit;
     private final Timer timer;
     /**
      * Temps restant
      */
-    private int time;
+    private       int   time;
 
     public Countdown(int timeLimit) {
         this.timeLimit = timeLimit;
-        this.time = timeLimit;
+        this.time      = timeLimit;
 
         this.timer = new Timer(DELAY, e -> {
             if (time > 0) {

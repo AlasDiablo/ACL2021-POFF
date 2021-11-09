@@ -3,6 +3,7 @@ package fr.poweroff.labyrinthe.model;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.level.Level;
+import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
 import fr.poweroff.labyrinthe.utils.ImageUtils;
@@ -10,6 +11,7 @@ import fr.poweroff.labyrinthe.utils.ImageUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * @author Horatiu Cirstea, Vincent Thomas
@@ -19,27 +21,37 @@ import java.io.IOException;
  */
 public class PacmanGame implements Game {
 
-    final Level level;
+    public static final Random RANDOM;
+
+    static {
+        var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
+        System.out.printf("Seed use: %d\n", seed);
+        RANDOM = new Random(seed);
+    }
+
+    final         Level      level;
+    final         Player     player;
     private int score;
 
     private final Coordinate pacmanPosition = new Coordinate(0, 0);
     /**
      * Minuteur du niveau
      */
-    private final Countdown countdown;
+    private final Countdown  countdown;
+    private final String     direction      = "RIGHT";
     /**
      * La vitesse de dépalcement du personnage
      */
-    protected int SPEEDMOVE = 4;
-    private String direction = "RIGHT";
-    private boolean finish = false;
+    protected     int        SPEEDMOVE      = 11;
+    private       boolean    finish         = false;
 
     /**
      * constructeur avec fichier source pour le help
      */
     public PacmanGame(String source) {
         ImageUtils.setClassLoader(this.getClass().getClassLoader());
-        this.level = new Level(PacmanPainter.WIDTH, PacmanPainter.HEIGHT);
+        this.level  = new Level();
+        this.player = new Player(new Coordinate(11, 11));
         BufferedReader helpReader;
         try {
             helpReader = new BufferedReader(new FileReader(source));
@@ -52,6 +64,7 @@ public class PacmanGame implements Game {
             System.out.println("Help not available");
         }
         countdown = new Countdown(60);
+        this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
         countdown.start();
         score = 0;
     }
@@ -72,35 +85,12 @@ public class PacmanGame implements Game {
      */
     @Override
     public void evolve(Cmd commande) {
-        //System.out.println("Execute "+commande);
-        //récupération des coordonnes du pacman
-        int x = this.pacmanPosition.getX();
-        int y = this.pacmanPosition.getY();
-        //Modification des coordonnees du pacman ou arret du jeu
-        switch (commande) {
-            case UP:
-                this.pacmanPosition.setY(y - SPEEDMOVE);
-                //System.out.println("Position Pacman :  "+this.pacmanPosition);
-                this.direction = commande.name();
-                break;
-            case DOWN:
-                this.pacmanPosition.setY(y + SPEEDMOVE);
-                //System.out.println("Position Pacman :  "+this.pacmanPosition);
-                this.direction = commande.name();
-                break;
-            case LEFT:
-                this.pacmanPosition.setX(x - SPEEDMOVE);
-                //System.out.println("Position Pacman :  "+this.pacmanPosition);
-                this.direction = commande.name();
-                break;
-            case RIGHT:
-                this.pacmanPosition.setX(x + SPEEDMOVE);
-                //System.out.println("Position Pacman :  "+this.pacmanPosition);
-                this.direction = commande.name();
-                break;
-            case EXIT:
-                this.setFinish(true);
-                break;
+
+        this.level.evolve(commande);
+
+        // arret du jeu
+        if (commande == Cmd.EXIT) {
+            this.setFinish(true);
         }
 
         //Tester si le timer est fini

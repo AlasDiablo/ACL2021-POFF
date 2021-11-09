@@ -24,13 +24,13 @@ public class TileGround extends Tile {
     }
 
     @Override
-    public Event onTileEvent(Event event) {
-        return event;
+    public Type getType() {
+        return Type.GROUND;
     }
 
     @Override
-    public Type getType() {
-        return Type.GROUND;
+    public Event onEvent(Event event) {
+        return event;
     }
 }
 

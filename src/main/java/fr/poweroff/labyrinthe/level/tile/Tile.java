@@ -1,13 +1,13 @@
 package fr.poweroff.labyrinthe.level.tile;
 
-import fr.poweroff.labyrinthe.event.Event;
+import fr.poweroff.labyrinthe.event.HandleEvent;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
-public abstract class Tile {
+public abstract class Tile implements HandleEvent {
 
     private final Coordinate coordinate;
 
@@ -16,12 +16,12 @@ public abstract class Tile {
     //------------------------------------------------
     public Tile() {
         this.coordinate = new Coordinate(-1, -1);
-        this.sprite = null;
+        this.sprite     = null;
     }
 
     public Tile(int x, int y) {
         this.coordinate = new Coordinate(x, y);
-        this.sprite = null;
+        this.sprite     = null;
     }
 
     public Tile(Coordinate coordinate) {
@@ -29,7 +29,7 @@ public abstract class Tile {
     }
 
     public Tile(BufferedImage sp, int x, int y) {
-        this.sprite = sp;
+        this.sprite     = sp;
         this.coordinate = new Coordinate(x, y);
     }
 
@@ -40,8 +40,6 @@ public abstract class Tile {
     //------------------------------------------------
 
     public abstract void draw(Graphics2D crayon);
-
-    public abstract Event onTileEvent(Event event);
 
     public BufferedImage getSprite() {
         return sprite;
