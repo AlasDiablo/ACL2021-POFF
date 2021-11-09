@@ -25,13 +25,13 @@ public class TileEnd extends Tile {
     }
 
     @Override
-    public Event onTileEvent(Event event) {
-        return event;
+    public Type getType() {
+        return Type.END;
     }
 
     @Override
-    public Type getType() {
-        return Type.END;
+    public Event onEvent(Event event) {
+        return event;
     }
 }
 

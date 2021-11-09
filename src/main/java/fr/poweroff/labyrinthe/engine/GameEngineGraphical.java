@@ -37,8 +37,8 @@ public class GameEngineGraphical {
      */
     public GameEngineGraphical(Game game, GamePainter gamePainter, GameController gameController) {
         // creation du game
-        this.game = game;
-        this.gamePainter = gamePainter;
+        this.game           = game;
+        this.gamePainter    = gamePainter;
         this.gameController = gameController;
     }
 

@@ -6,7 +6,6 @@ import fr.poweroff.labyrinthe.level.tile.Tile;
 import fr.poweroff.labyrinthe.level.tile.TileGround;
 import fr.poweroff.labyrinthe.level.tile.TileWall;
 import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,8 +20,7 @@ public class LevelTest {
 
     @Before
     public void setup() {
-        ImageUtils.setClassLoader(this.getClass().getClassLoader());
-        this.level   = new Level(33, 33);
+        this.level = new Level();
         this.entries = ImmutableMap.of(
                 new Coordinate(0, 0), new TileWall(0, 0),
                 new Coordinate(1, 0), new TileWall(11, 0),

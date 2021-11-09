@@ -18,20 +18,20 @@ public class DrawingPanel extends JPanel {
     /**
      * la clase chargee de Dessiner
      */
-    private final GamePainter painter;
+    private final GamePainter   painter;
     /**
      * la taille des images
      */
-    private final int width;
-    private final int height;
+    private final int           width;
+    private final int           height;
     /**
      * image suivante est l'image cachee sur laquelle dessiner
      */
-    private BufferedImage nextImage;
+    private       BufferedImage nextImage;
     /**
      * image en cours est l'image entrain d'etre affichee
      */
-    private BufferedImage currentImage;
+    private       BufferedImage currentImage;
 
     /**
      * constructeur Il construit les images pour doublebuffering ainsi que le
@@ -43,16 +43,18 @@ public class DrawingPanel extends JPanel {
      */
     public DrawingPanel(GamePainter painter) {
         super();
-        this.width = painter.getWidth();
+        this.width  = painter.getWidth();
         this.height = painter.getHeight();
         this.setPreferredSize(new Dimension(this.width, this.height));
         this.painter = painter;
 
         // cree l'image buffer et son graphics
-        this.nextImage = new BufferedImage(width, height,
-                BufferedImage.TYPE_INT_RGB);
+        this.nextImage    = new BufferedImage(width, height,
+                                              BufferedImage.TYPE_INT_RGB
+        );
         this.currentImage = new BufferedImage(width, height,
-                BufferedImage.TYPE_INT_RGB);
+                                              BufferedImage.TYPE_INT_RGB
+        );
     }
 
     /**
@@ -83,7 +85,8 @@ public class DrawingPanel extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         g.drawImage(this.currentImage, 0, 0, getWidth(), getHeight(), 0, 0,
-                getWidth(), getHeight(), null);
+                    getWidth(), getHeight(), null
+        );
     }
 
 }
