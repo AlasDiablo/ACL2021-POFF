@@ -1,5 +1,7 @@
 package fr.poweroff.labyrinthe.event;
 
-public interface Event {
-    // TODO
+public interface Event<T> {
+    String getName();
+
+    T getData();
 }

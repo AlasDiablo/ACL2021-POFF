@@ -1,48 +1,43 @@
 package fr.poweroff.labyrinthe.level.tile;
 
-import fr.poweroff.labyrinthe.event.HandleEvent;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
-public abstract class Tile implements HandleEvent {
+public abstract class Tile {
 
     private final Coordinate coordinate;
 
-    private final BufferedImage sprite;
+    private final BufferedImage[] sprites;
 
     //------------------------------------------------
-    public Tile() {
-        this.coordinate = new Coordinate(-1, -1);
-        this.sprite     = null;
-    }
 
-    public Tile(int x, int y) {
-        this.coordinate = new Coordinate(x, y);
-        this.sprite     = null;
-    }
-
-    public Tile(Coordinate coordinate) {
-        this(coordinate.getX(), coordinate.getY());
-    }
-
-    public Tile(BufferedImage sp, int x, int y) {
-        this.sprite     = sp;
+    public Tile(int x, int y, BufferedImage... sp) {
+        this.sprites    = sp;
         this.coordinate = new Coordinate(x, y);
     }
 
-    public Tile(BufferedImage sprite, Coordinate coordinate) {
-        this(sprite, coordinate.getX(), coordinate.getY());
+    public Tile(Coordinate coordinate, BufferedImage... sprites) {
+        this(coordinate.getX(), coordinate.getY(), sprites);
+    }
+
+    public Tile(int x, int y, BufferedImage sp) {
+        this.sprites    = new BufferedImage[]{ sp };
+        this.coordinate = new Coordinate(x, y);
+    }
+
+    public Tile(Coordinate coordinate, BufferedImage sprites) {
+        this(coordinate.getX(), coordinate.getY(), sprites);
     }
 
     //------------------------------------------------
 
     public abstract void draw(Graphics2D crayon);
 
-    public BufferedImage getSprite() {
-        return sprite;
+    public BufferedImage[] getSprites() {
+        return sprites;
     }
 
     public Coordinate getCoordinate() {
@@ -65,6 +60,6 @@ public abstract class Tile implements HandleEvent {
     }
 
     protected enum Type {
-        GROUND, WALL, START, END
+        GROUND, WALL, START, END, BONUS
     }
 }

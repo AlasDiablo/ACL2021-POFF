@@ -2,6 +2,8 @@ package fr.poweroff.labyrinthe.model;
 
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.Game;
+import fr.poweroff.labyrinthe.event.Event;
+import fr.poweroff.labyrinthe.event.TimeOutEvent;
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.utils.Coordinate;
@@ -29,27 +31,33 @@ public class PacmanGame implements Game {
         RANDOM = new Random(seed);
     }
 
-    final         Level      level;
-    final         Player     player;
-    private int score;
+    final          Level      level;
+    private static PacmanGame INSTANCE;
+    final          Player     player;
 
     private final Coordinate pacmanPosition = new Coordinate(0, 0);
     /**
      * Minuteur du niveau
      */
     private final Countdown  countdown;
-    private final String     direction      = "RIGHT";
-    /**
-     * La vitesse de dépalcement du personnage
-     */
-    protected     int        SPEEDMOVE      = 11;
     private       boolean    finish         = false;
+    private final int        score;
+
+    /**
+     * Renvoie les coordonnees du pacman
+     *
+     * @return les coordonnee du pacman
+     */
+    public Coordinate getPacmanPosition() {
+        return pacmanPosition;
+    }
 
     /**
      * constructeur avec fichier source pour le help
      */
     public PacmanGame(String source) {
         ImageUtils.setClassLoader(this.getClass().getClassLoader());
+        INSTANCE    = this;
         this.level  = new Level();
         this.player = new Player(new Coordinate(11, 11));
         BufferedReader helpReader;
@@ -69,13 +77,11 @@ public class PacmanGame implements Game {
         score = 0;
     }
 
-    /**
-     * Renvoie les coordonnees du pacman
-     *
-     * @return les coordonnee du pacman
-     */
-    public Coordinate getPacmanPosition() {
-        return pacmanPosition;
+    public static void onEvent(Event<?> event) {
+        System.out.println(event.getName());
+        if (event.getName().equals("TimeOut")) {
+            INSTANCE.setFinish(true);
+        }
     }
 
     /**
@@ -94,19 +100,11 @@ public class PacmanGame implements Game {
         }
 
         //Tester si le timer est fini
-        this.setFinish(countdown.isFinish());
+        if (this.countdown.isFinish()) {
+            PacmanGame.onEvent(new TimeOutEvent());
+        }
 
 
-
-    }
-
-    /**
-     * Renvoie de la propriete de direction
-     *
-     * @return la direction du pacman
-     */
-    public String getDirection() {
-        return direction;
     }
 
     /**
