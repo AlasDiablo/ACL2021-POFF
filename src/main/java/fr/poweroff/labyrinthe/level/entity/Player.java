@@ -47,25 +47,25 @@ public class Player extends Entity {
         switch (cmd) {
             case UP: {
                 var newY = y - MOVE_SPEED;
-                if (levelEvolve.canGoHere(x, newY, 20, 20)) this.coordinate.setY(newY);
+                if (levelEvolve.overlap(x, newY, 20, 20)) this.coordinate.setY(newY);
                 this.direction = cmd.name();
                 break;
             }
             case DOWN: {
                 var newY = y + MOVE_SPEED;
-                if (levelEvolve.canGoHere(x, newY, 20, 20)) this.coordinate.setY(newY);
+                if (levelEvolve.overlap(x, newY, 20, 20)) this.coordinate.setY(newY);
                 this.direction = cmd.name();
                 break;
             }
             case LEFT: {
                 var newX = x - MOVE_SPEED;
-                if (levelEvolve.canGoHere(newX, y, 20, 20)) this.coordinate.setX(newX);
+                if (levelEvolve.overlap(newX, y, 20, 20)) this.coordinate.setX(newX);
                 this.direction = cmd.name();
                 break;
             }
             case RIGHT: {
                 var newX = x + MOVE_SPEED;
-                if (levelEvolve.canGoHere(newX, y, 20, 20)) this.coordinate.setX(newX);
+                if (levelEvolve.overlap(newX, y, 20, 20)) this.coordinate.setX(newX);
                 this.direction = cmd.name();
                 break;
             }
