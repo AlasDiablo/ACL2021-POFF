@@ -4,9 +4,17 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ImageUtils {
+
+    private static final Map<String, BufferedImage> BUFFERED_IMAGE_MAP;
+
+    static {
+        BUFFERED_IMAGE_MAP = new HashMap<>();
+    }
 
     private static ClassLoader classLoader = null;
 
@@ -15,8 +23,12 @@ public class ImageUtils {
     }
 
     public static BufferedImage getImage(String url) {
+        if (BUFFERED_IMAGE_MAP.containsKey(url))
+            return BUFFERED_IMAGE_MAP.get(url);
         try {
-            return ImageIO.read(new File(Objects.requireNonNull(classLoader.getResource(url)).getFile()));
+            var image = ImageIO.read(new File(Objects.requireNonNull(classLoader.getResource(url)).getFile()));
+            BUFFERED_IMAGE_MAP.put(url, image);
+            return image;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
