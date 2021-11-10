@@ -112,7 +112,9 @@ public class Level {
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
                 20, 20, this.levelEvolve.bonusTiles
-        ).ifPresent(tile -> PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile)));
+        ).ifPresent(tile -> {
+            if (tile.getType() == Tile.Type.BONUS) {PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));}
+        });
     }
 
     public List<Tile> getLevelDisposition() {
