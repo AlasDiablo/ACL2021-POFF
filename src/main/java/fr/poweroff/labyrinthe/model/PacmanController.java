@@ -16,13 +16,21 @@ public class PacmanController implements GameController {
     /**
      * commande en cours
      */
-    private Cmd commandeEnCours;
+    private boolean left;
+    private boolean right;
+    private boolean up;
+    private boolean down;
+    private Cmd     other;
 
     /**
      * construction du controleur par defaut le controleur n'a pas de commande
      */
     public PacmanController() {
-        this.commandeEnCours = Cmd.IDLE;
+        this.left  = false;
+        this.right = false;
+        this.up    = false;
+        this.down  = false;
+        this.other = null;
     }
 
     /**
@@ -32,7 +40,16 @@ public class PacmanController implements GameController {
      * @return commande faite par le joueur
      */
     public Cmd getCommand() {
-        return this.commandeEnCours;
+        if (this.other != null) return this.other;
+        if (this.left && this.up) return Cmd.LEFT_UP;
+        if (this.left && this.down) return Cmd.LEFT_DOWN;
+        if (this.right && this.up) return Cmd.RIGHT_UP;
+        if (this.right && this.down) return Cmd.RIGHT_DOWN;
+        if (this.left) return Cmd.LEFT;
+        if (this.right) return Cmd.RIGHT;
+        if (this.up) return Cmd.UP;
+        if (this.down) return Cmd.DOWN;
+        return Cmd.IDLE;
     }
 
     @Override
@@ -40,46 +57,29 @@ public class PacmanController implements GameController {
      * met a jour les commandes en fonctions des touches appuyees
      */
     public void keyPressed(KeyEvent e) {
-        //Mouvement avec les touches des lettres
-        switch (e.getKeyChar()) {
-            // si on appuie sur 'q',commande joueur est gauche
-            case 'q':
-            case 'Q':
-                this.commandeEnCours = Cmd.LEFT;
-                break;
-            case 'd':
-            case 'D':
-                this.commandeEnCours = Cmd.RIGHT;
-                break;
-            case 'z':
-            case 'Z':
-                this.commandeEnCours = Cmd.UP;
-                break;
-            case 's':
-            case 'S':
-                this.commandeEnCours = Cmd.DOWN;
-                break;
-        }
-        //Mouvement avec les touches des flèches
         switch (e.getKeyCode()) {
-            // si on appuie sur 'q',commande joueur est gauche
-            case KeyEvent.VK_LEFT:
-                this.commandeEnCours = Cmd.LEFT;
+            case KeyEvent.VK_Q: // azerty
+            case KeyEvent.VK_A: // qwerty
+            case KeyEvent.VK_LEFT: // arrow
+                this.left = true;
                 break;
-            case KeyEvent.VK_RIGHT:
-                this.commandeEnCours = Cmd.RIGHT;
+            case KeyEvent.VK_D: // azerty and qwerty
+            case KeyEvent.VK_RIGHT: // arrow
+                this.right = true;
                 break;
-            case KeyEvent.VK_UP:
-                this.commandeEnCours = Cmd.UP;
+            case KeyEvent.VK_Z: // azerty
+            case KeyEvent.VK_W: // qwerty
+            case KeyEvent.VK_UP: // arrow
+                this.up = true;
                 break;
-            case KeyEvent.VK_DOWN:
-                this.commandeEnCours = Cmd.DOWN;
+            case KeyEvent.VK_S: // azerty and qwerty
+            case KeyEvent.VK_DOWN: // arrow
+                this.down = true;
                 break;
             case KeyEvent.VK_ESCAPE:
-                this.commandeEnCours = Cmd.EXIT;
+                this.other = Cmd.EXIT;
                 break;
         }
-
     }
 
     @Override
@@ -87,7 +87,29 @@ public class PacmanController implements GameController {
      * met a jour les commandes quand le joueur relache une touche
      */
     public void keyReleased(KeyEvent e) {
-        this.commandeEnCours = Cmd.IDLE;
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_Q: // azerty
+            case KeyEvent.VK_A: // qwerty
+            case KeyEvent.VK_LEFT: // arrow
+                this.left = false;
+                break;
+            case KeyEvent.VK_D: // azerty and qwerty
+            case KeyEvent.VK_RIGHT: // arrow
+                this.right = false;
+                break;
+            case KeyEvent.VK_Z: // azerty
+            case KeyEvent.VK_W: // qwerty
+            case KeyEvent.VK_UP: // arrow
+                this.up = false;
+                break;
+            case KeyEvent.VK_S: // azerty and qwerty
+            case KeyEvent.VK_DOWN: // arrow
+                this.down = false;
+                break;
+            case KeyEvent.VK_ESCAPE:
+                this.other = Cmd.EXIT;
+                break;
+        }
     }
 
     @Override

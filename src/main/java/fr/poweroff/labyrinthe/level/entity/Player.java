@@ -44,31 +44,29 @@ public class Player extends Entity {
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         var x = this.coordinate.getX();
         var y = this.coordinate.getY();
-        switch (cmd) {
-            case UP: {
-                var newY = y - MOVE_SPEED;
-                if (!levelEvolve.overlap(x, newY, 20, 20)) this.coordinate.setY(newY);
-                this.direction = cmd.name();
-                break;
-            }
-            case DOWN: {
-                var newY = y + MOVE_SPEED;
-                if (!levelEvolve.overlap(x, newY, 20, 20)) this.coordinate.setY(newY);
-                this.direction = cmd.name();
-                break;
-            }
-            case LEFT: {
-                var newX = x - MOVE_SPEED;
-                if (!levelEvolve.overlap(newX, y, 20, 20)) this.coordinate.setX(newX);
-                this.direction = cmd.name();
-                break;
-            }
-            case RIGHT: {
-                var newX = x + MOVE_SPEED;
-                if (!levelEvolve.overlap(newX, y, 20, 20)) this.coordinate.setX(newX);
-                this.direction = cmd.name();
-                break;
-            }
+
+        if (cmd == Cmd.UP || cmd == Cmd.LEFT_UP || cmd == Cmd.RIGHT_UP) {
+            var newY = y - MOVE_SPEED;
+            if (!levelEvolve.overlap(x, newY, 20, 20)) this.coordinate.setY(newY);
+            this.direction = Cmd.UP.name();
+        }
+
+        if (cmd == Cmd.DOWN || cmd == Cmd.LEFT_DOWN || cmd == Cmd.RIGHT_DOWN) {
+            var newY = y + MOVE_SPEED;
+            if (!levelEvolve.overlap(x, newY, 20, 20)) this.coordinate.setY(newY);
+            this.direction = Cmd.DOWN.name();
+        }
+
+        if (cmd == Cmd.LEFT || cmd == Cmd.LEFT_DOWN || cmd == Cmd.LEFT_UP) {
+            var newX = x - MOVE_SPEED;
+            if (!levelEvolve.overlap(newX, y, 20, 20)) this.coordinate.setX(newX);
+            this.direction = Cmd.LEFT.name();
+        }
+
+        if (cmd == Cmd.RIGHT || cmd == Cmd.RIGHT_DOWN || cmd == Cmd.RIGHT_UP) {
+            var newX = x + MOVE_SPEED;
+            if (!levelEvolve.overlap(newX, y, 20, 20)) this.coordinate.setX(newX);
+            this.direction = Cmd.RIGHT.name();
         }
     }
 }
