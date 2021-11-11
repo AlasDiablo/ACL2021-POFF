@@ -1,8 +1,6 @@
 package fr.poweroff.labyrinthe.engine;
 
-/**
- * @author Horatiu Cirstea, Vincent Thomas
- */
+import fr.poweroff.labyrinthe.engine.menu.Menu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,8 +36,6 @@ public class DrawingPanel extends JPanel {
      * Panel associe. Les images stockent le painter et on demande au panel la
      * mise a jour quand le painter est fini
      *
-     * @param width  largeur de l'image
-     * @param height hauteur de l'image
      */
     public DrawingPanel(GamePainter painter) {
         super();
@@ -74,6 +70,12 @@ public class DrawingPanel extends JPanel {
         this.nextImage.getGraphics()
                 .fillRect(0, 0, this.width, this.height);
         // met a jour l'image a afficher sur le panel
+        this.repaint();
+    }
+
+    public void drawMenu(){
+        Menu m = new Menu(0,0);
+        currentImage = m.getSprites();
         this.repaint();
     }
 

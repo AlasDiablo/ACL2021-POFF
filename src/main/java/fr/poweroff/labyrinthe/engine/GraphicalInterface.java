@@ -41,6 +41,13 @@ public class GraphicalInterface {
     /**
      * mise a jour du dessin
      */
+    public void paintMenu() {
+        this.panel.drawMenu();
+    }
+
+    /**
+     * mise a jour du dessin
+     */
     public void paint() {
         this.panel.drawGame();
     }

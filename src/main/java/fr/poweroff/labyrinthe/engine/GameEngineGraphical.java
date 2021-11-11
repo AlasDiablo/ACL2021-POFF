@@ -1,5 +1,9 @@
 package fr.poweroff.labyrinthe.engine;
 
+import fr.poweroff.labyrinthe.engine.menu.Menu;
+
+import java.awt.image.BufferedImage;
+
 /**
  * @author Horatiu Cirstea, Vincent Thomas
  * <p>
@@ -49,6 +53,12 @@ public class GameEngineGraphical {
 
         // creation de l'interface graphique
         this.gui = new GraphicalInterface(this.gamePainter, this.gameController);
+
+        //boucle de menu
+        while(!this.game.isFinished()) {
+            gui.paintMenu();
+        }
+
 
         // boucle de game
         while (!this.game.isFinished()) {
