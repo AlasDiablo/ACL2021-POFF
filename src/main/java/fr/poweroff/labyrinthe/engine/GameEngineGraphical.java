@@ -54,9 +54,19 @@ public class GameEngineGraphical {
         // creation de l'interface graphique
         this.gui = new GraphicalInterface(this.gamePainter, this.gameController);
 
+        boolean menuEnCour = true;
+
         //boucle de menu
-        while(!this.game.isFinished()) {
-            gui.paintMenu();
+        while(menuEnCour) {
+            Cmd c = this.gameController.getCommand();
+            //this.game.evolve(c);
+            this.gui.paintMenu();
+
+            //Lancement du jeu (arrêt de la boucle du menu)
+            if(c.name().equals("PLAY")){
+                menuEnCour = false;
+            }
+
         }
 
 
@@ -66,6 +76,8 @@ public class GameEngineGraphical {
             Cmd c = this.gameController.getCommand();
             // fait evoluer le game
             this.game.evolve(c);
+            //Mise en route du compteur
+            this.game.Compteur();
             // affiche le game
             this.gui.paint();
             // met en attente

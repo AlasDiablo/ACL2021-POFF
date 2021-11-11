@@ -73,8 +73,15 @@ public class PacmanGame implements Game {
         }
         countdown = new Countdown(60);
         this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
-        countdown.start();
         score = 0;
+    }
+
+    /**
+     * Mais en route le compteur
+     */
+    @Override
+    public void Compteur(){
+        countdown.start();
     }
 
     public static void onEvent(Event<?> event) {
@@ -104,6 +111,8 @@ public class PacmanGame implements Game {
             PacmanGame.onEvent(new TimeOutEvent());
         }
 
+        //Quitter le jeu
+        //quitter le jeu et la fenêtre
 
     }
 

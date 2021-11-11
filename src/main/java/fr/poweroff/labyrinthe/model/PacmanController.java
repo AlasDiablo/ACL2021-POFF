@@ -4,6 +4,7 @@ import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.GameController;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 
 /**
@@ -11,7 +12,7 @@ import java.awt.event.KeyEvent;
  * <p>
  * controleur de type KeyListener
  */
-public class PacmanController implements GameController {
+public class PacmanController implements GameController  {
 
     /**
      * commande en cours
@@ -36,9 +37,6 @@ public class PacmanController implements GameController {
     }
 
     @Override
-    /**
-     * met a jour les commandes en fonctions des touches appuyees
-     */
     public void keyPressed(KeyEvent e) {
         //Mouvement avec les touches des lettres
         switch (e.getKeyChar()) {
@@ -83,19 +81,60 @@ public class PacmanController implements GameController {
     }
 
     @Override
-    /**
-     * met a jour les commandes quand le joueur relache une touche
+    /*
+      met a jour les commandes quand le joueur relache une touche
      */
     public void keyReleased(KeyEvent e) {
         this.commandeEnCours = Cmd.IDLE;
     }
 
     @Override
-    /**
-     * ne fait rien
+    /*
+      ne fait rien
      */
     public void keyTyped(KeyEvent e) {
 
     }
 
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+        int x = mouseEvent.getX();
+        int y = mouseEvent.getY();
+        //Condition d'emplacement de la souris
+        //Clic sur "JOUER"
+        if(x > 197 && y > 174 && x < 332 && y < 215){
+            this.commandeEnCours = Cmd.PLAY;
+        }
+        //Clic sur "NIVEAUX"
+        if(x > 183 && y > 234 && x < 349 && y < 275){
+            this.commandeEnCours = Cmd.LEVELS;
+        }
+        //Clic sur "SCORES"
+        if(x > 193 && y > 291 && x < 335 && y < 329){
+            this.commandeEnCours = Cmd.SCORES;
+        }
+        //Clic sur "QUITTER"
+        if(x > 180 && y > 349 && x < 352 && y < 388){
+            this.commandeEnCours = Cmd.QUIT;
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent mouseEvent) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent mouseEvent) {
+
+    }
 }
