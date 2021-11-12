@@ -32,6 +32,9 @@ public class GameEngineGraphical {
      */
     private GraphicalInterface gui;
 
+    private boolean menuEnCour;
+    private boolean niveau;
+
     /**
      * construit un moteur
      *
@@ -54,18 +57,29 @@ public class GameEngineGraphical {
         // creation de l'interface graphique
         this.gui = new GraphicalInterface(this.gamePainter, this.gameController);
 
-        boolean menuEnCour = true;
-        boolean niveau = false;
+        menuEnCour = true;
+        niveau = false;
 
+        menu();
+
+        niveau();
+
+        jouer();
+
+    }
+
+    private void menu(){
         //boucle de menu
         while(menuEnCour) {
             Cmd c = this.gameController.getCommand();
+            this.gameController.setMenu(true);
             //this.game.evolve(c);
             this.gui.paintMenu();
 
             //Lancement du jeu (arrêt de la boucle du menu)
-            if(c.name().equals("PLAY"))
+            if(c.name().equals("PLAY")) {
                 menuEnCour = false;
+            }
 
             if(c.name().equals("QUIT"))
                 this.gui.quit();
@@ -77,15 +91,22 @@ public class GameEngineGraphical {
 
         }
 
+        this.gameController.setMenu(false);
+    }
+
+    private void niveau(){
         while(niveau){
             Cmd c = this.gameController.getCommand();
+            this.gameController.setNiveau(true);
             this.gui.paintNiveau();
 
             if(c.name().equals("LEVEL1"))
                 niveau = false;
         }
+        this.gameController.setNiveau(false);
+    }
 
-
+    private void jouer() throws InterruptedException {
         // boucle de game
         while (!this.game.isFinished()) {
             // demande controle utilisateur

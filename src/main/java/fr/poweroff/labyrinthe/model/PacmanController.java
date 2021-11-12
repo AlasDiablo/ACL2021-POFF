@@ -18,6 +18,8 @@ public class PacmanController implements GameController  {
      * commande en cours
      */
     private Cmd commandeEnCours;
+    private boolean menu;
+    private boolean niveaux;
 
     /**
      * construction du controleur par defaut le controleur n'a pas de commande
@@ -34,6 +36,26 @@ public class PacmanController implements GameController  {
      */
     public Cmd getCommand() {
         return this.commandeEnCours;
+    }
+
+    @Override
+    public boolean menu() {
+        return menu;
+    }
+
+    @Override
+    public boolean niveau() {
+        return niveaux;
+    }
+
+    @Override
+    public void setMenu(boolean m) {
+        this.menu = m;
+    }
+
+    @Override
+    public void setNiveau(boolean n) {
+        this.niveaux = n;
     }
 
     @Override
@@ -100,22 +122,44 @@ public class PacmanController implements GameController  {
     public void mouseClicked(MouseEvent mouseEvent) {
         int x = mouseEvent.getX();
         int y = mouseEvent.getY();
-        //Condition d'emplacement de la souris
-        //Clic sur "JOUER"
-        if(x > 197 && y > 174 && x < 332 && y < 215){
-            this.commandeEnCours = Cmd.PLAY;
+        //Condition d'emplacement de la souris sur le menu principal
+        if(menu) {
+            //Clic sur "JOUER"
+            if (x > 197 && y > 174 && x < 332 && y < 215) {
+                this.commandeEnCours = Cmd.PLAY;
+            }
+            //Clic sur "NIVEAUX"
+            if (x > 183 && y > 234 && x < 349 && y < 275) {
+                this.commandeEnCours = Cmd.LEVELS;
+            }
+            //Clic sur "SCORES"
+            if (x > 193 && y > 291 && x < 335 && y < 329) {
+                this.commandeEnCours = Cmd.SCORES;
+            }
+            //Clic sur "QUITTER"
+            if (x > 180 && y > 349 && x < 352 && y < 388) {
+                this.commandeEnCours = Cmd.QUIT;
+            }
         }
-        //Clic sur "NIVEAUX"
-        if(x > 183 && y > 234 && x < 349 && y < 275){
-            this.commandeEnCours = Cmd.LEVELS;
-        }
-        //Clic sur "SCORES"
-        if(x > 193 && y > 291 && x < 335 && y < 329){
-            this.commandeEnCours = Cmd.SCORES;
-        }
-        //Clic sur "QUITTER"
-        if(x > 180 && y > 349 && x < 352 && y < 388){
-            this.commandeEnCours = Cmd.QUIT;
+
+        if(niveaux) {
+            //Condition d'emplacement de la souris sur le menu de difficulté
+            //Clic sur "Facile"
+            if (x > 220 && y > 165 && x < 348 && y < 202) {
+                this.commandeEnCours = Cmd.LEVEL1;
+            }
+            //Clic sur "Normal"
+            if (x > 204 && y > 234 && x < 360 && y < 273) {
+                this.commandeEnCours = Cmd.LEVEL2;
+            }
+            //Clic sur "Difficile"
+            if (x > 191 && y > 303 && x < 369 && y < 346) {
+                this.commandeEnCours = Cmd.LEVEL3;
+            }
+            //Clic sur "Extreme"
+            if (x > 193 && y > 375 && x < 367 && y < 416) {
+                this.commandeEnCours = Cmd.LEVEL4;
+            }
         }
     }
 

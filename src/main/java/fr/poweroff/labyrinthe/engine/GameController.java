@@ -18,4 +18,10 @@ public interface GameController extends KeyListener , MouseListener {
      */
     Cmd getCommand();
 
+    boolean menu();
+    boolean niveau();
+
+    void setMenu(boolean m);
+    void setNiveau(boolean n);
+
 }

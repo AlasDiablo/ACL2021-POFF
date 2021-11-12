@@ -22,8 +22,7 @@ public class GraphicalInterface {
 
     /**
      * la construction de l'interface graphique: JFrame avec panel pour le game
-     *
-     * @param gamePainter    l'afficheur a utiliser dans le moteur
+     *  @param gamePainter    l'afficheur a utiliser dans le moteur
      * @param gameController l'afficheur a utiliser dans le moteur
      */
     public GraphicalInterface(GamePainter gamePainter, GameController gameController) {
@@ -48,6 +47,7 @@ public class GraphicalInterface {
         e2 = new JMenuItem("Niveaux");
         e3 = new JMenuItem("Scores");
         e4 = new JMenuItem("Quitter");
+
 
         //Quitte le jeu
         e4.addActionListener(actionEvent -> f.dispose());
