@@ -12,6 +12,7 @@ import fr.poweroff.labyrinthe.utils.Coordinate;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class Level {
@@ -24,14 +25,60 @@ public class Level {
     private             Entity       player;
 
     public Level() {
+        this.levelEvolve = new LevelEvolve();
+        this.init();
+    }
+
+    private void init() {
         this.levelDisposition = List.of();
         this.entities         = List.of();
         this.endTile          = null;
-        this.levelEvolve      = new LevelEvolve();
         this.player           = null;
     }
 
+    public void init(Map<Coordinate, Tile.Type> level, Entity player, Entity... entities) {
+        this.init();
+        ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
+        this.player = player;
+
+        level.forEach((coordinate, type) -> {
+            var  rx = coordinate.getX() * TITLE_SIZE;
+            var  ry = coordinate.getY() * TITLE_SIZE;
+            Tile currentTile;
+            switch (type) {
+                case WALL:
+                    currentTile = new TileWall(rx, ry);
+                    wallBuilder.add(currentTile);
+                    break;
+                case BONUS:
+                    currentTile = new TileBonus(rx, ry);
+                    bonusBuilder.add(currentTile);
+                    break;
+                case END:
+                    currentTile = new TileEnd(rx, ry);
+                    this.endTile = currentTile;
+                    break;
+                case START:
+                    currentTile = new TileStart(rx, ry);
+                    break;
+                default:
+                    currentTile = new TileGround(rx, ry);
+                    break;
+            }
+            levelBuilder.add(currentTile);
+        });
+
+        this.entities = new ArrayList<>(List.of(entities));
+        this.entities.add(player);
+        this.levelDisposition       = levelBuilder.build();
+        this.levelEvolve.wallTiles  = wallBuilder.build();
+        this.levelEvolve.bonusTiles = bonusBuilder.build();
+    }
+
     public void init(int width, int height, Entity player, Entity... entities) {
+        this.init();
         ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
@@ -123,8 +170,8 @@ public class Level {
         private List<Tile> wallTiles;
         private List<Tile> bonusTiles;
 
-        public boolean overlap(int x, int y, int w, int h) {
-            return overlap(x, y, w, h, this.wallTiles);
+        public boolean notOverlap(int x, int y, int w, int h) {
+            return !overlap(x, y, w, h, this.wallTiles);
         }
 
         public boolean overlap(int x, int y, int w, int h, List<Tile> tiles) {
