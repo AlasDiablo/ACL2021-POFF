@@ -5,5 +5,6 @@ package fr.poweroff.labyrinthe.engine;
  */
 public enum Cmd {
     LEFT, RIGHT, UP, DOWN, IDLE, EXIT,
-    PLAY, LEVELS, SCORES, QUIT
+    PLAY, LEVELS, SCORES, QUIT,
+    LEVEL1, LEVEL2, LEVEL3, LEVEL4
 }

@@ -2,6 +2,8 @@ package fr.poweroff.labyrinthe.engine;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 /**
@@ -46,6 +48,9 @@ public class GraphicalInterface {
         e2 = new JMenuItem("Niveaux");
         e3 = new JMenuItem("Scores");
         e4 = new JMenuItem("Quitter");
+
+        //Quitte le jeu
+        e4.addActionListener(actionEvent -> f.dispose());
         //Ajout des item au menu
         menu.add(e1);
         menu.add(e2);
@@ -84,4 +89,14 @@ public class GraphicalInterface {
         this.panel.drawGame();
     }
 
+    /**
+     * Fonction pour quitter la map
+     */
+    public void quit(){
+        this.f.dispose();
+    }
+
+    public void paintNiveau() {
+        this.panel.drawNiveau();
+    }
 }

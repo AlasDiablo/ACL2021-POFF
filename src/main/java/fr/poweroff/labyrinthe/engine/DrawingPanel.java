@@ -1,5 +1,6 @@
 package fr.poweroff.labyrinthe.engine;
 
+import fr.poweroff.labyrinthe.engine.menu.Level;
 import fr.poweroff.labyrinthe.engine.menu.Menu;
 
 import javax.swing.*;
@@ -79,6 +80,12 @@ public class DrawingPanel extends JPanel {
         this.repaint();
     }
 
+    public void drawNiveau() {
+        Level l = new Level(0,0);
+        currentImage = l.getSprites();
+        this.repaint();
+    }
+
     /**
      * redefinit la methode paint consiste a dessiner l'image en cours
      *
@@ -90,5 +97,6 @@ public class DrawingPanel extends JPanel {
                     getWidth(), getHeight(), null
         );
     }
+
 
 }

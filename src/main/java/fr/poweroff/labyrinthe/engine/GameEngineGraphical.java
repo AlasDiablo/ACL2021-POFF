@@ -55,6 +55,7 @@ public class GameEngineGraphical {
         this.gui = new GraphicalInterface(this.gamePainter, this.gameController);
 
         boolean menuEnCour = true;
+        boolean niveau = false;
 
         //boucle de menu
         while(menuEnCour) {
@@ -63,10 +64,25 @@ public class GameEngineGraphical {
             this.gui.paintMenu();
 
             //Lancement du jeu (arrêt de la boucle du menu)
-            if(c.name().equals("PLAY")){
+            if(c.name().equals("PLAY"))
+                menuEnCour = false;
+
+            if(c.name().equals("QUIT"))
+                this.gui.quit();
+
+            if(c.name().equals("LEVELS")) {
+                niveau = true;
                 menuEnCour = false;
             }
 
+        }
+
+        while(niveau){
+            Cmd c = this.gameController.getCommand();
+            this.gui.paintNiveau();
+
+            if(c.name().equals("LEVEL1"))
+                niveau = false;
         }
 
 
