@@ -7,11 +7,9 @@ import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
-import fr.poweroff.labyrinthe.utils.Coordinate;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
