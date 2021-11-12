@@ -2,18 +2,18 @@ package fr.poweroff.labyrinthe.level.tile;
 
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 
 public class TileBonus extends Tile {
 
     public TileBonus(int x, int y) {
-        super(x, y, ImageUtils.getImage("tile_bonus.png"));
+        super(x, y, FilesUtils.getImage("tile_bonus.png"));
     }
 
     public TileBonus(Coordinate coordinate) {
-        super(coordinate, ImageUtils.getImage("tile_bonus.png"));
+        super(coordinate, FilesUtils.getImage("tile_bonus.png"));
     }
 
     @Override

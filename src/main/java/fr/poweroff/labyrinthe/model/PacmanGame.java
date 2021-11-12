@@ -8,7 +8,7 @@ import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -56,7 +56,7 @@ public class PacmanGame implements Game {
      * constructeur avec fichier source pour le help
      */
     public PacmanGame(String source) {
-        ImageUtils.setClassLoader(this.getClass().getClassLoader());
+        FilesUtils.setClassLoader(this.getClass().getClassLoader());
         INSTANCE    = this;
         this.level  = new Level();
         this.player = new Player(new Coordinate(11, 11));
@@ -72,7 +72,8 @@ public class PacmanGame implements Game {
             System.out.println("Help not available");
         }
         countdown = new Countdown(60);
-        this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
+        // this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
+        this.level.init("levels/level_1.json", this.player);
         countdown.start();
         score = 0;
     }

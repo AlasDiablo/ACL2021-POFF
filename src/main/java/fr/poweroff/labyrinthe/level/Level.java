@@ -1,6 +1,7 @@
 package fr.poweroff.labyrinthe.level;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
@@ -8,12 +9,14 @@ import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Level {
     // Size on a title in pixel
@@ -36,12 +39,29 @@ public class Level {
         this.player           = null;
     }
 
+    public void init(String levelFile, Entity player, Entity... entities) {
+        ImmutableMap.Builder<Coordinate, Tile.Type> levelMap = new ImmutableMap.Builder<>();
+        var                                         json     = FilesUtils.getJson(levelFile);
+        var                                         level    = json.getAsJsonArray();
+        var                                         x        = new AtomicInteger();
+        var                                         y        = new AtomicInteger();
+        level.forEach(lineElement -> {
+            var line = lineElement.getAsJsonArray();
+            line.forEach(tile -> {
+                var tileName = tile.getAsString();
+                levelMap.put(new Coordinate(x.getAndIncrement(), y.get()), Tile.Type.valueOf(tileName));
+            });
+            y.getAndIncrement();
+            x.set(0);
+        });
+        this.init(levelMap.build(), player, entities);
+    }
+
     public void init(Map<Coordinate, Tile.Type> level, Entity player, Entity... entities) {
         this.init();
         ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
-        this.player = player;
 
         level.forEach((coordinate, type) -> {
             var  rx = coordinate.getX() * TITLE_SIZE;
@@ -62,6 +82,8 @@ public class Level {
                     break;
                 case START:
                     currentTile = new TileStart(rx, ry);
+                    player.getCoordinate().setX(rx);
+                    player.getCoordinate().setY(ry);
                     break;
                 default:
                     currentTile = new TileGround(rx, ry);
@@ -70,6 +92,7 @@ public class Level {
             levelBuilder.add(currentTile);
         });
 
+        this.player   = player;
         this.entities = new ArrayList<>(List.of(entities));
         this.entities.add(player);
         this.levelDisposition       = levelBuilder.build();
@@ -82,7 +105,6 @@ public class Level {
         ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
-        this.player = player;
 
         Coordinate tb1 = new Coordinate(10, 10);
         Coordinate tb2 = new Coordinate(20, 15);
@@ -132,6 +154,7 @@ public class Level {
                 levelBuilder.add(currentTile);
             }
         }
+        this.player   = player;
         this.entities = new ArrayList<>(List.of(entities));
         this.entities.add(player);
         this.levelDisposition       = levelBuilder.build();

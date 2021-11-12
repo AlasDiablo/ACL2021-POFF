@@ -1,14 +1,19 @@
 package fr.poweroff.labyrinthe.utils;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class ImageUtils {
+public class FilesUtils {
 
     private static final Map<String, BufferedImage> BUFFERED_IMAGE_MAP;
 
@@ -32,5 +37,17 @@ public class ImageUtils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static JsonElement getJson(String url) {
+        JsonElement json;
+        var         inputStream = classLoader.getResourceAsStream(url);
+        if (inputStream == null)
+            json = new JsonObject();
+        else {
+            var reader = new InputStreamReader(inputStream);
+            json = JsonParser.parseReader(reader);
+        }
+        return json;
     }
 }

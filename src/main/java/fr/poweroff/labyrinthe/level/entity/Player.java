@@ -3,7 +3,7 @@ package fr.poweroff.labyrinthe.level.entity;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.level.Level.LevelEvolve;
 import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 
@@ -14,10 +14,10 @@ public class Player extends Entity {
     public Player(Coordinate coordinate) {
         super(
                 coordinate,
-                ImageUtils.getImage("pacman_right.png"),
-                ImageUtils.getImage("pacman_down.png"),
-                ImageUtils.getImage("pacman_left.png"),
-                ImageUtils.getImage("pacman_up.png")
+                FilesUtils.getImage("pacman_right.png"),
+                FilesUtils.getImage("pacman_down.png"),
+                FilesUtils.getImage("pacman_left.png"),
+                FilesUtils.getImage("pacman_up.png")
         );
         this.direction = "RIGHT";
     }
