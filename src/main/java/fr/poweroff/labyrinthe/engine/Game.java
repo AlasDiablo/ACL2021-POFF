@@ -22,4 +22,6 @@ public interface Game {
      */
     boolean isFinished();
 
+    boolean isFinishCompteur();
+
 }

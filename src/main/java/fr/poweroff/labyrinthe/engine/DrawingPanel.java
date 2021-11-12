@@ -2,6 +2,7 @@ package fr.poweroff.labyrinthe.engine;
 
 import fr.poweroff.labyrinthe.engine.menu.Level;
 import fr.poweroff.labyrinthe.engine.menu.Menu;
+import fr.poweroff.labyrinthe.engine.menu.Perdu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -99,4 +100,9 @@ public class DrawingPanel extends JPanel {
     }
 
 
+    public void drawPerdu() {
+        Perdu p = new Perdu(0,0);
+        currentImage = p.getSprites();
+        this.repaint();
+    }
 }

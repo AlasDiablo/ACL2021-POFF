@@ -99,4 +99,8 @@ public class GraphicalInterface {
     public void paintNiveau() {
         this.panel.drawNiveau();
     }
+
+    public void paintPerdu() {
+        this.panel.drawPerdu();
+    }
 }

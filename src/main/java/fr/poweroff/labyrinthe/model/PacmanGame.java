@@ -39,7 +39,7 @@ public class PacmanGame implements Game {
     /**
      * Minuteur du niveau
      */
-    private final Countdown  countdown;
+    public final Countdown  countdown;
     private       boolean    finish         = false;
     private final int        score;
 
@@ -114,6 +114,11 @@ public class PacmanGame implements Game {
         //Quitter le jeu
         //quitter le jeu et la fenêtre
 
+    }
+
+    @Override
+    public boolean isFinishCompteur() {
+        return this.countdown.isFinish();
     }
 
     /**

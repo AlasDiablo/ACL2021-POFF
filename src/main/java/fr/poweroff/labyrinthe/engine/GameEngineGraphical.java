@@ -119,6 +119,10 @@ public class GameEngineGraphical {
             this.gui.paint();
             // met en attente
             Thread.sleep(100);
+
+            if(this.game.isFinishCompteur()){
+                this.gui.paintPerdu();
+            }
         }
     }
 
