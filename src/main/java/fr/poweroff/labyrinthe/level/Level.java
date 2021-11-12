@@ -7,16 +7,17 @@ import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
-import fr.poweroff.labyrinthe.utils.Coordinate;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class Level {
     // Size on a title in pixel
     public static final int          TITLE_SIZE = 11 * 2;
+    public static final int          BONUS_NUMBER = 3;
     private final       LevelEvolve  levelEvolve;
     private             List<Tile>   levelDisposition;
     private             List<Entity> entities;
@@ -37,10 +38,6 @@ public class Level {
         ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
         this.player = player;
 
-        Coordinate tb1 = new Coordinate(10, 10);
-        Coordinate tb2 = new Coordinate(20, 15);
-        Coordinate tb3 = new Coordinate(10, 20);
-
         var sizeX = (int) Math.floor((float) width / (float) TITLE_SIZE);
         var sizeY = (int) Math.floor((float) height / (float) TITLE_SIZE);
 
@@ -54,17 +51,26 @@ public class Level {
             endPos = (int) Math.floor((surface - perimeter) * Math.random());
         }
 
+        int[] bonusTile = new int[BONUS_NUMBER];
+        for (int i = 0; i < BONUS_NUMBER;  i++) {
+           bonusTile[i] = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+        }
+
         var beforeStart = 0;
         var beforeEnd   = 0;
+        int beforeBonus = 0;
 
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
                 Tile currentTile;
                 var  rx = x * TITLE_SIZE;
                 var  ry = y * TITLE_SIZE;
-                if ((x == tb1.getX() && y == tb1.getY()) || (x == tb2.getX() && y == tb2.getY()) || (x == tb3.getX() && y == tb3.getY())) {
+                int finalBeforeBonus1 = beforeBonus;
+                if (IntStream.of(bonusTile).anyMatch(i -> i == finalBeforeBonus1)) {
+                    System.out.println("beforeBonus: " + beforeBonus);
                     currentTile = new TileBonus(rx, ry);
                     bonusBuilder.add(currentTile);
+                    beforeBonus++;
                 } else if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
                     currentTile = new TileWall(rx, ry);
                     wallBuilder.add(currentTile);
@@ -81,6 +87,7 @@ public class Level {
                     }
                     beforeStart++;
                     beforeEnd++;
+                    beforeBonus++;
                 }
                 levelBuilder.add(currentTile);
             }
@@ -112,7 +119,9 @@ public class Level {
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
                 20, 20, this.levelEvolve.bonusTiles
-        ).ifPresent(tile -> PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile)));
+        ).ifPresent(tile -> {
+            if (tile.getType() == Tile.Type.BONUS) {PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));}
+        });
     }
 
     public List<Tile> getLevelDisposition() {

@@ -59,7 +59,7 @@ public abstract class Tile {
         return Objects.hash(coordinate, getType());
     }
 
-    protected enum Type {
+    public enum Type {
         GROUND, WALL, START, END, BONUS
     }
 }
