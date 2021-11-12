@@ -42,7 +42,7 @@ public class PacmanGame implements Game {
      */
     private final Countdown  countdown;
     private       boolean    finish         = false;
-    private       int        score;
+    protected     int        score;
 
     /**
      * Renvoie les coordonnees du pacman
@@ -137,5 +137,9 @@ public class PacmanGame implements Game {
      */
     public Countdown getCountdown() {
         return countdown;
+    }
+
+    public int getScore() {
+        return score;
     }
 }
