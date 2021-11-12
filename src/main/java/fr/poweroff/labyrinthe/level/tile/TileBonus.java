@@ -10,14 +10,16 @@ import java.awt.image.BufferedImage;
 public class TileBonus extends Tile {
 
     private Type state;
+    private int image;
 
     public TileBonus(int x, int y) {
-        super(x, y, new BufferedImage[]{ImageUtils.getImage("tile_bonus.png"), ImageUtils.getImage("tile_ground.png")});
+        super(x, y, ImageUtils.getImage("tile_bonus.png"), ImageUtils.getImage("tile_ground.png"));
         state = Type.BONUS;
+        image = 0;
     }
 
     public TileBonus(Coordinate coordinate) {
-        super(coordinate, new BufferedImage[]{ImageUtils.getImage("tile_bonus.png"), ImageUtils.getImage("tile_ground.png")});
+        super(coordinate, ImageUtils.getImage("tile_bonus.png"), ImageUtils.getImage("tile_ground.png"));
         state = Type.BONUS;
     }
 
@@ -26,6 +28,7 @@ public class TileBonus extends Tile {
         int x = this.getCoordinate().getX();
         int y = this.getCoordinate().getY();
 
+    /**
         int image;
 
         if (state == Type.BONUS) {
@@ -33,6 +36,7 @@ public class TileBonus extends Tile {
         }else {
             image = 1;
         }
+     **/
         graphics2D.drawImage(this.getSprites()[image], x, y, Level.TITLE_SIZE, Level.TITLE_SIZE, null);
     }
 
@@ -42,6 +46,9 @@ public class TileBonus extends Tile {
     }
 
     public void changeType(){
-        if (state == Type.BONUS) {state = Type.GROUND;}
+        if (state == Type.BONUS) {
+            state = Type.GROUND;
+            image = 1;
+        }
     }
 }
