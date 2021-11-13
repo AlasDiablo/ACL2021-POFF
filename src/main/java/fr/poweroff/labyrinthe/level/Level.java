@@ -67,7 +67,6 @@ public class Level {
                 var  ry = y * TITLE_SIZE;
                 int finalBeforeBonus1 = beforeBonus;
                 if (IntStream.of(bonusTile).anyMatch(i -> i == finalBeforeBonus1)) {
-                    System.out.println("beforeBonus: " + beforeBonus);
                     currentTile = new TileBonus(rx, ry);
                     bonusBuilder.add(currentTile);
                     beforeBonus++;
