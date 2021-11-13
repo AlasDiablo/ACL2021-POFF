@@ -6,6 +6,7 @@ import fr.poweroff.labyrinthe.event.Event;
 import fr.poweroff.labyrinthe.event.TimeOutEvent;
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.entity.Player;
+import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
@@ -39,9 +40,9 @@ public class PacmanGame implements Game {
     /**
      * Minuteur du niveau
      */
-    private final Countdown  countdown;
+    public final Countdown  countdown;
     private       boolean    finish         = false;
-    private final int        score;
+    protected     int        score;
 
     /**
      * Renvoie les coordonnees du pacman
@@ -74,14 +75,26 @@ public class PacmanGame implements Game {
         countdown = new Countdown(60);
         // this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
         this.level.init("levels/level_1.json", this.player);
-        countdown.start();
         score = 0;
+    }
+
+    /**
+     * Mais en route le compteur
+     */
+    @Override
+    public void Compteur(){
+        countdown.start();
     }
 
     public static void onEvent(Event<?> event) {
         System.out.println(event.getName());
         if (event.getName().equals("TimeOut")) {
             INSTANCE.setFinish(true);
+        }else if (event.getName().equals("PlayerOnBonusTile")) {
+            INSTANCE.score ++;
+            TileBonus tb = (TileBonus) event.getData();
+            tb.changeType();
+            System.out.println("SCORE: " + INSTANCE.score);
         }
     }
 
@@ -105,7 +118,14 @@ public class PacmanGame implements Game {
             PacmanGame.onEvent(new TimeOutEvent());
         }
 
+        //Quitter le jeu
+        //quitter le jeu et la fenêtre
 
+    }
+
+    @Override
+    public boolean isFinishCompteur() {
+        return this.countdown.isFinish();
     }
 
     /**
@@ -132,5 +152,9 @@ public class PacmanGame implements Game {
      */
     public Countdown getCountdown() {
         return countdown;
+    }
+
+    public int getScore() {
+        return score;
     }
 }

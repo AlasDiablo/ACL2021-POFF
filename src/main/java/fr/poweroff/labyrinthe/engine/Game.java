@@ -15,9 +15,13 @@ public interface Game {
      */
     void evolve(Cmd userCmd);
 
+    void Compteur();
+
     /**
      * @return true si et seulement si le jeu est fini
      */
     boolean isFinished();
+
+    boolean isFinishCompteur();
 
 }

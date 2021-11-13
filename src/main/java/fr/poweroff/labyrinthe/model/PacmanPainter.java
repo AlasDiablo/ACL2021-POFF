@@ -44,6 +44,9 @@ public class PacmanPainter implements GamePainter {
         Font font = new Font("Courier New", Font.BOLD, 17);
         crayon.setFont(font);
         crayon.drawString(pacmanGame.getCountdown().getMinutesSeconds(), WIDTH / 2, 50);
+
+        crayon.drawString("Score: ", WIDTH / 2 - 25, 70);
+        crayon.drawString(String.valueOf(pacmanGame.getScore()), WIDTH / 2 + 45, 70);
     }
 
     @Override
