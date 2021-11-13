@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
  * <p>
  * controleur qui envoie des commandes au jeu
  */
-public interface GameController extends KeyListener , MouseListener {
+public interface GameController extends KeyListener, MouseListener {
 
     /**
      * quand on demande les commandes, le controleur retourne la commande en
@@ -19,9 +19,11 @@ public interface GameController extends KeyListener , MouseListener {
     Cmd getCommand();
 
     boolean menu();
+
     boolean niveau();
 
     void setMenu(boolean m);
+
     void setNiveau(boolean n);
 
 }

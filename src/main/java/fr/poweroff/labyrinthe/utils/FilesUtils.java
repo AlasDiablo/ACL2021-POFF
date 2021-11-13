@@ -16,12 +16,11 @@ import java.util.Objects;
 public class FilesUtils {
 
     private static final Map<String, BufferedImage> BUFFERED_IMAGE_MAP;
+    private static       ClassLoader                classLoader = null;
 
     static {
         BUFFERED_IMAGE_MAP = new HashMap<>();
     }
-
-    private static ClassLoader classLoader = null;
 
     public static void setClassLoader(ClassLoader classLoaderIn) {
         if (classLoader == null) classLoader = classLoaderIn;

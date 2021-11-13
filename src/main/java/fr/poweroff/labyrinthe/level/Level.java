@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.IntStream;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 public class Level {
     // Size on a title in pixel
-    public static final int          TITLE_SIZE = 11 * 2;
+    public static final int          TITLE_SIZE   = 11 * 2;
     public static final int          BONUS_NUMBER = 3;
     private final       LevelEvolve  levelEvolve;
     private             List<Tile>   levelDisposition;
@@ -122,8 +122,8 @@ public class Level {
         }
 
         int[] bonusTile = new int[BONUS_NUMBER];
-        for (int i = 0; i < BONUS_NUMBER;  i++) {
-           bonusTile[i] = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+        for (int i = 0; i < BONUS_NUMBER; i++) {
+            bonusTile[i] = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
         }
 
         var beforeStart = 0;
@@ -133,16 +133,16 @@ public class Level {
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
                 Tile currentTile;
-                var  rx = x * TITLE_SIZE;
-                var  ry = y * TITLE_SIZE;
-                int finalBeforeBonus1 = beforeBonus;
-                if (IntStream.of(bonusTile).anyMatch(i -> i == finalBeforeBonus1)) {
+                var  rx                = x * TITLE_SIZE;
+                var  ry                = y * TITLE_SIZE;
+                int  finalBeforeBonus1 = beforeBonus;
+                if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
+                    currentTile = new TileWall(rx, ry);
+                    wallBuilder.add(currentTile);
+                } else if (IntStream.of(bonusTile).anyMatch(i -> i == finalBeforeBonus1)) {
                     currentTile = new TileBonus(rx, ry);
                     bonusBuilder.add(currentTile);
                     beforeBonus++;
-                } else if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
-                    currentTile = new TileWall(rx, ry);
-                    wallBuilder.add(currentTile);
                 } else {
                     if (beforeStart == startPos) {
                         currentTile = new TileStart(rx, ry);
@@ -190,7 +190,9 @@ public class Level {
                 this.player.getCoordinate().getY(),
                 20, 20, this.levelEvolve.bonusTiles
         ).ifPresent(tile -> {
-            if (tile.getType() == Tile.Type.BONUS) {PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));}
+            if (tile.getType() == Tile.Type.BONUS) {
+                PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));
+            }
         });
     }
 
