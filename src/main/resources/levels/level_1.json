@@ -1,0 +1,26 @@
+[
+  [
+    "WALL",
+    "WALL",
+    "WALL",
+    "WALL"
+  ],
+  [
+    "WALL",
+    "BONUS",
+    "START",
+    "WALL"
+  ],
+  [
+    "WALL",
+    "END",
+    "GROUND",
+    "WALL"
+  ],
+  [
+    "WALL",
+    "WALL",
+    "WALL",
+    "WALL"
+  ]
+]

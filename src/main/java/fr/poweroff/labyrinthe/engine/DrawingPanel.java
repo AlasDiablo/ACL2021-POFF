@@ -37,7 +37,6 @@ public class DrawingPanel extends JPanel {
      * constructeur Il construit les images pour doublebuffering ainsi que le
      * Panel associe. Les images stockent le painter et on demande au panel la
      * mise a jour quand le painter est fini
-     *
      */
     public DrawingPanel(GamePainter painter) {
         super();
@@ -75,14 +74,14 @@ public class DrawingPanel extends JPanel {
         this.repaint();
     }
 
-    public void drawMenu(){
-        Menu m = new Menu(0,0);
+    public void drawMenu() {
+        Menu m = new Menu(0, 0);
         currentImage = m.getSprites();
         this.repaint();
     }
 
     public void drawNiveau() {
-        Level l = new Level(0,0);
+        Level l = new Level(0, 0);
         currentImage = l.getSprites();
         this.repaint();
     }
@@ -101,7 +100,7 @@ public class DrawingPanel extends JPanel {
 
 
     public void drawPerdu() {
-        Perdu p = new Perdu(0,0);
+        Perdu p = new Perdu(0, 0);
         currentImage = p.getSprites();
         this.repaint();
     }

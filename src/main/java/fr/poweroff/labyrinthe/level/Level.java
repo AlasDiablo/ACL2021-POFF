@@ -1,22 +1,27 @@
 package fr.poweroff.labyrinthe.level;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
+import fr.poweroff.labyrinthe.utils.Coordinate;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class Level {
     // Size on a title in pixel
-    public static final int          TITLE_SIZE = 11 * 2;
+    public static final int          TITLE_SIZE   = 11 * 2;
     public static final int          BONUS_NUMBER = 3;
     private final       LevelEvolve  levelEvolve;
     private             List<Tile>   levelDisposition;
@@ -25,18 +30,83 @@ public class Level {
     private             Entity       player;
 
     public Level() {
+        this.levelEvolve = new LevelEvolve();
+        this.init();
+    }
+
+    private void init() {
         this.levelDisposition = List.of();
         this.entities         = List.of();
         this.endTile          = null;
-        this.levelEvolve      = new LevelEvolve();
         this.player           = null;
     }
 
-    public void init(int width, int height, Entity player, Entity... entities) {
+    public void init(String levelFile, Entity player, Entity... entities) {
+        ImmutableMap.Builder<Coordinate, Tile.Type> levelMap = new ImmutableMap.Builder<>();
+        var                                         json     = FilesUtils.getJson(levelFile);
+        var                                         level    = json.getAsJsonArray();
+        var                                         x        = new AtomicInteger();
+        var                                         y        = new AtomicInteger();
+        level.forEach(lineElement -> {
+            var line = lineElement.getAsJsonArray();
+            line.forEach(tile -> {
+                var tileName = tile.getAsString();
+                levelMap.put(new Coordinate(x.getAndIncrement(), y.get()), Tile.Type.valueOf(tileName));
+            });
+            y.getAndIncrement();
+            x.set(0);
+        });
+        this.init(levelMap.build(), player, entities);
+    }
+
+    public void init(Map<Coordinate, Tile.Type> level, Entity player, Entity... entities) {
+        this.init();
         ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
-        this.player = player;
+
+        level.forEach((coordinate, type) -> {
+            var  rx = coordinate.getX() * TITLE_SIZE;
+            var  ry = coordinate.getY() * TITLE_SIZE;
+            Tile currentTile;
+            switch (type) {
+                case WALL:
+                    currentTile = new TileWall(rx, ry);
+                    wallBuilder.add(currentTile);
+                    break;
+                case BONUS:
+                    currentTile = new TileBonus(rx, ry);
+                    bonusBuilder.add(currentTile);
+                    break;
+                case END:
+                    currentTile = new TileEnd(rx, ry);
+                    this.endTile = currentTile;
+                    break;
+                case START:
+                    currentTile = new TileStart(rx, ry);
+                    player.getCoordinate().setX(rx);
+                    player.getCoordinate().setY(ry);
+                    break;
+                default:
+                    currentTile = new TileGround(rx, ry);
+                    break;
+            }
+            levelBuilder.add(currentTile);
+        });
+
+        this.player   = player;
+        this.entities = new ArrayList<>(List.of(entities));
+        this.entities.add(player);
+        this.levelDisposition       = levelBuilder.build();
+        this.levelEvolve.wallTiles  = wallBuilder.build();
+        this.levelEvolve.bonusTiles = bonusBuilder.build();
+    }
+
+    public void init(int width, int height, Entity player, Entity... entities) {
+        this.init();
+        ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
 
         var sizeX = (int) Math.floor((float) width / (float) TITLE_SIZE);
         var sizeY = (int) Math.floor((float) height / (float) TITLE_SIZE);
@@ -52,8 +122,8 @@ public class Level {
         }
 
         int[] bonusTile = new int[BONUS_NUMBER];
-        for (int i = 0; i < BONUS_NUMBER;  i++) {
-           bonusTile[i] = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+        for (int i = 0; i < BONUS_NUMBER; i++) {
+            bonusTile[i] = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
         }
 
         var beforeStart = 0;
@@ -63,16 +133,16 @@ public class Level {
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
                 Tile currentTile;
-                var  rx = x * TITLE_SIZE;
-                var  ry = y * TITLE_SIZE;
-                int finalBeforeBonus1 = beforeBonus;
-                if (IntStream.of(bonusTile).anyMatch(i -> i == finalBeforeBonus1)) {
+                var  rx                = x * TITLE_SIZE;
+                var  ry                = y * TITLE_SIZE;
+                int  finalBeforeBonus1 = beforeBonus;
+                if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
+                    currentTile = new TileWall(rx, ry);
+                    wallBuilder.add(currentTile);
+                } else if (IntStream.of(bonusTile).anyMatch(i -> i == finalBeforeBonus1)) {
                     currentTile = new TileBonus(rx, ry);
                     bonusBuilder.add(currentTile);
                     beforeBonus++;
-                } else if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
-                    currentTile = new TileWall(rx, ry);
-                    wallBuilder.add(currentTile);
                 } else {
                     if (beforeStart == startPos) {
                         currentTile = new TileStart(rx, ry);
@@ -91,6 +161,7 @@ public class Level {
                 levelBuilder.add(currentTile);
             }
         }
+        this.player   = player;
         this.entities = new ArrayList<>(List.of(entities));
         this.entities.add(player);
         this.levelDisposition       = levelBuilder.build();
@@ -119,7 +190,9 @@ public class Level {
                 this.player.getCoordinate().getY(),
                 20, 20, this.levelEvolve.bonusTiles
         ).ifPresent(tile -> {
-            if (tile.getType() == Tile.Type.BONUS) {PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));}
+            if (tile.getType() == Tile.Type.BONUS) {
+                PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));
+            }
         });
     }
 
@@ -131,8 +204,8 @@ public class Level {
         private List<Tile> wallTiles;
         private List<Tile> bonusTiles;
 
-        public boolean overlap(int x, int y, int w, int h) {
-            return overlap(x, y, w, h, this.wallTiles);
+        public boolean notOverlap(int x, int y, int w, int h) {
+            return !overlap(x, y, w, h, this.wallTiles);
         }
 
         public boolean overlap(int x, int y, int w, int h, List<Tile> tiles) {

@@ -2,24 +2,23 @@ package fr.poweroff.labyrinthe.level.tile;
 
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class TileBonus extends Tile {
 
     private Type state;
-    private int image;
+    private int  image;
 
     public TileBonus(int x, int y) {
-        super(x, y, ImageUtils.getImage("tile_bonus.png"), ImageUtils.getImage("tile_ground.png"));
+        super(x, y, FilesUtils.getImage("tile_bonus.png"), FilesUtils.getImage("tile_ground.png"));
         state = Type.BONUS;
         image = 0;
     }
 
     public TileBonus(Coordinate coordinate) {
-        super(coordinate, ImageUtils.getImage("tile_bonus.png"), ImageUtils.getImage("tile_ground.png"));
+        super(coordinate, FilesUtils.getImage("tile_bonus.png"), FilesUtils.getImage("tile_ground.png"));
         state = Type.BONUS;
     }
 
@@ -28,15 +27,15 @@ public class TileBonus extends Tile {
         int x = this.getCoordinate().getX();
         int y = this.getCoordinate().getY();
 
-    /**
-        int image;
+        /**
+         int image;
 
-        if (state == Type.BONUS) {
-            image = 0;
-        }else {
-            image = 1;
-        }
-     **/
+         if (state == Type.BONUS) {
+         image = 0;
+         }else {
+         image = 1;
+         }
+         **/
         graphics2D.drawImage(this.getSprites()[image], x, y, Level.TITLE_SIZE, Level.TITLE_SIZE, null);
     }
 
@@ -45,7 +44,7 @@ public class TileBonus extends Tile {
         return state;
     }
 
-    public void changeType(){
+    public void changeType() {
         if (state == Type.BONUS) {
             state = Type.GROUND;
             image = 1;

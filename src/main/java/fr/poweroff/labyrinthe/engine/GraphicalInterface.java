@@ -2,8 +2,6 @@ package fr.poweroff.labyrinthe.engine;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
 /**
@@ -18,11 +16,12 @@ public class GraphicalInterface {
      */
     private final DrawingPanel panel;
 
-    private JFrame f ;
+    private final JFrame f;
 
     /**
      * la construction de l'interface graphique: JFrame avec panel pour le game
-     *  @param gamePainter    l'afficheur a utiliser dans le moteur
+     *
+     * @param gamePainter    l'afficheur a utiliser dans le moteur
      * @param gameController l'afficheur a utiliser dans le moteur
      */
     public GraphicalInterface(GamePainter gamePainter, GameController gameController) {
@@ -92,7 +91,7 @@ public class GraphicalInterface {
     /**
      * Fonction pour quitter la map
      */
-    public void quit(){
+    public void quit() {
         this.f.dispose();
     }
 

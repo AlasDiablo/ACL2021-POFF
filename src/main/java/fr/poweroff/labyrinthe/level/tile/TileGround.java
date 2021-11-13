@@ -2,17 +2,17 @@ package fr.poweroff.labyrinthe.level.tile;
 
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 
 public class TileGround extends Tile {
     public TileGround(int x, int y) {
-        super(x, y, ImageUtils.getImage("tile_ground.png"));
+        super(x, y, FilesUtils.getImage("tile_ground.png"));
     }
 
     public TileGround(Coordinate coordinate) {
-        super(coordinate, ImageUtils.getImage("tile_ground.png"));
+        super(coordinate, FilesUtils.getImage("tile_ground.png"));
     }
 
     @Override

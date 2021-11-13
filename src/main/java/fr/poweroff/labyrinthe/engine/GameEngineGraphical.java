@@ -1,9 +1,5 @@
 package fr.poweroff.labyrinthe.engine;
 
-import fr.poweroff.labyrinthe.engine.menu.Menu;
-
-import java.awt.image.BufferedImage;
-
 /**
  * @author Horatiu Cirstea, Vincent Thomas
  * <p>
@@ -58,7 +54,7 @@ public class GameEngineGraphical {
         this.gui = new GraphicalInterface(this.gamePainter, this.gameController);
 
         menuEnCour = true;
-        niveau = false;
+        niveau     = false;
 
         menu();
 
@@ -68,24 +64,24 @@ public class GameEngineGraphical {
 
     }
 
-    private void menu(){
+    private void menu() {
         //boucle de menu
-        while(menuEnCour) {
+        while (menuEnCour) {
             Cmd c = this.gameController.getCommand();
             this.gameController.setMenu(true);
             //this.game.evolve(c);
             this.gui.paintMenu();
 
             //Lancement du jeu (arrêt de la boucle du menu)
-            if(c.name().equals("PLAY")) {
+            if (c.name().equals("PLAY")) {
                 menuEnCour = false;
             }
 
-            if(c.name().equals("QUIT"))
+            if (c.name().equals("QUIT"))
                 this.gui.quit();
 
-            if(c.name().equals("LEVELS")) {
-                niveau = true;
+            if (c.name().equals("LEVELS")) {
+                niveau     = true;
                 menuEnCour = false;
             }
 
@@ -94,13 +90,13 @@ public class GameEngineGraphical {
         this.gameController.setMenu(false);
     }
 
-    private void niveau(){
-        while(niveau){
+    private void niveau() {
+        while (niveau) {
             Cmd c = this.gameController.getCommand();
             this.gameController.setNiveau(true);
             this.gui.paintNiveau();
 
-            if(c.name().equals("LEVEL1"))
+            if (c.name().equals("LEVEL1"))
                 niveau = false;
         }
         this.gameController.setNiveau(false);
@@ -120,7 +116,7 @@ public class GameEngineGraphical {
             // met en attente
             Thread.sleep(33, 333);
 
-            if(this.game.isFinishCompteur()){
+            if (this.game.isFinishCompteur()) {
                 this.gui.paintPerdu();
             }
         }

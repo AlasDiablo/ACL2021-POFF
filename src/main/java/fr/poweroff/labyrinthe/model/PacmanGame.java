@@ -9,7 +9,7 @@ import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -24,7 +24,8 @@ import java.util.Random;
  */
 public class PacmanGame implements Game {
 
-    public static final Random RANDOM;
+    public static final Random     RANDOM;
+    private static      PacmanGame INSTANCE;
 
     static {
         var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
@@ -32,32 +33,21 @@ public class PacmanGame implements Game {
         RANDOM = new Random(seed);
     }
 
-    final          Level      level;
-    private static PacmanGame INSTANCE;
-    final          Player     player;
-
-    private final Coordinate pacmanPosition = new Coordinate(0, 0);
     /**
      * Minuteur du niveau
      */
-    public final Countdown  countdown;
-    private       boolean    finish         = false;
+    public final  Countdown  countdown;
+    final         Level      level;
+    final         Player     player;
+    private final Coordinate pacmanPosition = new Coordinate(0, 0);
     protected     int        score;
-
-    /**
-     * Renvoie les coordonnees du pacman
-     *
-     * @return les coordonnee du pacman
-     */
-    public Coordinate getPacmanPosition() {
-        return pacmanPosition;
-    }
+    private       boolean    finish         = false;
 
     /**
      * constructeur avec fichier source pour le help
      */
     public PacmanGame(String source) {
-        ImageUtils.setClassLoader(this.getClass().getClassLoader());
+        FilesUtils.setClassLoader(this.getClass().getClassLoader());
         INSTANCE    = this;
         this.level  = new Level();
         this.player = new Player(new Coordinate(11, 11));
@@ -74,27 +64,37 @@ public class PacmanGame implements Game {
         }
         countdown = new Countdown(60);
         this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
+        //this.level.init("levels/level_1.json", this.player);
         score = 0;
-    }
-
-    /**
-     * Mais en route le compteur
-     */
-    @Override
-    public void Compteur(){
-        countdown.start();
     }
 
     public static void onEvent(Event<?> event) {
         System.out.println(event.getName());
         if (event.getName().equals("TimeOut")) {
             INSTANCE.setFinish(true);
-        }else if (event.getName().equals("PlayerOnBonusTile")) {
-            INSTANCE.score ++;
+        } else if (event.getName().equals("PlayerOnBonusTile")) {
+            INSTANCE.score++;
             TileBonus tb = (TileBonus) event.getData();
             tb.changeType();
             System.out.println("SCORE: " + INSTANCE.score);
         }
+    }
+
+    /**
+     * Renvoie les coordonnees du pacman
+     *
+     * @return les coordonnee du pacman
+     */
+    public Coordinate getPacmanPosition() {
+        return pacmanPosition;
+    }
+
+    /**
+     * Mais en route le compteur
+     */
+    @Override
+    public void Compteur() {
+        countdown.start();
     }
 
     /**

@@ -12,7 +12,7 @@ import java.awt.event.MouseEvent;
  * <p>
  * controleur de type KeyListener
  */
-public class PacmanController implements GameController  {
+public class PacmanController implements GameController {
 
     /**
      * commande en cours
@@ -145,7 +145,7 @@ public class PacmanController implements GameController  {
         int x = mouseEvent.getX();
         int y = mouseEvent.getY();
         //Condition d'emplacement de la souris sur le menu principal
-        if(menu) {
+        if (menu) {
             //Clic sur "JOUER"
             if (x > 197 && y > 174 && x < 332 && y < 215) {
                 this.other = Cmd.PLAY;
@@ -164,7 +164,7 @@ public class PacmanController implements GameController  {
             }
         }
 
-        if(niveaux) {
+        if (niveaux) {
             //Condition d'emplacement de la souris sur le menu de difficulté
             //Clic sur "Facile"
             if (x > 220 && y > 165 && x < 348 && y < 202) {
@@ -191,7 +191,7 @@ public class PacmanController implements GameController  {
 
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
-
+        this.other = null;
     }
 
     @Override

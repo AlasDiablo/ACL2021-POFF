@@ -1,26 +1,26 @@
 package fr.poweroff.labyrinthe.engine.menu;
 
 import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Perdu {
-    public static final int  TITLE_SIZE = 275 * 2;
+    public static final int TITLE_SIZE = 275 * 2;
 
-    private final Coordinate coordinate;
-    private final BufferedImage sprites = ImageUtils.getImage("game_over.jpg");
+    private final Coordinate    coordinate;
+    private final BufferedImage sprites = FilesUtils.getImage("game_over.jpg");
 
 
     public Perdu(int x, int y) {
-        coordinate = new Coordinate(x,y);
+        coordinate = new Coordinate(x, y);
     }
-
 
 
     /**
      * Fonction de dessin de l'image
+     *
      * @param graphics2D le graphic sur lequel dessiner
      */
     public void draw(Graphics2D graphics2D) {

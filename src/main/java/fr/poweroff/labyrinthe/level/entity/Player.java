@@ -3,7 +3,7 @@ package fr.poweroff.labyrinthe.level.entity;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.level.Level.LevelEvolve;
 import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 
@@ -14,10 +14,10 @@ public class Player extends Entity {
     public Player(Coordinate coordinate) {
         super(
                 coordinate,
-                ImageUtils.getImage("pacman_right.png"),
-                ImageUtils.getImage("pacman_down.png"),
-                ImageUtils.getImage("pacman_left.png"),
-                ImageUtils.getImage("pacman_up.png")
+                FilesUtils.getImage("pacman_right.png"),
+                FilesUtils.getImage("pacman_down.png"),
+                FilesUtils.getImage("pacman_left.png"),
+                FilesUtils.getImage("pacman_up.png")
         );
         this.direction = "RIGHT";
     }
@@ -47,25 +47,25 @@ public class Player extends Entity {
 
         if (cmd == Cmd.UP || cmd == Cmd.LEFT_UP || cmd == Cmd.RIGHT_UP) {
             var newY = y - MOVE_SPEED;
-            if (!levelEvolve.overlap(x, newY, 20, 20)) this.coordinate.setY(newY);
+            if (levelEvolve.notOverlap(x, newY, 20, 20)) this.coordinate.setY(newY);
             this.direction = Cmd.UP.name();
         }
 
         if (cmd == Cmd.DOWN || cmd == Cmd.LEFT_DOWN || cmd == Cmd.RIGHT_DOWN) {
             var newY = y + MOVE_SPEED;
-            if (!levelEvolve.overlap(x, newY, 20, 20)) this.coordinate.setY(newY);
+            if (levelEvolve.notOverlap(x, newY, 20, 20)) this.coordinate.setY(newY);
             this.direction = Cmd.DOWN.name();
         }
 
         if (cmd == Cmd.LEFT || cmd == Cmd.LEFT_DOWN || cmd == Cmd.LEFT_UP) {
             var newX = x - MOVE_SPEED;
-            if (!levelEvolve.overlap(newX, y, 20, 20)) this.coordinate.setX(newX);
+            if (levelEvolve.notOverlap(newX, y, 20, 20)) this.coordinate.setX(newX);
             this.direction = Cmd.LEFT.name();
         }
 
         if (cmd == Cmd.RIGHT || cmd == Cmd.RIGHT_DOWN || cmd == Cmd.RIGHT_UP) {
             var newX = x + MOVE_SPEED;
-            if (!levelEvolve.overlap(newX, y, 20, 20)) this.coordinate.setX(newX);
+            if (levelEvolve.notOverlap(newX, y, 20, 20)) this.coordinate.setX(newX);
             this.direction = Cmd.RIGHT.name();
         }
     }
