@@ -5,6 +5,7 @@ import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.event.Event;
 import fr.poweroff.labyrinthe.event.TimeOutEvent;
 import fr.poweroff.labyrinthe.level.Level;
+import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.utils.Coordinate;
@@ -14,6 +15,9 @@ import fr.poweroff.labyrinthe.utils.ImageUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -32,9 +36,10 @@ public class PacmanGame implements Game {
         RANDOM = new Random(seed);
     }
 
-    final          Level      level;
-    private static PacmanGame INSTANCE;
-    final          Player     player;
+    final          Level         level;
+    private static PacmanGame    INSTANCE;
+    final          Player        player;
+    private     ArrayList<Monster> monsters;
 
     private final Coordinate pacmanPosition = new Coordinate(0, 0);
     /**
@@ -61,6 +66,12 @@ public class PacmanGame implements Game {
         INSTANCE    = this;
         this.level  = new Level();
         this.player = new Player(new Coordinate(11, 11));
+        this.monsters = new ArrayList<>() {{
+                add(new Monster(new Coordinate(20, 20)));
+                add(new Monster(new Coordinate(21, 21)));
+                add(new Monster(new Coordinate(22, 22)));
+        }};
+
         BufferedReader helpReader;
         try {
             helpReader = new BufferedReader(new FileReader(source));
@@ -73,7 +84,7 @@ public class PacmanGame implements Game {
             System.out.println("Help not available");
         }
         countdown = new Countdown(60);
-        this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
+        this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player, this.monsters.get(0), this.monsters.get(1), this.monsters.get(2));
         countdown.start();
         score = 0;
     }
