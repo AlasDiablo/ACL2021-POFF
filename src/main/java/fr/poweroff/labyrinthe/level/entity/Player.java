@@ -26,16 +26,16 @@ public class Player extends Entity {
     public void draw(Graphics2D graphics) {
         switch (direction) {
             case "UP":
-                graphics.drawImage(this.getSprite()[3], this.getCoordinate().getX(), this.getCoordinate().getY(), 20, 20, null);
+                graphics.drawImage(this.getSprite()[3], this.getCoordinate().getX(), this.getCoordinate().getY(), ENTITY_SIZE, ENTITY_SIZE, null);
                 break;
             case "DOWN":
-                graphics.drawImage(this.getSprite()[1], this.getCoordinate().getX(), this.getCoordinate().getY(), 20, 20, null);
+                graphics.drawImage(this.getSprite()[1], this.getCoordinate().getX(), this.getCoordinate().getY(), ENTITY_SIZE, ENTITY_SIZE, null);
                 break;
             case "LEFT":
-                graphics.drawImage(this.getSprite()[2], this.getCoordinate().getX(), this.getCoordinate().getY(), 20, 20, null);
+                graphics.drawImage(this.getSprite()[2], this.getCoordinate().getX(), this.getCoordinate().getY(), ENTITY_SIZE, ENTITY_SIZE, null);
                 break;
             case "RIGHT":
-                graphics.drawImage(this.getSprite()[0], this.getCoordinate().getX(), this.getCoordinate().getY(), 20, 20, null);
+                graphics.drawImage(this.getSprite()[0], this.getCoordinate().getX(), this.getCoordinate().getY(), ENTITY_SIZE, ENTITY_SIZE, null);
                 break;
         }
     }
@@ -47,25 +47,29 @@ public class Player extends Entity {
 
         if (cmd == Cmd.UP || cmd == Cmd.LEFT_UP || cmd == Cmd.RIGHT_UP) {
             var newY = y - MOVE_SPEED;
-            if (levelEvolve.notOverlap(x, newY, 20, 20)) this.coordinate.setY(newY);
+            if (levelEvolve.notOverlap(x, newY, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setY(newY);
+            else if (levelEvolve.notOverlap(x, y - 1, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setY(y - 1);
             this.direction = Cmd.UP.name();
         }
 
         if (cmd == Cmd.DOWN || cmd == Cmd.LEFT_DOWN || cmd == Cmd.RIGHT_DOWN) {
             var newY = y + MOVE_SPEED;
-            if (levelEvolve.notOverlap(x, newY, 20, 20)) this.coordinate.setY(newY);
+            if (levelEvolve.notOverlap(x, newY, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setY(newY);
+            else if (levelEvolve.notOverlap(x, y + 1, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setY(y + 1);
             this.direction = Cmd.DOWN.name();
         }
 
         if (cmd == Cmd.LEFT || cmd == Cmd.LEFT_DOWN || cmd == Cmd.LEFT_UP) {
             var newX = x - MOVE_SPEED;
-            if (levelEvolve.notOverlap(newX, y, 20, 20)) this.coordinate.setX(newX);
+            if (levelEvolve.notOverlap(newX, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(newX);
+            else if (levelEvolve.notOverlap(x - 1, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(x - 1);
             this.direction = Cmd.LEFT.name();
         }
 
         if (cmd == Cmd.RIGHT || cmd == Cmd.RIGHT_DOWN || cmd == Cmd.RIGHT_UP) {
             var newX = x + MOVE_SPEED;
-            if (levelEvolve.notOverlap(newX, y, 20, 20)) this.coordinate.setX(newX);
+            if (levelEvolve.notOverlap(newX, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(newX);
+            else if (levelEvolve.notOverlap(x + 1, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(x + 1);
             this.direction = Cmd.RIGHT.name();
         }
     }

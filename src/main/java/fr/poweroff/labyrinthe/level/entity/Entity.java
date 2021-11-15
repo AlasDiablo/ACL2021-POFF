@@ -8,9 +8,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Entity {
-    protected final int             MOVE_SPEED = 4;
-    protected final Coordinate      coordinate;
-    protected final BufferedImage[] sprite;
+    public static final int             ENTITY_SIZE = 18;
+    protected final     int             MOVE_SPEED  = 4;
+    protected final     Coordinate      coordinate;
+    protected final     BufferedImage[] sprite;
 
     public Entity(Coordinate coordinate, BufferedImage sprite) {
         this.coordinate = coordinate;

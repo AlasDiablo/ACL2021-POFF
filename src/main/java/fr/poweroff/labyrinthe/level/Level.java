@@ -84,8 +84,8 @@ public class Level {
                     break;
                 case START:
                     currentTile = new TileStart(rx, ry);
-                    player.getCoordinate().setX(rx);
-                    player.getCoordinate().setY(ry);
+                    player.getCoordinate().setX(rx + 2);
+                    player.getCoordinate().setY(ry + 2);
                     break;
                 default:
                     currentTile = new TileGround(rx, ry);
@@ -146,8 +146,8 @@ public class Level {
                 } else {
                     if (beforeStart == startPos) {
                         currentTile = new TileStart(rx, ry);
-                        player.getCoordinate().setX(rx);
-                        player.getCoordinate().setY(ry);
+                        player.getCoordinate().setX(rx + 2);
+                        player.getCoordinate().setY(ry + 2);
                     } else if (beforeEnd == endPos) {
                         currentTile  = new TileEnd(rx, ry);
                         this.endTile = currentTile;
@@ -172,6 +172,20 @@ public class Level {
     public void draw(Graphics2D graphics) {
         this.levelDisposition.forEach(tile -> tile.draw(graphics));
         this.entities.forEach(entity -> entity.draw(graphics));
+        this.drawHitBox(graphics);
+    }
+
+    private void drawHitBox(Graphics2D graphics) {
+        this.levelDisposition.stream().filter(tile -> !tile.getType().equals(Tile.Type.GROUND)).forEach(tile -> {
+            var pos = tile.getCoordinate();
+            graphics.setColor(Color.RED);
+            graphics.drawRect(pos.getX(), pos.getY(), TITLE_SIZE, TITLE_SIZE);
+        });
+        this.entities.forEach(entity -> {
+            var pos = entity.getCoordinate();
+            graphics.setColor(Color.BLUE);
+            graphics.drawRect(pos.getX(), pos.getY(), Entity.ENTITY_SIZE, Entity.ENTITY_SIZE);
+        });
     }
 
     public void evolve(Cmd cmd) {
@@ -179,7 +193,7 @@ public class Level {
         if (this.levelEvolve.overlap(
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
-                20, 20, List.of(this.endTile)
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, List.of(this.endTile)
         )
         ) {
             PacmanGame.onEvent(new PlayerOnEndTileEvent(this.endTile));
@@ -188,7 +202,7 @@ public class Level {
         this.levelEvolve.overlapFindAny(
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
-                20, 20, this.levelEvolve.bonusTiles
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.levelEvolve.bonusTiles
         ).ifPresent(tile -> {
             if (tile.getType() == Tile.Type.BONUS) {
                 PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));
