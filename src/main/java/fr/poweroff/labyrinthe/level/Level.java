@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 public class Level {
     // Size on a title in pixel
@@ -28,6 +27,7 @@ public class Level {
     private             List<Entity> entities;
     private             Tile         endTile;
     private             Entity       player;
+    private             int          bonusNumber;
 
     public Level() {
         this.levelEvolve = new LevelEvolve();
@@ -39,6 +39,7 @@ public class Level {
         this.entities         = List.of();
         this.endTile          = null;
         this.player           = null;
+        this.bonusNumber      = 0;
     }
 
     public void init(String levelFile, Entity player, Entity... entities) {
@@ -51,6 +52,9 @@ public class Level {
             var line = lineElement.getAsJsonArray();
             line.forEach(tile -> {
                 var tileName = tile.getAsString();
+                if (tileName.equals(Tile.Type.BONUS.name())) {
+                    this.bonusNumber++;
+                }
                 levelMap.put(new Coordinate(x.getAndIncrement(), y.get()), Tile.Type.valueOf(tileName));
             });
             y.getAndIncrement();
@@ -118,12 +122,22 @@ public class Level {
         var endPos   = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
 
         while (startPos == endPos) {
-            endPos = (int) Math.floor((surface - perimeter) * Math.random());
+            endPos = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
         }
 
-        int[] bonusTile = new int[BONUS_NUMBER];
+        var bonusNumber = PacmanGame.RANDOM.ints(
+                1,
+                BONUS_NUMBER,
+                Math.max(BONUS_NUMBER, (int) Math.floor(surface / 8f))
+        ).findAny().orElse(BONUS_NUMBER);
+
+        List<Integer> bonusTile = new ArrayList<>();
         for (int i = 0; i < BONUS_NUMBER; i++) {
-            bonusTile[i] = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+            int bonusIndex;
+            do {
+                bonusIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+            } while (bonusTile.contains(bonusIndex));
+            bonusTile.add(bonusIndex);
         }
 
         var beforeStart = 0;
@@ -135,16 +149,14 @@ public class Level {
                 Tile currentTile;
                 var  rx                = x * TITLE_SIZE;
                 var  ry                = y * TITLE_SIZE;
-                int  finalBeforeBonus1 = beforeBonus;
                 if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
                     currentTile = new TileWall(rx, ry);
                     wallBuilder.add(currentTile);
-                } else if (IntStream.of(bonusTile).anyMatch(i -> i == finalBeforeBonus1)) {
-                    currentTile = new TileBonus(rx, ry);
-                    bonusBuilder.add(currentTile);
-                    beforeBonus++;
                 } else {
-                    if (beforeStart == startPos) {
+                    if (bonusTile.contains(beforeBonus)) {
+                        currentTile = new TileBonus(rx, ry);
+                        bonusBuilder.add(currentTile);
+                    } else if (beforeStart == startPos) {
                         currentTile = new TileStart(rx, ry);
                         player.getCoordinate().setX(rx);
                         player.getCoordinate().setY(ry);
@@ -161,8 +173,9 @@ public class Level {
                 levelBuilder.add(currentTile);
             }
         }
-        this.player   = player;
-        this.entities = new ArrayList<>(List.of(entities));
+        this.player      = player;
+        this.bonusNumber = bonusNumber;
+        this.entities    = new ArrayList<>(List.of(entities));
         this.entities.add(player);
         this.levelDisposition       = levelBuilder.build();
         this.levelEvolve.wallTiles  = wallBuilder.build();
