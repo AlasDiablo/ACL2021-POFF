@@ -121,12 +121,6 @@ public class Level {
             endPos = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
         }
 
-//        var bonusNumber = PacmanGame.RANDOM.ints(
-//                1,
-//                BONUS_NUMBER,
-//                Math.max(BONUS_NUMBER, (int) Math.floor(surface / 16f))
-//        ).findAny().orElse(BONUS_NUMBER);
-
         List<Integer> bonusTile = new ArrayList<>();
         for (int i = 0; i < BONUS_NUMBER; i++) {
             int bonusIndex;
@@ -136,35 +130,50 @@ public class Level {
             bonusTile.add(bonusIndex);
         }
 
-        var beforeStart = 0;
-        var beforeEnd   = 0;
-        int beforeBonus = 0;
+        var wallNumber = PacmanGame.RANDOM.ints(
+                1,
+                WALL_NUMBER,
+                Math.max(WALL_NUMBER, (int) Math.floor(surface / 16f))
+        ).findAny().orElse(WALL_NUMBER);
+
+        List<Integer> wallTile = new ArrayList<>();
+        for (int i = 0; i < wallNumber; i++) {
+            int wallIndex;
+            do {
+                wallIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+            } while (wallTile.contains(wallIndex) || bonusTile.contains(wallIndex) || wallIndex == startPos || wallIndex == endPos);
+            wallTile.add(wallIndex);
+        }
+
+
+        var levelIndex = 0;
 
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
                 Tile currentTile;
-                var  rx                = x * TITLE_SIZE;
-                var  ry                = y * TITLE_SIZE;
+                var  rx = x * TITLE_SIZE;
+                var  ry = y * TITLE_SIZE;
                 if ((x == 0 || x == sizeX - 1) || (y == 0 || y == sizeY - 1)) {
                     currentTile = new TileWall(rx, ry);
                     wallBuilder.add(currentTile);
                 } else {
-                    if (bonusTile.contains(beforeBonus)) {
+                    if (bonusTile.contains(levelIndex)) {
                         currentTile = new TileBonus(rx, ry);
                         bonusBuilder.add(currentTile);
-                    } else if (beforeStart == startPos) {
+                    } else if (wallTile.contains(levelIndex)) {
+                        currentTile = new TileWall(rx, ry);
+                        wallBuilder.add(currentTile);
+                    } else if (levelIndex == startPos) {
                         currentTile = new TileStart(rx, ry);
                         player.getCoordinate().setX(rx);
                         player.getCoordinate().setY(ry);
-                    } else if (beforeEnd == endPos) {
+                    } else if (levelIndex == endPos) {
                         currentTile  = new TileEnd(rx, ry);
                         this.endTile = currentTile;
                     } else {
                         currentTile = new TileGround(rx, ry);
                     }
-                    beforeStart++;
-                    beforeEnd++;
-                    beforeBonus++;
+                    levelIndex++;
                 }
                 levelBuilder.add(currentTile);
             }
