@@ -16,7 +16,7 @@ public class Monster extends Entity {
                 coordinate,
                 ImageUtils.getImage("monster.png")
         );
-        this.direction = "RIGHT";
+        this.direction = "DOWN";
     }
 
     @Override
@@ -28,5 +28,27 @@ public class Monster extends Entity {
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         //TODO Depalcement des monstre en ligne
+        var x = this.coordinate.getX();
+        var y = this.coordinate.getY();
+
+        if (this.direction.equals(Cmd.UP.name())) {
+            var newY = y - MOVE_SPEED;
+            if (!levelEvolve.overlap(x, newY, 20, 20)) {
+                this.coordinate.setY(newY);
+                this.direction = Cmd.UP.name();
+            }else {
+                this.direction = Cmd.DOWN.name();
+            }
+        } else if (this.direction.equals(Cmd.DOWN.name())) {
+            var newY = y + MOVE_SPEED;
+            if (!levelEvolve.overlap(x, newY, 20, 20)) {
+                this.coordinate.setY(newY);
+                this.direction = Cmd.DOWN.name();
+            }else {
+                this.direction = Cmd.UP.name();
+            }
+
+        }
+
     }
 }
