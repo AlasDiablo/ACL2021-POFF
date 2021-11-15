@@ -7,10 +7,21 @@ import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 
+/**
+ * Class how define the player entity
+ */
 public class Player extends Entity {
 
+    /**
+     * The last direction of the player
+     */
     private String direction;
 
+    /**
+     * Default constructor of the player
+     *
+     * @param coordinate the start position of the player
+     */
     public Player(Coordinate coordinate) {
         super(
                 coordinate,
@@ -22,6 +33,11 @@ public class Player extends Entity {
         this.direction = "RIGHT";
     }
 
+    /**
+     * Fonction used to draw the player
+     *
+     * @param graphics Drawing object
+     */
     @Override
     public void draw(Graphics2D graphics) {
         switch (direction) {
@@ -40,6 +56,12 @@ public class Player extends Entity {
         }
     }
 
+    /**
+     * Function used to tick the player
+     *
+     * @param cmd         the current command
+     * @param levelEvolve the level evolve instance use for overlapping check
+     */
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         var x = this.coordinate.getX();
