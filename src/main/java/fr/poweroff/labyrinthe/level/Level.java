@@ -296,7 +296,7 @@ public class Level {
         // tick all entities
         this.entities.forEach(entity -> entity.evolve(cmd, this.levelEvolve));
 
-        // Ckeck if player is on the end tile
+        // Check if player is on the end tile
         if (this.levelEvolve.overlap(
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
