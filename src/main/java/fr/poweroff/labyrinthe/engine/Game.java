@@ -17,6 +17,8 @@ public interface Game {
 
     void Compteur();
 
+    void setFinish(boolean finish);
+
     /**
      * @return true si et seulement si le jeu est fini
      */

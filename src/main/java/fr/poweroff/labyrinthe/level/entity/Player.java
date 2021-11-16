@@ -8,11 +8,26 @@ import fr.poweroff.labyrinthe.utils.FilesUtils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Class how define the player entity
+ */
 public class Player extends Entity {
 
+    /**
+     * The player sprite path
+     */
     private static final String SPRITE_PATH = "assets/player/";
+
+    /**
+     * The current player sprite
+     */
     private              int    spriteIndex;
 
+    /**
+     * Default constructor of the player
+     *
+     * @param coordinate the start position of the player
+     */
     public Player(Coordinate coordinate) {
         super(
                 coordinate,
@@ -28,10 +43,20 @@ public class Player extends Entity {
         this.spriteIndex = 0;
     }
 
+    /**
+     * Funcion use to get the player sprite
+     * @param name the name of the sprite
+     * @return the sprite as a buffered image
+     */
     private static BufferedImage getSprite(String name) {
         return FilesUtils.getImage(SPRITE_PATH + name);
     }
 
+    /**
+     * Fonction used to draw the player
+     *
+     * @param graphics Drawing object
+     */
     @Override
     public void draw(Graphics2D graphics) {
         graphics.drawImage(
@@ -42,6 +67,12 @@ public class Player extends Entity {
         );
     }
 
+    /**
+     * Function used to tick the player
+     *
+     * @param cmd         the current command
+     * @param levelEvolve the level evolve instance use for overlapping check
+     */
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         var x = this.coordinate.getX();
