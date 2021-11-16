@@ -77,6 +77,8 @@ public class PacmanGame implements Game {
             TileBonus tb = (TileBonus) event.getData();
             tb.changeType();
             System.out.println("SCORE: " + INSTANCE.score);
+        } else if (event.getName().equals("PlayerOnEndTile")) {
+            INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
         }
     }
 
