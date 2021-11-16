@@ -117,7 +117,8 @@ public class GameEngineGraphical {
             Thread.sleep(33, 333);
 
             if (this.game.isFinishCompteur()) {
-                this.gui.paintPerdu();
+                this.gui.paintPerdu(); //Affichage de la page game_over
+                this.game.setFinish(true); //Pour mettre fin au jeu
             }
         }
     }
