@@ -172,7 +172,7 @@ public class Level {
     public void draw(Graphics2D graphics) {
         this.levelDisposition.forEach(tile -> tile.draw(graphics));
         this.entities.forEach(entity -> entity.draw(graphics));
-        this.drawHitBox(graphics);
+        // this.drawHitBox(graphics);
     }
 
     private void drawHitBox(Graphics2D graphics) {

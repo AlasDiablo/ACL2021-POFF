@@ -62,7 +62,7 @@ public class PacmanGame implements Game {
         } catch (IOException e) {
             System.out.println("Help not available");
         }
-        countdown = new Countdown(10);
+        countdown = new Countdown(60);
         this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
         //this.level.init("levels/level_1.json", this.player);
         score = 0;
