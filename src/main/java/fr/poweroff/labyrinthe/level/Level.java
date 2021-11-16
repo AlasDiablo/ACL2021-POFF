@@ -144,8 +144,8 @@ public class Level {
                 // Create start tile and place the player onto
                 case START:
                     currentTile = new TileStart(rx, ry);
-                    player.getCoordinate().setX(rx);
-                    player.getCoordinate().setY(ry);
+                    player.getCoordinate().setX(rx + 2);
+                    player.getCoordinate().setY(ry + 2);
                     break;
                 // Create ground tile
                 default:
@@ -251,8 +251,8 @@ public class Level {
                         // Create start tile and place player onto
                     } else if (levelIndex == startPos) {
                         currentTile = new TileStart(rx, ry);
-                        player.getCoordinate().setX(rx);
-                        player.getCoordinate().setY(ry);
+                        player.getCoordinate().setX(rx + 2);
+                        player.getCoordinate().setY(ry + 2);
                         // Create end tile
                     } else if (levelIndex == endPos) {
                         currentTile  = new TileEnd(rx, ry);
@@ -285,6 +285,24 @@ public class Level {
         this.levelDisposition.forEach(tile -> tile.draw(graphics));
         // Draw all entities
         this.entities.forEach(entity -> entity.draw(graphics));
+        // this.drawHitBox(graphics);
+    }
+
+    /**
+     * Function used to draw the hit box of each element
+     * @param graphics Drawing object
+     */
+    private void drawHitBox(Graphics2D graphics) {
+        this.levelDisposition.stream().filter(tile -> !tile.getType().equals(Tile.Type.GROUND)).forEach(tile -> {
+            var pos = tile.getCoordinate();
+            graphics.setColor(Color.RED);
+            graphics.drawRect(pos.getX(), pos.getY(), TITLE_SIZE, TITLE_SIZE);
+        });
+        this.entities.forEach(entity -> {
+            var pos = entity.getCoordinate();
+            graphics.setColor(Color.BLUE);
+            graphics.drawRect(pos.getX(), pos.getY(), Entity.ENTITY_SIZE, Entity.ENTITY_SIZE);
+        });
     }
 
     /**
@@ -300,7 +318,7 @@ public class Level {
         if (this.levelEvolve.overlap(
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
-                20, 20, List.of(this.endTile)
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, List.of(this.endTile)
         )
         ) {
             PacmanGame.onEvent(new PlayerOnEndTileEvent(this.endTile));
@@ -310,7 +328,7 @@ public class Level {
         this.levelEvolve.overlapFindAny(
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
-                20, 20, this.levelEvolve.bonusTiles
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.levelEvolve.bonusTiles
         ).ifPresent(tile -> {
             if (tile.getType() == Tile.Type.BONUS) { // check if the tile has already been visited
                 PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));

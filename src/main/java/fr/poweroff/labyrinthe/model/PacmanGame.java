@@ -134,6 +134,7 @@ public class PacmanGame implements Game {
      *
      * @param finish l'etat du jeu
      */
+    @Override
     public void setFinish(boolean finish) {
         this.finish = finish;
     }
