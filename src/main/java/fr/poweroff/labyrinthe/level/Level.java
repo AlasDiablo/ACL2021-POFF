@@ -12,10 +12,8 @@ import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 public class Level {
@@ -42,12 +40,6 @@ public class Level {
         ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
         this.player = player;
 
-        ArrayList<Monster> monsters = new ArrayList<>() {{
-            add((Monster) entities[0]);
-            add((Monster) entities[1]);
-            add((Monster) entities[2]);
-        }};
-
         var sizeX = (int) Math.floor((float) width / (float) TITLE_SIZE);
         var sizeY = (int) Math.floor((float) height / (float) TITLE_SIZE);
 
@@ -65,15 +57,11 @@ public class Level {
         for (int i = 0; i < BONUS_NUMBER;  i++) {
            bonusTile[i] = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
         }
-        int[] monstersPositon = new int[monsters.size()];
-        for (int i = 0; i < monsters.size();  i++) {
-           monstersPositon[i] = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
-        }
+
 
         var beforeStart = 0;
         var beforeEnd   = 0;
         int beforeBonus = 0;
-        int beforeMonster = 0;
 
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
@@ -98,18 +86,10 @@ public class Level {
                         this.endTile = currentTile;
                     }else {
                         currentTile = new TileGround(rx, ry);
-                        int finalBeforeMonster = beforeMonster;
-                        if (IntStream.of(monstersPositon).anyMatch(i -> i == finalBeforeMonster)) {
-                            System.out.println("MONSTER");
-                            int index = Ints.indexOf(monstersPositon, finalBeforeMonster);
-                            monsters.get(index).getCoordinate().setX(rx);
-                            monsters.get(index).getCoordinate().setY(ry);
-                        }
                     }
                     beforeStart++;
                     beforeEnd++;
                     beforeBonus++;
-                    beforeMonster++;
                 }
                 levelBuilder.add(currentTile);
             }
@@ -121,6 +101,45 @@ public class Level {
         this.levelDisposition       = levelBuilder.build();
         this.levelEvolve.wallTiles  = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
+
+        ArrayList<Monster> monsters = initMonster(width, height, (ImmutableList) levelDisposition, entities);
+        this.entities.addAll(monsters);
+    }
+
+    public ArrayList<Monster> initMonster(int width, int height,ImmutableList levelDisposition, Entity...entities) {
+        ArrayList<Monster> monsters = new ArrayList<>() {{
+            add((Monster) entities[0]);
+            add((Monster) entities[1]);
+            add((Monster) entities[2]);
+        }};
+
+        var sizeX = (int) Math.floor((float) width / (float) TITLE_SIZE);
+        var sizeY = (int) Math.floor((float) height / (float) TITLE_SIZE);
+        var perimeter = sizeX * 2 + sizeY * 2;
+        var surface   = sizeX * sizeY;
+
+        int randomIndex;
+        ArrayList<Integer> randomIndexList = new ArrayList<>();
+
+        for (int i = 0; i < monsters.size(); i++) {
+            Tile tile = (Tile) levelDisposition.get(0);
+
+            while (tile.getType() != Tile.Type.GROUND) {
+                randomIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+                tile = (Tile) levelDisposition.get(randomIndex);
+                if (tile.getType() == Tile.Type.GROUND) {
+                    randomIndexList.add(randomIndex);
+                }
+            }
+        }
+
+        for (int i = 0; i < monsters.size(); i++) {
+            Tile tile = (Tile) levelDisposition.get(randomIndexList.get(i));
+            monsters.get(i).getCoordinate().setX(tile.getCoordinate().getX());
+            monsters.get(i).getCoordinate().setY(tile.getCoordinate().getY());
+        }
+
+        return monsters;
     }
 
     public void draw(Graphics2D graphics) {
