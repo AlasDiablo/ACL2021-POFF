@@ -102,11 +102,11 @@ public class Level {
         this.levelEvolve.wallTiles  = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
 
-        ArrayList<Monster> monsters = initMonster(width, height, (ImmutableList) levelDisposition, entities);
+        ArrayList<Monster> monsters = initMonster(width, height, levelDisposition, entities);
         this.entities.addAll(monsters);
     }
 
-    public ArrayList<Monster> initMonster(int width, int height,ImmutableList levelDisposition, Entity...entities) {
+    public ArrayList<Monster> initMonster(int width, int height,List<Tile> levelDisposition, Entity...entities) {
         ArrayList<Monster> monsters = new ArrayList<>() {{
             add((Monster) entities[0]);
             add((Monster) entities[1]);
