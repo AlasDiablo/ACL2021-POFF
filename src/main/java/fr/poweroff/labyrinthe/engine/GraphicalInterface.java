@@ -102,4 +102,7 @@ public class GraphicalInterface {
     public void paintPerdu() {
         this.panel.drawPerdu();
     }
+
+    public void paintPause() { this.panel.drawPause();
+    }
 }

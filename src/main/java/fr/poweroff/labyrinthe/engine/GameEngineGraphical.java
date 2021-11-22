@@ -109,10 +109,15 @@ public class GameEngineGraphical {
             Cmd c = this.gameController.getCommand();
             // fait evoluer le game
             this.game.evolve(c);
-            //Mise en route du compteur
-            this.game.Compteur();
-            // affiche le game
-            this.gui.paint();
+            if(!this.game.setPause()) {
+                //Mise en route du compteur
+                this.game.Compteur();
+                // affiche le game
+                this.gui.paint();
+            }
+            else{
+                this.gui.paintPause();
+            }
             // met en attente
             Thread.sleep(33, 333);
 
@@ -120,6 +125,7 @@ public class GameEngineGraphical {
                 this.gui.paintPerdu(); //Affichage de la page game_over
                 this.game.setFinish(true); //Pour mettre fin au jeu
             }
+
         }
     }
 

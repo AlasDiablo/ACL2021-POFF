@@ -24,6 +24,7 @@ public class PacmanController implements GameController {
     private boolean up;
     private boolean down;
     private Cmd     other;
+    private Cmd pause;
 
     /**
      * construction du controleur par defaut le controleur n'a pas de commande
@@ -34,6 +35,7 @@ public class PacmanController implements GameController {
         this.up    = false;
         this.down  = false;
         this.other = null;
+        this.pause = null;
     }
 
     /**
@@ -44,6 +46,7 @@ public class PacmanController implements GameController {
      */
     public Cmd getCommand() {
         if (this.other != null) return this.other;
+        if (this.pause != null) {this.pause = null; return Cmd.PAUSE;}
         if (this.left && this.up) return Cmd.LEFT_UP;
         if (this.left && this.down) return Cmd.LEFT_DOWN;
         if (this.right && this.up) return Cmd.RIGHT_UP;
@@ -125,6 +128,9 @@ public class PacmanController implements GameController {
             case KeyEvent.VK_S: // azerty and qwerty
             case KeyEvent.VK_DOWN: // arrow
                 this.down = false;
+                break;
+            case KeyEvent.VK_P:
+                this.pause = Cmd.PAUSE;
                 break;
             case KeyEvent.VK_ESCAPE:
                 this.other = Cmd.EXIT;

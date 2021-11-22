@@ -26,4 +26,12 @@ public interface Game {
 
     boolean isFinishCompteur();
 
+    /**
+     * Met en pause le jeu
+     */
+    void Pause();
+
+    boolean setPause();
+
+    void getPause(boolean p);
 }
