@@ -43,6 +43,7 @@ public class PacmanGame implements Game {
     private final Coordinate pacmanPosition = new Coordinate(0, 0);
     protected     int        score;
     private       boolean    finish         = false;
+    private       boolean    pause; //Vérifie si le jeu est en pause
     private       boolean    win            = false;
 
     /**
@@ -64,10 +65,11 @@ public class PacmanGame implements Game {
         } catch (IOException e) {
             Labyrinthe.LOGGER.warning("Help not available");
         }
-        countdown = new Countdown(10);
+        countdown = new Countdown(60);
         this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
         //this.level.init("levels/level_1.json", this.player);
-        score = 0;
+        score      = 0;
+        this.pause = false; //Met le jeu non en pause au départ
     }
 
     public static void onEvent(Event<?> event) {
@@ -100,7 +102,7 @@ public class PacmanGame implements Game {
      * Mais en route le compteur
      */
     @Override
-    public void Compteur() {
+    public void compteur() {
         countdown.start();
     }
 
@@ -112,7 +114,10 @@ public class PacmanGame implements Game {
     @Override
     public void evolve(Cmd commande) {
 
-        this.level.evolve(commande);
+        //Ne met à jour le jeu que si nous ne somme pas en pause
+        //Sinon elle le remet à jour qu'à la prochaine fois qu'on clic sur pause
+        if (!pause) this.level.evolve(commande);
+        else if (commande == Cmd.PAUSE) this.level.evolve(commande);
 
         // arret du jeu
         if (commande == Cmd.EXIT) {
@@ -124,14 +129,29 @@ public class PacmanGame implements Game {
             PacmanGame.onEvent(new TimeOutEvent());
         }
 
-        //Quitter le jeu
-        //quitter le jeu et la fenêtre
+
+        //Met en pause le jeu
+        if (commande == Cmd.PAUSE) {
+            Labyrinthe.LOGGER.debug("Pause !");
+            if (this.pause) {
+                this.compteur();
+                this.getPause(false);
+            } else {
+                this.isPause(); //Met en pause
+                this.getPause(true); //signal que le jeu est en pause
+            }
+        }
 
     }
 
     @Override
     public boolean isWin() {
         return this.win;
+    }
+
+    @Override
+    public void setWin(boolean win) {
+        this.win = win;
     }
 
     /**
@@ -152,11 +172,6 @@ public class PacmanGame implements Game {
         return this.finish;
     }
 
-    @Override
-    public void setWin(boolean win) {
-        this.win = win;
-    }
-
     /**
      * Convertit en minutes et secondes le temps restant du minuteur
      *
@@ -164,6 +179,21 @@ public class PacmanGame implements Game {
      */
     public Countdown getCountdown() {
         return countdown;
+    }
+
+    @Override
+    public void isPause() {
+        this.countdown.pause();
+    }
+
+    @Override
+    public boolean setPause() {
+        return this.pause;
+    }
+
+    @Override
+    public void getPause(boolean p) {
+        this.pause = p;
     }
 
     public int getScore() {

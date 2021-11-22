@@ -44,6 +44,13 @@ public class Countdown {
     }
 
     /**
+     * Mettre en pause le decompte
+     */
+    public void pause() {
+        this.timer.stop();
+    }
+
+    /**
      * @return le temps restant
      */
     public int getTime() {

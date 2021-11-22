@@ -1,9 +1,7 @@
 package fr.poweroff.labyrinthe.engine;
 
-import fr.poweroff.labyrinthe.engine.menu.Gagne;
-import fr.poweroff.labyrinthe.engine.menu.Level;
 import fr.poweroff.labyrinthe.engine.menu.Menu;
-import fr.poweroff.labyrinthe.engine.menu.Perdu;
+import fr.poweroff.labyrinthe.engine.menu.*;
 import fr.poweroff.labyrinthe.model.PacmanPainter;
 
 import javax.swing.*;
@@ -114,6 +112,12 @@ public class DrawingPanel extends JPanel {
         var font     = new Font("Courier New", Font.BOLD, 28);
         graphics.setFont(font);
         graphics.drawString(String.valueOf(((PacmanPainter) this.painter).pacmanGame.getScore()), 300, 410);
+        this.repaint();
+    }
+
+    public void drawPause() {
+        Pause p = new Pause(0, 0);
+        currentImage = p.getSprites();
         this.repaint();
     }
 }
