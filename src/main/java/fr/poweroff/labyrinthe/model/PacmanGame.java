@@ -68,7 +68,7 @@ public class PacmanGame implements Game {
         countdown = new Countdown(60);
         this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
         //this.level.init("levels/level_1.json", this.player);
-        score = 0;
+        score      = 0;
         this.pause = false; //Met le jeu non en pause au départ
     }
 
@@ -102,7 +102,7 @@ public class PacmanGame implements Game {
      * Mais en route le compteur
      */
     @Override
-    public void Compteur() {
+    public void compteur() {
         countdown.start();
     }
 
@@ -116,8 +116,8 @@ public class PacmanGame implements Game {
 
         //Ne met à jour le jeu que si nous ne somme pas en pause
         //Sinon elle le remet à jour qu'à la prochaine fois qu'on clic sur pause
-        if(!pause) this.level.evolve(commande);
-        else if(commande == Cmd.PAUSE) this.level.evolve(commande);
+        if (!pause) this.level.evolve(commande);
+        else if (commande == Cmd.PAUSE) this.level.evolve(commande);
 
         // arret du jeu
         if (commande == Cmd.EXIT) {
@@ -131,14 +131,13 @@ public class PacmanGame implements Game {
 
 
         //Met en pause le jeu
-        if(commande == Cmd.PAUSE){
-            System.out.println("Pause !");
-            if(this.pause){
-                this.Compteur();
+        if (commande == Cmd.PAUSE) {
+            Labyrinthe.LOGGER.debug("Pause !");
+            if (this.pause) {
+                this.compteur();
                 this.getPause(false);
-            }
-            else {
-                this.Pause(); //Met en pause
+            } else {
+                this.isPause(); //Met en pause
                 this.getPause(true); //signal que le jeu est en pause
             }
         }
@@ -148,6 +147,11 @@ public class PacmanGame implements Game {
     @Override
     public boolean isWin() {
         return this.win;
+    }
+
+    @Override
+    public void setWin(boolean win) {
+        this.win = win;
     }
 
     /**
@@ -168,11 +172,6 @@ public class PacmanGame implements Game {
         return this.finish;
     }
 
-    @Override
-    public void setWin(boolean win) {
-        this.win = win;
-    }
-
     /**
      * Convertit en minutes et secondes le temps restant du minuteur
      *
@@ -183,17 +182,17 @@ public class PacmanGame implements Game {
     }
 
     @Override
-    public void Pause(){
+    public void isPause() {
         this.countdown.pause();
     }
 
     @Override
-    public boolean setPause(){
+    public boolean setPause() {
         return this.pause;
     }
 
     @Override
-    public void getPause(boolean p){
+    public void getPause(boolean p) {
         this.pause = p;
     }
 

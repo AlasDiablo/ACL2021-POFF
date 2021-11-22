@@ -110,11 +110,11 @@ public class GameEngineGraphical {
             // fait evoluer le game
             this.game.evolve(c);
             //Mise en route du compteur
-            this.game.Compteur();
+            this.game.compteur();
             // affiche le game
-            if(!this.game.setPause()) {
+            if (!this.game.setPause()) {
                 //Mise en route du compteur
-                this.game.Compteur();
+                this.game.compteur();
                 // affiche le game
                 this.gui.paint();
 

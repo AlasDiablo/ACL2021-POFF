@@ -290,6 +290,7 @@ public class Level {
 
     /**
      * Function used to draw the hit box of each element
+     *
      * @param graphics Drawing object
      */
     private void drawHitBox(Graphics2D graphics) {

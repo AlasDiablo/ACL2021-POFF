@@ -21,7 +21,7 @@ public class Player extends Entity {
     /**
      * The current player sprite
      */
-    private              int    spriteIndex;
+    private int spriteIndex;
 
     /**
      * Default constructor of the player
@@ -45,7 +45,9 @@ public class Player extends Entity {
 
     /**
      * Funcion use to get the player sprite
+     *
      * @param name the name of the sprite
+     *
      * @return the sprite as a buffered image
      */
     private static BufferedImage getSprite(String name) {

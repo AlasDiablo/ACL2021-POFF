@@ -1,10 +1,7 @@
 package fr.poweroff.labyrinthe.engine;
 
-import fr.poweroff.labyrinthe.engine.menu.Gagne;
-import fr.poweroff.labyrinthe.engine.menu.Level;
 import fr.poweroff.labyrinthe.engine.menu.Menu;
-import fr.poweroff.labyrinthe.engine.menu.Pause;
-import fr.poweroff.labyrinthe.engine.menu.Perdu;
+import fr.poweroff.labyrinthe.engine.menu.*;
 import fr.poweroff.labyrinthe.model.PacmanPainter;
 
 import javax.swing.*;
