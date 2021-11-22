@@ -6,6 +6,7 @@ import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.event.Event;
 import fr.poweroff.labyrinthe.event.TimeOutEvent;
 import fr.poweroff.labyrinthe.level.Level;
+import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
@@ -58,11 +59,7 @@ public class PacmanGame implements Game {
         INSTANCE      = this;
         this.level    = new Level();
         this.player   = new Player(new Coordinate(11, 11));
-        this.monsters = new ArrayList<>() {{
-            add(new Monster(new Coordinate(20, 20)));
-            add(new Monster(new Coordinate(21, 21)));
-            add(new Monster(new Coordinate(22, 22)));
-        }};
+        this.monsters = new ArrayList<>();
 
         BufferedReader helpReader;
         try {
@@ -76,8 +73,6 @@ public class PacmanGame implements Game {
             Labyrinthe.LOGGER.warning("Help not available");
         }
         countdown = new Countdown(60);
-        this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player, this.monsters.get(0), this.monsters.get(1), this.monsters.get(2));
-        //this.level.init("levels/level_1.json", this.player);
         score      = 0;
         this.pause = false; //Met le jeu non en pause au départ
     }
@@ -97,6 +92,16 @@ public class PacmanGame implements Game {
             INSTANCE.setWin(true);
             INSTANCE.setFinish(true);
         }
+    }
+
+    @Override
+    public void setDifficult(int difficult) {
+        for (int i = 0; i < difficult * 2 - 2; i++) {
+            monsters.add(new Monster(new Coordinate(0, 0)));
+        }
+        this.level.init(
+                PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, this.player, this.monsters.toArray(new Entity[]{ })
+        );
     }
 
     /**

@@ -6,15 +6,16 @@ import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.level.entity.Entity;
-import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -166,12 +167,13 @@ public class Level {
     /**
      * Initialize the level from the window size
      *
-     * @param width    window width
-     * @param height   window height
-     * @param player   player instances
-     * @param entities list of all entities in the game (excluded from player)
+     * @param width     window width
+     * @param height    window height
+     * @param difficult current game difficulty
+     * @param player    player instances
+     * @param entities  list of all entities in the game (excluded from player)
      */
-    public void init(int width, int height, Entity player, Entity... entities) {
+    public void init(int width, int height, int difficult, Entity player, Entity... entities) {
         // Initialize or re-initialize variable
         this.init();
 
@@ -207,12 +209,14 @@ public class Level {
             bonusTile.add(bonusIndex);
         }
 
+        var wallNumberWithDifficult = WALL_NUMBER + (WALL_NUMBER / 2 * (difficult - 1));
+
         // Create a random amount of wall
         var wallNumber = PacmanGame.RANDOM.ints(
                 1,
-                WALL_NUMBER,
-                Math.max(WALL_NUMBER, (int) Math.floor(surface / 16f))
-        ).findAny().orElse(WALL_NUMBER);
+                wallNumberWithDifficult,
+                Math.max(wallNumberWithDifficult, (int) Math.floor(surface / 16f))
+        ).findAny().orElse(wallNumberWithDifficult);
 
         // Create the list of wall tile index
         List<Integer> wallTile = new ArrayList<>();
@@ -269,22 +273,16 @@ public class Level {
         this.player   = player;
         this.entities = new ArrayList<>(List.of(entities));
         this.entities.add(player);
-        this.entities.addAll(Arrays.asList(entities));
 
         this.levelDisposition       = levelBuilder.build();
         this.levelEvolve.wallTiles  = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
 
-        List<Monster> monsters = initMonster(width, height, levelDisposition, entities);
-        this.entities.addAll(monsters);
+        this.initMonster(width, height, levelDisposition, entities);
     }
 
-    public List<Monster> initMonster(int width, int height, List<Tile> levelDisposition, Entity... entities) {
-        ArrayList<Monster> monsters = new ArrayList<>() {{
-            add((Monster) entities[0]);
-            add((Monster) entities[1]);
-            add((Monster) entities[2]);
-        }};
+    public void initMonster(int width, int height, List<Tile> levelDisposition, Entity... entities) {
+        List<Entity> entitiesList = List.of(entities);
 
         var sizeX     = (int) Math.floor((float) width / (float) TITLE_SIZE);
         var sizeY     = (int) Math.floor((float) height / (float) TITLE_SIZE);
@@ -294,7 +292,7 @@ public class Level {
         int           randomIndex;
         List<Integer> randomIndexList = new ArrayList<>();
 
-        for (int i = 0; i < monsters.size(); i++) {
+        for (int i = 0; i < entitiesList.size(); i++) {
             Tile tile = levelDisposition.get(0);
 
             while (tile.getType() != Tile.Type.GROUND) {
@@ -306,13 +304,11 @@ public class Level {
             }
         }
 
-        for (int i = 0; i < monsters.size(); i++) {
+        for (int i = 0; i < entitiesList.size(); i++) {
             Tile tile = levelDisposition.get(randomIndexList.get(i));
-            monsters.get(i).getCoordinate().setX(tile.getCoordinate().getX() + 2);
-            monsters.get(i).getCoordinate().setY(tile.getCoordinate().getY() + 2);
+            entitiesList.get(i).getCoordinate().setX(tile.getCoordinate().getX() + 2);
+            entitiesList.get(i).getCoordinate().setY(tile.getCoordinate().getY() + 2);
         }
-
-        return monsters;
     }
 
     /**

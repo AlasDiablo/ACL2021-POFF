@@ -36,4 +36,6 @@ public interface Game {
     boolean setPause();
 
     void getPause(boolean p);
+
+    void setDifficult(int difficult);
 }
