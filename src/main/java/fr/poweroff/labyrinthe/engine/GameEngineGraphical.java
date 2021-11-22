@@ -115,9 +115,9 @@ public class GameEngineGraphical {
                 // affiche le game
                 this.gui.paint();
             }
-            else{
+            /*else{
                 this.gui.paintPause();
-            }
+            }*/
             // met en attente
             Thread.sleep(33, 333);
 

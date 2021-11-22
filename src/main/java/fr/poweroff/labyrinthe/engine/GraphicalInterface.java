@@ -49,7 +49,7 @@ public class GraphicalInterface {
 
 
         //Quitte le jeu
-        e4.addActionListener(actionEvent -> f.dispose());
+        e4.addActionListener(actionEvent -> quit());
         //Ajout des item au menu
         menu.add(e1);
         menu.add(e2);
