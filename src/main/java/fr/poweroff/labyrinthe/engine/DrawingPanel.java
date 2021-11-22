@@ -1,8 +1,8 @@
 package fr.poweroff.labyrinthe.engine;
 
-/**
- * @author Horatiu Cirstea, Vincent Thomas
- */
+import fr.poweroff.labyrinthe.engine.menu.Menu;
+import fr.poweroff.labyrinthe.engine.menu.*;
+import fr.poweroff.labyrinthe.model.PacmanPainter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,9 +37,6 @@ public class DrawingPanel extends JPanel {
      * constructeur Il construit les images pour doublebuffering ainsi que le
      * Panel associe. Les images stockent le painter et on demande au panel la
      * mise a jour quand le painter est fini
-     *
-     * @param width  largeur de l'image
-     * @param height hauteur de l'image
      */
     public DrawingPanel(GamePainter painter) {
         super();
@@ -77,6 +74,18 @@ public class DrawingPanel extends JPanel {
         this.repaint();
     }
 
+    public void drawMenu() {
+        Menu m = new Menu(0, 0);
+        currentImage = m.getSprites();
+        this.repaint();
+    }
+
+    public void drawNiveau() {
+        Level l = new Level(0, 0);
+        currentImage = l.getSprites();
+        this.repaint();
+    }
+
     /**
      * redefinit la methode paint consiste a dessiner l'image en cours
      *
@@ -89,4 +98,26 @@ public class DrawingPanel extends JPanel {
         );
     }
 
+
+    public void drawPerdu() {
+        Perdu p = new Perdu(0, 0);
+        currentImage = p.getSprites();
+        this.repaint();
+    }
+
+    public void drawGagne() {
+        Gagne p = new Gagne(0, 0);
+        currentImage = p.getSprites();
+        var graphics = currentImage.getGraphics();
+        var font     = new Font("Courier New", Font.BOLD, 28);
+        graphics.setFont(font);
+        graphics.drawString(String.valueOf(((PacmanPainter) this.painter).pacmanGame.getScore()), 300, 410);
+        this.repaint();
+    }
+
+    public void drawPause() {
+        Pause p = new Pause(0, 0);
+        currentImage = p.getSprites();
+        this.repaint();
+    }
 }

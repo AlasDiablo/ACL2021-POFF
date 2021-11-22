@@ -18,7 +18,7 @@ public class PacmanPainter implements GamePainter {
     static final int WIDTH  = 550;
     static final int HEIGHT = 550;
 
-    private final PacmanGame pacmanGame;
+    public final PacmanGame pacmanGame;
 
     /**
      * appelle constructeur parent

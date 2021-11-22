@@ -1,5 +1,6 @@
 package fr.poweroff.labyrinthe.model;
 
+import fr.poweroff.labyrinthe.Labyrinthe;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.event.Event;
@@ -10,7 +11,7 @@ import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -28,41 +29,33 @@ import java.util.Random;
  */
 public class PacmanGame implements Game {
 
-    public static final Random RANDOM;
+    public static final Random     RANDOM;
+    private static      PacmanGame INSTANCE;
 
     static {
         var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
-        System.out.printf("Seed use: %d\n", seed);
+        Labyrinthe.LOGGER.info(String.format("Seed use: %d", seed));
         RANDOM = new Random(seed);
     }
 
-    final          Level         level;
-    private static PacmanGame    INSTANCE;
-    final          Player        player;
-    private     ArrayList<Monster> monsters;
-
-    private final Coordinate pacmanPosition = new Coordinate(0, 0);
     /**
      * Minuteur du niveau
      */
-    private final Countdown  countdown;
-    private       boolean    finish         = false;
+    public final  Countdown  countdown;
+    final         Level      level;
+    final         Player     player;
+    private     List<Monster> monsters;
+    private final Coordinate pacmanPosition = new Coordinate(0, 0);
     protected     int        score;
-
-    /**
-     * Renvoie les coordonnees du pacman
-     *
-     * @return les coordonnee du pacman
-     */
-    public Coordinate getPacmanPosition() {
-        return pacmanPosition;
-    }
+    private       boolean    finish         = false;
+    private       boolean    pause; //Vérifie si le jeu est en pause
+    private       boolean    win            = false;
 
     /**
      * constructeur avec fichier source pour le help
      */
     public PacmanGame(String source) {
-        ImageUtils.setClassLoader(this.getClass().getClassLoader());
+        FilesUtils.setClassLoader(this.getClass().getClassLoader());
         INSTANCE    = this;
         this.level  = new Level();
         this.player = new Player(new Coordinate(11, 11));
@@ -77,28 +70,51 @@ public class PacmanGame implements Game {
             helpReader = new BufferedReader(new FileReader(source));
             String ligne;
             while ((ligne = helpReader.readLine()) != null) {
-                System.out.println(ligne);
+                Labyrinthe.LOGGER.info(ligne);
             }
             helpReader.close();
         } catch (IOException e) {
-            System.out.println("Help not available");
+            Labyrinthe.LOGGER.warning("Help not available");
         }
         countdown = new Countdown(60);
         this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player, this.monsters.get(0), this.monsters.get(1), this.monsters.get(2));
-        countdown.start();
-        score = 0;
+        //this.level.init("levels/level_1.json", this.player);
+        score      = 0;
+        this.pause = false; //Met le jeu non en pause au départ
     }
 
     public static void onEvent(Event<?> event) {
-        System.out.println(event.getName());
+        Labyrinthe.LOGGER.debug(event.getName());
+
         if (event.getName().equals("TimeOut")) {
             INSTANCE.setFinish(true);
-        }else if (event.getName().equals("PlayerOnBonusTile")) {
-            INSTANCE.score ++;
+        } else if (event.getName().equals("PlayerOnBonusTile")) {
+            INSTANCE.score++;
             TileBonus tb = (TileBonus) event.getData();
             tb.changeType();
-            System.out.println("SCORE: " + INSTANCE.score);
+            Labyrinthe.LOGGER.debug("SCORE: " + INSTANCE.score);
+        } else if (event.getName().equals("PlayerOnEndTile")) {
+            //INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
+            INSTANCE.setWin(true);
+            INSTANCE.setFinish(true);
         }
+    }
+
+    /**
+     * Renvoie les coordonnees du pacman
+     *
+     * @return les coordonnee du pacman
+     */
+    public Coordinate getPacmanPosition() {
+        return pacmanPosition;
+    }
+
+    /**
+     * Mais en route le compteur
+     */
+    @Override
+    public void compteur() {
+        countdown.start();
     }
 
     /**
@@ -109,7 +125,10 @@ public class PacmanGame implements Game {
     @Override
     public void evolve(Cmd commande) {
 
-        this.level.evolve(commande);
+        //Ne met à jour le jeu que si nous ne somme pas en pause
+        //Sinon elle le remet à jour qu'à la prochaine fois qu'on clic sur pause
+        if (!pause) this.level.evolve(commande);
+        else if (commande == Cmd.PAUSE) this.level.evolve(commande);
 
         // arret du jeu
         if (commande == Cmd.EXIT) {
@@ -122,6 +141,28 @@ public class PacmanGame implements Game {
         }
 
 
+        //Met en pause le jeu
+        if (commande == Cmd.PAUSE) {
+            Labyrinthe.LOGGER.debug("Pause !");
+            if (this.pause) {
+                this.compteur();
+                this.getPause(false);
+            } else {
+                this.isPause(); //Met en pause
+                this.getPause(true); //signal que le jeu est en pause
+            }
+        }
+
+    }
+
+    @Override
+    public boolean isWin() {
+        return this.win;
+    }
+
+    @Override
+    public void setWin(boolean win) {
+        this.win = win;
     }
 
     /**
@@ -129,6 +170,7 @@ public class PacmanGame implements Game {
      *
      * @param finish l'etat du jeu
      */
+    @Override
     public void setFinish(boolean finish) {
         this.finish = finish;
     }
@@ -148,6 +190,21 @@ public class PacmanGame implements Game {
      */
     public Countdown getCountdown() {
         return countdown;
+    }
+
+    @Override
+    public void isPause() {
+        this.countdown.pause();
+    }
+
+    @Override
+    public boolean setPause() {
+        return this.pause;
+    }
+
+    @Override
+    public void getPause(boolean p) {
+        this.pause = p;
     }
 
     public int getScore() {
