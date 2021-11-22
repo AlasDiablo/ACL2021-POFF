@@ -3,7 +3,7 @@ package fr.poweroff.labyrinthe.level.entity;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.level.Level.LevelEvolve;
 import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.ImageUtils;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 
@@ -14,7 +14,7 @@ public class Monster extends Entity {
     public Monster(Coordinate coordinate) {
         super(
                 coordinate,
-                ImageUtils.getImage("monster.png")
+                FilesUtils.getImage("monster.png")
         );
         this.direction = "DOWN";
     }
