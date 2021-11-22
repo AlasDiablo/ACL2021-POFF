@@ -42,6 +42,7 @@ public class PacmanGame implements Game {
     private final Coordinate pacmanPosition = new Coordinate(0, 0);
     protected     int        score;
     private       boolean    finish         = false;
+    private       boolean    win            = false;
 
     /**
      * constructeur avec fichier source pour le help
@@ -62,7 +63,7 @@ public class PacmanGame implements Game {
         } catch (IOException e) {
             System.out.println("Help not available");
         }
-        countdown = new Countdown(60);
+        countdown = new Countdown(10);
         this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
         //this.level.init("levels/level_1.json", this.player);
         score = 0;
@@ -78,7 +79,9 @@ public class PacmanGame implements Game {
             tb.changeType();
             System.out.println("SCORE: " + INSTANCE.score);
         } else if (event.getName().equals("PlayerOnEndTile")) {
-            INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
+            //INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
+            INSTANCE.setWin(true);
+            INSTANCE.setFinish(true);
         }
     }
 
@@ -125,8 +128,8 @@ public class PacmanGame implements Game {
     }
 
     @Override
-    public boolean isFinishCompteur() {
-        return this.countdown.isFinish();
+    public boolean isWin() {
+        return this.win;
     }
 
     /**
@@ -145,6 +148,11 @@ public class PacmanGame implements Game {
     @Override
     public boolean isFinished() {
         return this.finish;
+    }
+
+    @Override
+    public void setWin(boolean win) {
+        this.win = win;
     }
 
     /**

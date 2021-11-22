@@ -112,14 +112,15 @@ public class GameEngineGraphical {
             //Mise en route du compteur
             this.game.Compteur();
             // affiche le game
-            this.gui.paint();
+            if (this.game.isFinished()) {
+                if (this.game.isWin()) this.gui.paintGagne(); //Affichage de la page game_win
+                else this.gui.paintPerdu(); //Affichage de la page game_over
+            } else {
+                this.gui.paint();
+            }
+
             // met en attente
             Thread.sleep(33, 333);
-
-            if (this.game.isFinishCompteur()) {
-                this.gui.paintPerdu(); //Affichage de la page game_over
-                this.game.setFinish(true); //Pour mettre fin au jeu
-            }
         }
     }
 

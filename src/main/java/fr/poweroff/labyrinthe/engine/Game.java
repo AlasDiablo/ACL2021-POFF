@@ -19,11 +19,13 @@ public interface Game {
 
     void setFinish(boolean finish);
 
+    boolean isWin();
+
     /**
      * @return true si et seulement si le jeu est fini
      */
     boolean isFinished();
 
-    boolean isFinishCompteur();
+    void setWin(boolean win);
 
 }

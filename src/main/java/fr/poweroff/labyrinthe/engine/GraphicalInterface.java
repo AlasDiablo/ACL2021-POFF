@@ -102,4 +102,8 @@ public class GraphicalInterface {
     public void paintPerdu() {
         this.panel.drawPerdu();
     }
+
+    public void paintGagne() {
+        this.panel.drawGagne();
+    }
 }
