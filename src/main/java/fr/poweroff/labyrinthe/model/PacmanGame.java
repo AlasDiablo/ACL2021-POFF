@@ -6,6 +6,7 @@ import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.event.Event;
 import fr.poweroff.labyrinthe.event.TimeOutEvent;
 import fr.poweroff.labyrinthe.level.Level;
+import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.utils.Coordinate;
@@ -15,6 +16,8 @@ import fr.poweroff.labyrinthe.utils.FilesUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -37,23 +40,30 @@ public class PacmanGame implements Game {
     /**
      * Minuteur du niveau
      */
-    public final  Countdown  countdown;
-    final         Level      level;
-    final         Player     player;
-    private final Coordinate pacmanPosition = new Coordinate(0, 0);
-    protected     int        score;
-    private       boolean    finish         = false;
-    private       boolean    pause; //Vérifie si le jeu est en pause
-    private       boolean    win            = false;
+    public final  Countdown     countdown;
+    final         Level         level;
+    final         Player        player;
+    private final Coordinate    pacmanPosition = new Coordinate(0, 0);
+    private final List<Monster> monsters;
+    protected     int           score;
+    private       boolean       finish         = false;
+    private       boolean       pause; //Vérifie si le jeu est en pause
+    private       boolean       win            = false;
 
     /**
      * constructeur avec fichier source pour le help
      */
     public PacmanGame(String source) {
         FilesUtils.setClassLoader(this.getClass().getClassLoader());
-        INSTANCE    = this;
-        this.level  = new Level();
-        this.player = new Player(new Coordinate(11, 11));
+        INSTANCE      = this;
+        this.level    = new Level();
+        this.player   = new Player(new Coordinate(11, 11));
+        this.monsters = new ArrayList<>() {{
+            add(new Monster(new Coordinate(20, 20)));
+            add(new Monster(new Coordinate(21, 21)));
+            add(new Monster(new Coordinate(22, 22)));
+        }};
+
         BufferedReader helpReader;
         try {
             helpReader = new BufferedReader(new FileReader(source));
@@ -66,7 +76,7 @@ public class PacmanGame implements Game {
             Labyrinthe.LOGGER.warning("Help not available");
         }
         countdown = new Countdown(60);
-        this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
+        this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player, this.monsters.get(0), this.monsters.get(1), this.monsters.get(2));
         //this.level.init("levels/level_1.json", this.player);
         score      = 0;
         this.pause = false; //Met le jeu non en pause au départ

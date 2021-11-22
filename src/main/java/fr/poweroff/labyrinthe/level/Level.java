@@ -6,16 +6,15 @@ import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.level.entity.Entity;
+import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -270,9 +269,50 @@ public class Level {
         this.player   = player;
         this.entities = new ArrayList<>(List.of(entities));
         this.entities.add(player);
+        this.entities.addAll(Arrays.asList(entities));
+
         this.levelDisposition       = levelBuilder.build();
         this.levelEvolve.wallTiles  = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
+
+        List<Monster> monsters = initMonster(width, height, levelDisposition, entities);
+        this.entities.addAll(monsters);
+    }
+
+    public List<Monster> initMonster(int width, int height, List<Tile> levelDisposition, Entity... entities) {
+        ArrayList<Monster> monsters = new ArrayList<>() {{
+            add((Monster) entities[0]);
+            add((Monster) entities[1]);
+            add((Monster) entities[2]);
+        }};
+
+        var sizeX     = (int) Math.floor((float) width / (float) TITLE_SIZE);
+        var sizeY     = (int) Math.floor((float) height / (float) TITLE_SIZE);
+        var perimeter = sizeX * 2 + sizeY * 2;
+        var surface   = sizeX * sizeY;
+
+        int           randomIndex;
+        List<Integer> randomIndexList = new ArrayList<>();
+
+        for (int i = 0; i < monsters.size(); i++) {
+            Tile tile = levelDisposition.get(0);
+
+            while (tile.getType() != Tile.Type.GROUND) {
+                randomIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+                tile        = levelDisposition.get(randomIndex);
+                if (tile.getType() == Tile.Type.GROUND) {
+                    randomIndexList.add(randomIndex);
+                }
+            }
+        }
+
+        for (int i = 0; i < monsters.size(); i++) {
+            Tile tile = levelDisposition.get(randomIndexList.get(i));
+            monsters.get(i).getCoordinate().setX(tile.getCoordinate().getX() + 2);
+            monsters.get(i).getCoordinate().setY(tile.getCoordinate().getY() + 2);
+        }
+
+        return monsters;
     }
 
     /**
