@@ -2,7 +2,6 @@ package fr.poweroff.labyrinthe.level;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.primitives.Ints;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
@@ -12,15 +11,11 @@ import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
-import fr.poweroff.labyrinthe.utils.Coordinate;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 /**
  * Class use tu create a level and handle each game tick
@@ -280,31 +275,31 @@ public class Level {
         this.levelEvolve.wallTiles  = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
 
-        ArrayList<Monster> monsters = initMonster(width, height, levelDisposition, entities);
+        List<Monster> monsters = initMonster(width, height, levelDisposition, entities);
         this.entities.addAll(monsters);
     }
 
-    public ArrayList<Monster> initMonster(int width, int height,List<Tile> levelDisposition, Entity...entities) {
+    public List<Monster> initMonster(int width, int height, List<Tile> levelDisposition, Entity... entities) {
         ArrayList<Monster> monsters = new ArrayList<>() {{
             add((Monster) entities[0]);
             add((Monster) entities[1]);
             add((Monster) entities[2]);
         }};
 
-        var sizeX = (int) Math.floor((float) width / (float) TITLE_SIZE);
-        var sizeY = (int) Math.floor((float) height / (float) TITLE_SIZE);
+        var sizeX     = (int) Math.floor((float) width / (float) TITLE_SIZE);
+        var sizeY     = (int) Math.floor((float) height / (float) TITLE_SIZE);
         var perimeter = sizeX * 2 + sizeY * 2;
         var surface   = sizeX * sizeY;
 
-        int randomIndex;
-        ArrayList<Integer> randomIndexList = new ArrayList<>();
+        int           randomIndex;
+        List<Integer> randomIndexList = new ArrayList<>();
 
         for (int i = 0; i < monsters.size(); i++) {
-            Tile tile = (Tile) levelDisposition.get(0);
+            Tile tile = levelDisposition.get(0);
 
             while (tile.getType() != Tile.Type.GROUND) {
                 randomIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
-                tile = (Tile) levelDisposition.get(randomIndex);
+                tile        = levelDisposition.get(randomIndex);
                 if (tile.getType() == Tile.Type.GROUND) {
                     randomIndexList.add(randomIndex);
                 }
@@ -312,9 +307,9 @@ public class Level {
         }
 
         for (int i = 0; i < monsters.size(); i++) {
-            Tile tile = (Tile) levelDisposition.get(randomIndexList.get(i));
-            monsters.get(i).getCoordinate().setX(tile.getCoordinate().getX());
-            monsters.get(i).getCoordinate().setY(tile.getCoordinate().getY());
+            Tile tile = levelDisposition.get(randomIndexList.get(i));
+            monsters.get(i).getCoordinate().setX(tile.getCoordinate().getX() + 2);
+            monsters.get(i).getCoordinate().setY(tile.getCoordinate().getY() + 2);
         }
 
         return monsters;
