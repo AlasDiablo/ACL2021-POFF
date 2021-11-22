@@ -102,6 +102,7 @@ public class PacmanGame implements Game {
         this.level.init(
                 PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, this.player, this.monsters.toArray(new Entity[]{ })
         );
+        this.compteur();
     }
 
     /**
@@ -150,10 +151,10 @@ public class PacmanGame implements Game {
             Labyrinthe.LOGGER.debug("Pause !");
             if (this.pause) {
                 this.compteur();
-                this.getPause(false);
+                this.setPause(false);
             } else {
-                this.isPause(); //Met en pause
-                this.getPause(true); //signal que le jeu est en pause
+                this.pause(); //Met en pause
+                this.setPause(true); //signal que le jeu est en pause
             }
         }
 
@@ -196,18 +197,17 @@ public class PacmanGame implements Game {
         return countdown;
     }
 
-    @Override
-    public void isPause() {
+    public void pause() {
         this.countdown.pause();
     }
 
     @Override
-    public boolean setPause() {
+    public boolean getPause() {
         return this.pause;
     }
 
     @Override
-    public void getPause(boolean p) {
+    public void setPause(boolean p) {
         this.pause = p;
     }
 

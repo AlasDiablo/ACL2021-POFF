@@ -126,24 +126,17 @@ public class GameEngineGraphical {
             Cmd c = this.gameController.getCommand();
             // fait evoluer le game
             this.game.evolve(c);
-            //Mise en route du compteur
-            this.game.compteur();
+
             // affiche le game
-            if (!this.game.setPause()) {
-                //Mise en route du compteur
-                this.game.compteur();
+            if (this.game.getPause()) {
+                //this.gui.paintPause();
+            } else if (this.game.isFinished()) {
+                if (this.game.isWin()) this.gui.paintGagne(); //Affichage de la page game_win
+                else this.gui.paintPerdu(); //Affichage de la page game_over
+            } else {
                 // affiche le game
                 this.gui.paint();
-
-                if (this.game.isFinished()) {
-                    if (this.game.isWin()) this.gui.paintGagne(); //Affichage de la page game_win
-                    else this.gui.paintPerdu(); //Affichage de la page game_over
-                } else {
-                    this.gui.paint();
-                }
-            } /*else{
-                this.gui.paintPause();
-            }*/
+            }
             // met en attente
             Thread.sleep(33, 333);
         }

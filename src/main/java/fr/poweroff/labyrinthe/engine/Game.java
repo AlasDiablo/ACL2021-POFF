@@ -31,11 +31,11 @@ public interface Game {
     /**
      * Met en pause le jeu
      */
-    void isPause();
+    void pause();
 
-    boolean setPause();
+    boolean getPause();
 
-    void getPause(boolean p);
+    void setPause(boolean p);
 
     void setDifficult(int difficult);
 }

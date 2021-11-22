@@ -102,6 +102,9 @@ public class PacmanController implements GameController {
             case KeyEvent.VK_DOWN: // arrow
                 this.down = true;
                 break;
+            case KeyEvent.VK_P:
+                this.pause = Cmd.PAUSE;
+                break;
             case KeyEvent.VK_ESCAPE:
                 this.other = Cmd.EXIT;
                 break;
@@ -132,11 +135,8 @@ public class PacmanController implements GameController {
             case KeyEvent.VK_DOWN: // arrow
                 this.down = false;
                 break;
-            case KeyEvent.VK_P:
-                this.pause = Cmd.PAUSE;
-                break;
-            case KeyEvent.VK_ESCAPE:
-                this.other = Cmd.EXIT;
+            default:
+                this.other = null;
                 break;
         }
     }
