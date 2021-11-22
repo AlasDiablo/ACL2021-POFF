@@ -3,6 +3,7 @@ package fr.poweroff.labyrinthe.level;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import fr.poweroff.labyrinthe.engine.Cmd;
+import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.level.entity.Entity;
@@ -54,6 +55,8 @@ public class Level {
      * The player instances
      */
     private             Entity       player;
+    private             int         difficult;
+    private             int         wallNumberReal;
 
     public Level() {
         this.levelEvolve = new LevelEvolve();
@@ -172,7 +175,7 @@ public class Level {
      * @param player   player instances
      * @param entities list of all entities in the game (excluded from player)
      */
-    public void init(int width, int height, Entity player, Entity... entities) {
+    public void init(int width, int height, Entity player,List<Monster> m, Entity... entities) {
         // Initialize or re-initialize variable
         this.init();
 
@@ -211,9 +214,9 @@ public class Level {
         // Create a random amount of wall
         var wallNumber = PacmanGame.RANDOM.ints(
                 1,
-                WALL_NUMBER,
-                Math.max(WALL_NUMBER, (int) Math.floor(surface / 16f))
-        ).findAny().orElse(WALL_NUMBER);
+                wallNumberReal,
+                Math.max(wallNumberReal, (int) Math.floor(surface / 16f))
+        ).findAny().orElse(wallNumberReal);
 
         // Create the list of wall tile index
         List<Integer> wallTile = new ArrayList<>();
@@ -270,16 +273,14 @@ public class Level {
         this.player   = player;
         this.entities = new ArrayList<>(List.of(entities));
         this.entities.add(player);
+        m.forEach(Monster -> this.entities.add(Monster));
         this.levelDisposition       = levelBuilder.build();
         this.levelEvolve.wallTiles  = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
+
     }
 
-    /**
-     * Draw the level
-     *
-     * @param graphics drawing object
-     */
+
     public void draw(Graphics2D graphics) {
         // Draw all tiles
         this.levelDisposition.forEach(tile -> tile.draw(graphics));
@@ -334,6 +335,11 @@ public class Level {
                 PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));
             }
         });
+    }
+
+    public void setDifficult(int difficult) {
+        this.difficult = difficult;
+        this.wallNumberReal = WALL_NUMBER + (3 * (difficult-1));
     }
 
     /**

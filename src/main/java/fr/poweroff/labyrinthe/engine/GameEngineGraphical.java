@@ -74,6 +74,7 @@ public class GameEngineGraphical {
 
             //Lancement du jeu (arrêt de la boucle du menu)
             if (c.name().equals("PLAY")) {
+                this.game.setDifficult(1);
                 menuEnCour = false;
             }
 
@@ -96,8 +97,22 @@ public class GameEngineGraphical {
             this.gameController.setNiveau(true);
             this.gui.paintNiveau();
 
-            if (c.name().equals("LEVEL1"))
+            if (c.name().equals("LEVEL1")) {
+                this.game.setDifficult(1);
                 niveau = false;
+            }
+            else if (c.name().equals("LEVEL2")) {
+                this.game.setDifficult(2);
+                niveau = false;
+            }
+            else if (c.name().equals("LEVEL3")) {
+                this.game.setDifficult(3);
+                niveau = false;
+            }
+            else if (c.name().equals("LEVEL4")) {
+                this.game.setDifficult(4);
+                niveau = false;
+            }
         }
         this.gameController.setNiveau(false);
     }

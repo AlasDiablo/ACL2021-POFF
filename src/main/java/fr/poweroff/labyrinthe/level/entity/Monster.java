@@ -33,7 +33,7 @@ public class Monster extends Entity {
 
         if (this.direction.equals(Cmd.UP.name())) {
             var newY = y - MOVE_SPEED;
-            if (!levelEvolve.notOverlap(x, newY, 20, 20)) {
+            if (levelEvolve.notOverlap(x, newY, 20, 20)) {
                 this.coordinate.setY(newY);
                 this.direction = Cmd.UP.name();
             }else {
@@ -41,7 +41,7 @@ public class Monster extends Entity {
             }
         } else if (this.direction.equals(Cmd.DOWN.name())) {
             var newY = y + MOVE_SPEED;
-            if (!levelEvolve.notOverlap(x, newY, 20, 20)) {
+            if (levelEvolve.notOverlap(x, newY, 20, 20)) {
                 this.coordinate.setY(newY);
                 this.direction = Cmd.DOWN.name();
             }else {

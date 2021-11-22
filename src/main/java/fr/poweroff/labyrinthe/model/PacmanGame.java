@@ -5,6 +5,7 @@ import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.event.Event;
 import fr.poweroff.labyrinthe.event.TimeOutEvent;
 import fr.poweroff.labyrinthe.level.Level;
+import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.utils.Coordinate;
@@ -14,6 +15,7 @@ import fr.poweroff.labyrinthe.utils.FilesUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -39,6 +41,7 @@ public class PacmanGame implements Game {
     public final  Countdown  countdown;
     final         Level      level;
     final         Player     player;
+    private ArrayList<Monster> monsters;
     private final Coordinate pacmanPosition = new Coordinate(0, 0);
     protected     int        score;
     private       boolean    finish         = false;
@@ -51,6 +54,7 @@ public class PacmanGame implements Game {
         INSTANCE    = this;
         this.level  = new Level();
         this.player = new Player(new Coordinate(11, 11));
+        this.monsters = new ArrayList<>();
         BufferedReader helpReader;
         try {
             helpReader = new BufferedReader(new FileReader(source));
@@ -63,8 +67,8 @@ public class PacmanGame implements Game {
             System.out.println("Help not available");
         }
         countdown = new Countdown(60);
-        this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player);
-        //this.level.init("levels/level_1.json", this.player);
+        this.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.player,this.monsters);
+
         score = 0;
     }
 
@@ -72,13 +76,17 @@ public class PacmanGame implements Game {
         System.out.println(event.getName());
         if (event.getName().equals("TimeOut")) {
             INSTANCE.setFinish(true);
+        }else if(event.getName().equals("PlayerOnMonsterTile")){
+            INSTANCE.setFinish(true);
         } else if (event.getName().equals("PlayerOnBonusTile")) {
             INSTANCE.score++;
             TileBonus tb = (TileBonus) event.getData();
             tb.changeType();
             System.out.println("SCORE: " + INSTANCE.score);
+
+
         } else if (event.getName().equals("PlayerOnEndTile")) {
-            INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
+            INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player,INSTANCE.monsters);
         }
     }
 
@@ -158,5 +166,12 @@ public class PacmanGame implements Game {
 
     public int getScore() {
         return score;
+    }
+    @Override
+    public void setDifficult(int difficult){
+        for(int i = 0;i<difficult*2-2;i++){
+            monsters.add(new Monster(new Coordinate((i+1) *80 ,(i+1) *80)));
+        }
+        this.level.setDifficult(difficult);
     }
 }

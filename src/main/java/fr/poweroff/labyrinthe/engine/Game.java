@@ -25,5 +25,6 @@ public interface Game {
     boolean isFinished();
 
     boolean isFinishCompteur();
+    void    setDifficult(int difficult);
 
 }
