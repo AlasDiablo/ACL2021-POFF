@@ -8,16 +8,20 @@ import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Monster extends Entity {
 
     /**
      * The player sprite path
      */
-    private static final String  SPRITE_PATH = "assets/ghost/";
-    private final        int     spriteIndex;
-    private final        boolean vertical;
-    private              Cmd     direction;
+    private static final String    SPRITE_PATH = "assets/ghost/";
+    private final        int       spriteIndex;
+    private final        List<Cmd> directions  = new ArrayList<>(List.of(Cmd.RIGHT, Cmd.LEFT, Cmd.DOWN, Cmd.UP));
+    private              boolean   vertical;
+    private              Cmd       direction;
 
     public Monster(Coordinate coordinate) {
         super(
@@ -56,28 +60,35 @@ public class Monster extends Entity {
 
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
-        //TODO Depalcement des monstre en ligne
         var x = this.coordinate.getX();
         var y = this.coordinate.getY();
+        int newX, newY;
+
+        if (PacmanGame.RANDOM.nextInt(1024) > 1000) {
+            this.changeDirection();
+        }
 
         if (this.direction == Cmd.UP || this.direction == Cmd.LEFT) {
-            var newX = x - (this.vertical ? 0 : MOVE_SPEED);
-            var newY = y - (this.vertical ? MOVE_SPEED : 0);
-            if (levelEvolve.notOverlap(newX, newY, ENTITY_SIZE, ENTITY_SIZE)) {
-                this.coordinate.setX(newX);
-                this.coordinate.setY(newY);
-            } else {
-                this.direction = this.vertical ? Cmd.DOWN : Cmd.RIGHT;
-            }
-        } else if (this.direction == Cmd.DOWN || this.direction == Cmd.RIGHT) {
-            var newX = x + (this.vertical ? 0 : MOVE_SPEED);
-            var newY = y + (this.vertical ? MOVE_SPEED : 0);
-            if (levelEvolve.notOverlap(newX, newY, ENTITY_SIZE, ENTITY_SIZE)) {
-                this.coordinate.setX(newX);
-                this.coordinate.setY(newY);
-            } else {
-                this.direction = this.vertical ? Cmd.UP : Cmd.LEFT;
-            }
+            newX = x - (this.vertical ? 0 : MOVE_SPEED);
+            newY = y - (this.vertical ? MOVE_SPEED : 0);
+
+        } else {
+            newX = x + (this.vertical ? 0 : MOVE_SPEED);
+            newY = y + (this.vertical ? MOVE_SPEED : 0);
         }
+
+        if (levelEvolve.notOverlap(newX, newY, ENTITY_SIZE, ENTITY_SIZE)) {
+            this.coordinate.setX(newX);
+            this.coordinate.setY(newY);
+        } else {
+            this.changeDirection();
+        }
+    }
+
+    private void changeDirection() {
+        var dir = PacmanGame.RANDOM.nextInt(4);
+        Collections.shuffle(this.directions);
+        this.direction = this.directions.get(dir);
+        this.vertical  = this.direction == Cmd.UP || this.direction == Cmd.DOWN;
     }
 }

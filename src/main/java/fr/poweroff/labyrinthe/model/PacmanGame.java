@@ -50,6 +50,7 @@ public class PacmanGame implements Game {
     private       boolean       finish         = false;
     private       boolean       pause; //Vérifie si le jeu est en pause
     private       boolean       win            = false;
+    private       int           difficult      = 1;
 
     /**
      * constructeur avec fichier source pour le help
@@ -72,7 +73,7 @@ public class PacmanGame implements Game {
         } catch (IOException e) {
             Labyrinthe.LOGGER.warning("Help not available");
         }
-        countdown = new Countdown(60);
+        countdown  = new Countdown(600);
         score      = 0;
         this.pause = false; //Met le jeu non en pause au départ
     }
@@ -88,7 +89,8 @@ public class PacmanGame implements Game {
             tb.changeType();
             Labyrinthe.LOGGER.debug("SCORE: " + INSTANCE.score);
         } else if (event.getName().equals("PlayerOnEndTile")) {
-            //INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
+            // INSTANCE.setDifficult(INSTANCE.difficult);
+            // INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
             INSTANCE.setWin(true);
             INSTANCE.setFinish(true);
         }
@@ -96,11 +98,13 @@ public class PacmanGame implements Game {
 
     @Override
     public void setDifficult(int difficult) {
-        for (int i = 0; i < difficult * 2 - 2; i++) {
+        this.difficult = difficult;
+        this.monsters.clear();
+        for (int i = 0; i < this.difficult * 2; i++) {
             monsters.add(new Monster(new Coordinate(0, 0)));
         }
         this.level.init(
-                PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, this.player, this.monsters.toArray(new Entity[]{ })
+                PacmanPainter.WIDTH, PacmanPainter.HEIGHT, this.difficult, this.player, this.monsters.toArray(new Entity[]{ })
         );
         this.compteur();
     }
