@@ -1,6 +1,5 @@
 package fr.poweroff.labyrinthe.model;
 
-import fr.poweroff.labyrinthe.Labyrinthe;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.event.Event;
@@ -34,7 +33,7 @@ public class PacmanGame implements Game {
 
     static {
         var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
-        Labyrinthe.LOGGER.info(String.format("Seed use: %d", seed));
+        //Labyrinthe.LOGGER.info(String.format("Seed use: %d", seed));
         RANDOM = new Random(seed);
     }
 
@@ -66,11 +65,11 @@ public class PacmanGame implements Game {
             helpReader = new BufferedReader(new FileReader(source));
             String ligne;
             while ((ligne = helpReader.readLine()) != null) {
-                Labyrinthe.LOGGER.info(ligne);
+                //Labyrinthe.LOGGER.info(ligne);
             }
             helpReader.close();
         } catch (IOException e) {
-            Labyrinthe.LOGGER.warning("Help not available");
+            //Labyrinthe.LOGGER.warning("Help not available");
         }
         countdown = new Countdown(60);
         score      = 0;
@@ -78,7 +77,7 @@ public class PacmanGame implements Game {
     }
 
     public static void onEvent(Event<?> event) {
-        Labyrinthe.LOGGER.debug(event.getName());
+        //Labyrinthe.LOGGER.debug(event.getName());
 
         if (event.getName().equals("TimeOut")) {
             INSTANCE.setFinish(true);
@@ -86,7 +85,7 @@ public class PacmanGame implements Game {
             INSTANCE.score++;
             TileBonus tb = (TileBonus) event.getData();
             tb.changeType();
-            Labyrinthe.LOGGER.debug("SCORE: " + INSTANCE.score);
+            //Labyrinthe.LOGGER.debug("SCORE: " + INSTANCE.score);
         } else if (event.getName().equals("PlayerOnEndTile")) {
             //INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
             INSTANCE.setWin(true);
@@ -148,7 +147,7 @@ public class PacmanGame implements Game {
 
         //Met en pause le jeu
         if (commande == Cmd.PAUSE) {
-            Labyrinthe.LOGGER.debug("Pause !");
+            //Labyrinthe.LOGGER.debug("Pause !");
             if (this.pause) {
                 this.compteur();
                 this.setPause(false);

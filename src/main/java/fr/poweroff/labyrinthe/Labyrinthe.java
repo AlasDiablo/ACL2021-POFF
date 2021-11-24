@@ -1,7 +1,5 @@
 package fr.poweroff.labyrinthe;
 
-import fr.liotapsi.jprettylogs.ILogger;
-import fr.liotapsi.jprettylogs.impl.AnsiLogger;
 import fr.poweroff.labyrinthe.engine.GameEngineGraphical;
 import fr.poweroff.labyrinthe.model.PacmanController;
 import fr.poweroff.labyrinthe.model.PacmanGame;
@@ -12,7 +10,7 @@ import fr.poweroff.labyrinthe.model.PacmanPainter;
  */
 public class Labyrinthe {
 
-    public static final ILogger LOGGER = new AnsiLogger(System.out, true, true, true, true, true);
+    //public static final ILogger LOGGER = new AnsiLogger(System.out, true, true, true, true, true);
 
     public static void main(String[] args) throws InterruptedException {
 
