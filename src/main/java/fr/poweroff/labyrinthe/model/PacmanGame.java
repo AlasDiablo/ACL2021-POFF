@@ -63,7 +63,8 @@ public class PacmanGame implements Game {
             TileBonus tb = (TileBonus) event.getData();
             tb.changeType();
         } else if (event.getName().equals("PlayerOnEndTile")) {
-            //INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
+            // INSTANCE.setDifficult(INSTANCE.difficult);
+            // INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
             INSTANCE.setWin(true);
             INSTANCE.setFinish(true);
         }
@@ -115,7 +116,6 @@ public class PacmanGame implements Game {
 
         //Met en pause le jeu
         if (commande == Cmd.PAUSE) {
-            //Labyrinthe.LOGGER.debug("Pause !");
             if (this.pause) {
                 this.compteur();
                 this.setPause(false);
