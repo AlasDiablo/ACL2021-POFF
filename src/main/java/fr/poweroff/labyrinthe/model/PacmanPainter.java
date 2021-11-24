@@ -1,6 +1,7 @@
 package fr.poweroff.labyrinthe.model;
 
 import fr.poweroff.labyrinthe.engine.GamePainter;
+import fr.poweroff.labyrinthe.level.Level;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -38,15 +39,25 @@ public class PacmanPainter implements GamePainter {
 
         this.pacmanGame.level.draw(crayon);
 
+        crayon.setColor(Color.BLACK);
+        crayon.fillRect(Level.TITLE_SIZE - 2, 2, Level.TITLE_SIZE * 23 + 2, 18);
+        crayon.setColor(Color.ORANGE);
+
+        crayon.drawLine(Level.TITLE_SIZE - 2, 2, Level.TITLE_SIZE * 24, 2);
+        crayon.drawLine(Level.TITLE_SIZE - 2, 18, Level.TITLE_SIZE * 24 + 2, 18);
+
+        crayon.drawLine(Level.TITLE_SIZE * 24, 2, Level.TITLE_SIZE * 24, 18);
+        crayon.drawLine(Level.TITLE_SIZE - 2, 2, Level.TITLE_SIZE - 2, 18);
+
         crayon.setColor(Color.white);
 
 
         Font font = new Font("Courier New", Font.BOLD, 17);
         crayon.setFont(font);
-        crayon.drawString(pacmanGame.getCountdown().getMinutesSeconds(), WIDTH / 2, 50);
+        crayon.drawString(pacmanGame.getCountdown().getMinutesSeconds(), Level.TITLE_SIZE, 15);
 
-        crayon.drawString("Score: ", WIDTH / 2 - 25, 70);
-        crayon.drawString(String.valueOf(pacmanGame.getScore()), WIDTH / 2 + 45, 70);
+        crayon.drawString("Score: ", Level.TITLE_SIZE * 4, 15);
+        crayon.drawString(String.valueOf(pacmanGame.getScore()), Level.TITLE_SIZE * 7, 15);
     }
 
     @Override
