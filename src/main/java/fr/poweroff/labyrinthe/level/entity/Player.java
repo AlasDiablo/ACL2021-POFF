@@ -25,12 +25,10 @@ public class Player extends Entity {
 
     /**
      * Default constructor of the player
-     *
-     * @param coordinate the start position of the player
      */
-    public Player(Coordinate coordinate) {
+    public Player() {
         super(
-                coordinate,
+                new Coordinate(0, 0),
                 Player.getSprite("pacman_right.png"),
                 Player.getSprite("pacman_down.png"),
                 Player.getSprite("pacman_left.png"),

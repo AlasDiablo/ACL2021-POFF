@@ -65,6 +65,8 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
+                    <includeProjectDependencies>true</includeProjectDependencies>
+                    <includePluginDependencies>true</includePluginDependencies>
                     <executable>java</executable>
                     <mainClass>fr.poweroff.labyrinthe.Labyrinthe</mainClass>
                 </configuration>
@@ -88,13 +90,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.9</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.liotapsi</groupId>
-            <artifactId>jprettylogs</artifactId>
-            <version>3.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/jprettylogs-3.0.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
