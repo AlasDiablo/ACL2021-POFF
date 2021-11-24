@@ -1,5 +1,6 @@
 package fr.poweroff.labyrinthe.model;
 
+import com.google.common.collect.Lists;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.event.Event;
@@ -13,10 +14,6 @@ import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -33,7 +30,6 @@ public class PacmanGame implements Game {
 
     static {
         var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
-        //Labyrinthe.LOGGER.info(String.format("Seed use: %d", seed));
         RANDOM = new Random(seed);
     }
 
@@ -42,9 +38,6 @@ public class PacmanGame implements Game {
      */
     public final  Countdown     countdown;
     final         Level         level;
-    final         Player        player;
-    private final Coordinate    pacmanPosition = new Coordinate(0, 0);
-    private final List<Monster> monsters;
     protected     int           score;
     private       boolean       finish         = false;
     private       boolean       pause; //Vérifie si le jeu est en pause
@@ -53,39 +46,22 @@ public class PacmanGame implements Game {
     /**
      * constructeur avec fichier source pour le help
      */
-    public PacmanGame(String source) {
+    public PacmanGame() {
         FilesUtils.setClassLoader(this.getClass().getClassLoader());
-        INSTANCE      = this;
-        this.level    = new Level();
-        this.player   = new Player(new Coordinate(11, 11));
-        this.monsters = new ArrayList<>();
-
-        BufferedReader helpReader;
-        try {
-            helpReader = new BufferedReader(new FileReader(source));
-            String ligne;
-            while ((ligne = helpReader.readLine()) != null) {
-                //Labyrinthe.LOGGER.info(ligne);
-            }
-            helpReader.close();
-        } catch (IOException e) {
-            //Labyrinthe.LOGGER.warning("Help not available");
-        }
-        countdown = new Countdown(60);
+        INSTANCE   = this;
+        this.level = new Level();
+        countdown  = new Countdown(60);
         score      = 0;
         this.pause = false; //Met le jeu non en pause au départ
     }
 
     public static void onEvent(Event<?> event) {
-        //Labyrinthe.LOGGER.debug(event.getName());
-
         if (event.getName().equals("TimeOut")) {
             INSTANCE.setFinish(true);
         } else if (event.getName().equals("PlayerOnBonusTile")) {
             INSTANCE.score++;
             TileBonus tb = (TileBonus) event.getData();
             tb.changeType();
-            //Labyrinthe.LOGGER.debug("SCORE: " + INSTANCE.score);
         } else if (event.getName().equals("PlayerOnEndTile")) {
             //INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
             INSTANCE.setWin(true);
@@ -95,22 +71,14 @@ public class PacmanGame implements Game {
 
     @Override
     public void setDifficult(int difficult) {
+        List<Entity> monsters = Lists.newArrayList();
         for (int i = 0; i < difficult * 2 - 2; i++) {
             monsters.add(new Monster(new Coordinate(0, 0)));
         }
         this.level.init(
-                PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, this.player, this.monsters.toArray(new Entity[]{ })
+                PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, new Player(), monsters.toArray(new Entity[]{ })
         );
         this.compteur();
-    }
-
-    /**
-     * Renvoie les coordonnees du pacman
-     *
-     * @return les coordonnee du pacman
-     */
-    public Coordinate getPacmanPosition() {
-        return pacmanPosition;
     }
 
     /**
