@@ -9,7 +9,6 @@ import fr.poweroff.labyrinthe.utils.FilesUtils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Monster extends Entity {
@@ -87,7 +86,6 @@ public class Monster extends Entity {
 
     private void changeDirection() {
         var dir = PacmanGame.RANDOM.nextInt(4);
-        Collections.shuffle(this.directions);
         this.direction = this.directions.get(dir);
         this.vertical  = this.direction == Cmd.UP || this.direction == Cmd.DOWN;
     }
