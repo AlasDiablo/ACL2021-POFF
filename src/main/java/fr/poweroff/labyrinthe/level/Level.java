@@ -6,6 +6,7 @@ import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.level.entity.Entity;
+import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
@@ -371,6 +372,18 @@ public class Level {
                 PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));
             }
         });
+
+        //check if player touch a monster
+        this.levelEvolve.overlapEntity(
+                this.player.getCoordinate().getX(),
+                this.player.getCoordinate().getY(),
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.entities
+        ).ifPresent(entity->{
+            if(entity != this.player) {
+                System.out.println("Joueur touche par " + entity.getClass() + ": " + entity.getCoordinate().getX() + ", " + entity.getCoordinate().getY());
+            }
+            }
+        );
     }
 
     /**
@@ -448,6 +461,27 @@ public class Level {
                             tile.getCoordinate().getX() + TITLE_SIZE < x ||
                             y + h < tile.getCoordinate().getY() ||
                             tile.getCoordinate().getY() + TITLE_SIZE < y)
+                    )
+                    .findAny();
+        }
+
+
+        /**
+         * Check if a entity overlapping a list of entity
+         * @param x X position of the tested entity
+         * @param y Y position of the tested entity
+         * @param w Widht of a entity
+         * @param h Height of a entity
+         * @param entities list of entities to be check
+         * @return the overlapping entity
+         */
+        public Optional<Entity> overlapEntity(int x, int y, int w, int h, List<Entity> entities) {
+            return entities
+                    .stream()
+                    .filter(entitie -> !(x + w < entitie.getCoordinate().getX() ||
+                            entitie.getCoordinate().getX() + entitie.ENTITY_SIZE < x ||
+                            y + h < entitie.getCoordinate().getY() ||
+                            entitie.getCoordinate().getY() + entitie.ENTITY_SIZE < y)
                     )
                     .findAny();
         }
