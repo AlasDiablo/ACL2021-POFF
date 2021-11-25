@@ -10,6 +10,7 @@ import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
+import fr.poweroff.labyrinthe.level.tile.special.TileLife;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
@@ -64,7 +65,12 @@ public class PacmanGame implements Game {
             INSTANCE.score++;
             TileBonus tb = (TileBonus) event.getData();
             tb.changeType();
-        } else if (event.getName().equals("PlayerOnEndTile")) {
+        } else if (event.getName().equals("PlayerOnLifeBonusTile")) {
+            INSTANCE.life++;
+            TileLife tb = (TileLife) event.getData();
+            tb.changeType();
+        }
+        else if (event.getName().equals("PlayerOnEndTile")) {
             // INSTANCE.setDifficult(INSTANCE.difficult);
             // INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
             INSTANCE.setWin(true);
@@ -188,9 +194,6 @@ public class PacmanGame implements Game {
         return life;
     }
 
-    public void addlife(){
-        this.life++;
-    }
 
     public void minuslife(){
         this.life--;

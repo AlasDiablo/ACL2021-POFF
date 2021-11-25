@@ -126,6 +126,7 @@ public abstract class Tile {
      * Enum used to define the type of the tile
      */
     public enum Type {
-        GROUND, WALL, START, END, BONUS
+        GROUND, WALL, START, END, BONUS,
+        ADDLIFE
     }
 }

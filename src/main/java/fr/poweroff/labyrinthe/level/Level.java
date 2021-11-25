@@ -5,8 +5,10 @@ import com.google.common.collect.ImmutableMap;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
+import fr.poweroff.labyrinthe.event.cases.PlayerOnLifeBonusTileEvent;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.tile.*;
+import fr.poweroff.labyrinthe.level.tile.special.TileLife;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
@@ -117,6 +119,7 @@ public class Level {
         ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> specialBonusBuilder = new ImmutableList.Builder<>();
 
         // Read the level map and create tile
         level.forEach((coordinate, type) -> {
@@ -147,6 +150,10 @@ public class Level {
                     player.getCoordinate().setX(rx + 2);
                     player.getCoordinate().setY(ry + 2);
                     break;
+                case ADDLIFE:
+                    currentTile = new TileLife(rx , ry);
+                    specialBonusBuilder.add(currentTile);
+                    break;
                 // Create ground tile
                 default:
                     currentTile = new TileGround(rx, ry);
@@ -162,6 +169,7 @@ public class Level {
         this.levelDisposition       = levelBuilder.build();
         this.levelEvolve.wallTiles  = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
+        this.levelEvolve.specialBonusTiles = specialBonusBuilder.build();
     }
 
     /**
@@ -181,6 +189,7 @@ public class Level {
         ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> specialBonusBuilder = new ImmutableList.Builder<>();
 
         // Calculate the level size
         var sizeX = (int) Math.floor((float) width / (float) TITLE_SIZE);
@@ -209,6 +218,16 @@ public class Level {
             bonusTile.add(bonusIndex);
         }
 
+        // Create the list of special bonus tile index
+        List<Integer> specialBonusTile = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            int bonusIndex;
+            do {
+                bonusIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+            } while (specialBonusTile.contains(bonusIndex) || bonusIndex == startPos || bonusIndex == endPos);
+            specialBonusTile.add(bonusIndex);
+        }
+
         var wallNumberWithDifficult = WALL_NUMBER + (WALL_NUMBER / 2 * (difficult - 1));
 
         // Create a random amount of wall
@@ -224,7 +243,7 @@ public class Level {
             int wallIndex;
             do {
                 wallIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
-            } while (wallTile.contains(wallIndex) || bonusTile.contains(wallIndex) || wallIndex == startPos || wallIndex == endPos);
+            } while (wallTile.contains(wallIndex) || bonusTile.contains(wallIndex) || specialBonusTile.contains(wallIndex) || wallIndex == startPos || wallIndex == endPos);
             wallTile.add(wallIndex);
         }
 
@@ -261,6 +280,9 @@ public class Level {
                         currentTile  = new TileEnd(rx, ry);
                         this.endTile = currentTile;
                         // Create ground tile
+                    } else if(specialBonusTile.contains(levelIndex)){
+                        currentTile = new TileLife(rx , ry);
+                        specialBonusBuilder.add(currentTile);
                     } else {
                         currentTile = new TileGround(rx, ry);
                     }
@@ -277,6 +299,7 @@ public class Level {
         this.levelDisposition       = levelBuilder.build();
         this.levelEvolve.wallTiles  = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
+        this.levelEvolve.specialBonusTiles = specialBonusBuilder.build();
 
         this.initMonster(width, height, levelDisposition, entities);
     }
@@ -361,14 +384,22 @@ public class Level {
             PacmanGame.onEvent(new PlayerOnEndTileEvent(this.endTile));
         }
 
+        List<Tile> liste = new ArrayList<>();
+        liste.addAll(this.levelEvolve.bonusTiles);
+        liste.addAll(this.levelEvolve.specialBonusTiles);
+
+
         // Check if player is on a bonus tile
         this.levelEvolve.overlapFindAny(
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
-                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.levelEvolve.bonusTiles
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, liste
         ).ifPresent(tile -> {
             if (tile.getType() == Tile.Type.BONUS) { // check if the tile has already been visited
                 PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));
+            }
+            if (tile.getType() == Tile.Type.ADDLIFE) { // check if the tile has already been visited
+                PacmanGame.onEvent(new PlayerOnLifeBonusTileEvent(tile));
             }
         });
     }
@@ -394,6 +425,8 @@ public class Level {
          * List of all bonus tile
          */
         private List<Tile> bonusTiles;
+
+        private List<Tile> specialBonusTiles;
 
         /**
          * Check if a custom rectangle is not overlapping a wall
