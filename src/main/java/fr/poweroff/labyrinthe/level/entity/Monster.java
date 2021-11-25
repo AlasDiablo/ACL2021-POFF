@@ -19,8 +19,8 @@ public class Monster extends Entity {
     private static final String    SPRITE_PATH = "assets/ghost/";
     private final        int       spriteIndex;
     private final        List<Cmd> directions  = new ArrayList<>(List.of(Cmd.RIGHT, Cmd.LEFT, Cmd.DOWN, Cmd.UP));
-    private              boolean   vertical;
-    private              Cmd       direction;
+    protected            boolean   vertical;
+    protected            Cmd       direction;
 
     public Monster(Coordinate coordinate) {
         super(
@@ -28,9 +28,29 @@ public class Monster extends Entity {
                 Monster.getSprite("monster_blinky.png"),
                 Monster.getSprite("monster_clyde.png"),
                 Monster.getSprite("monster_inky.png"),
-                Monster.getSprite("monster_pinky.png")
+                Monster.getSprite("monster_pinky.png"),
+                Monster.getSprite("monster_blue.png")
         );
         this.spriteIndex = PacmanGame.RANDOM.ints(0, this.sprite.length).findAny().orElse(0);
+        this.vertical    = PacmanGame.RANDOM.nextBoolean();
+        var bool = PacmanGame.RANDOM.nextBoolean();
+        if (this.vertical) {
+            this.direction = bool ? Cmd.DOWN : Cmd.UP;
+        } else {
+            this.direction = bool ? Cmd.RIGHT : Cmd.LEFT;
+        }
+    }
+
+    public Monster(Coordinate coordinate, int spriteIndex) {
+        super(
+                coordinate,
+                Monster.getSprite("monster_blinky.png"),
+                Monster.getSprite("monster_clyde.png"),
+                Monster.getSprite("monster_inky.png"),
+                Monster.getSprite("monster_pinky.png"),
+                Monster.getSprite("monster_blue.png")
+        );
+        this.spriteIndex = spriteIndex;
         this.vertical    = PacmanGame.RANDOM.nextBoolean();
         var bool = PacmanGame.RANDOM.nextBoolean();
         if (this.vertical) {
@@ -54,18 +74,24 @@ public class Monster extends Entity {
     @Override
     public void draw(Graphics2D graphics) {
         graphics.drawImage(this.getSprite()[this.spriteIndex], this.getCoordinate().getX(), this.getCoordinate().getY(), ENTITY_SIZE, ENTITY_SIZE, null);
-        //TODO Orientation des sprite en fondtion de la direction de deplacement
     }
 
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
-        var x = this.coordinate.getX();
-        var y = this.coordinate.getY();
-        int newX, newY;
+        this.changeDirectionRandomly();
+        this.move(levelEvolve);
+    }
 
+    protected void changeDirectionRandomly() {
         if (PacmanGame.RANDOM.nextInt(1024) > 1000) {
             this.changeDirection();
         }
+    }
+
+    protected void move(LevelEvolve levelEvolve) {
+        var x = this.coordinate.getX();
+        var y = this.coordinate.getY();
+        int newX, newY;
 
         if (this.direction == Cmd.UP || this.direction == Cmd.LEFT) {
             newX = x - (this.vertical ? 0 : MOVE_SPEED);

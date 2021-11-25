@@ -15,8 +15,8 @@ public class PacmanPainter implements GamePainter {
     /**
      * la taille des cases
      */
-    static final int WIDTH  = 550;
-    static final int HEIGHT = 550;
+    public static final int WIDTH  = 550;
+    public static final int HEIGHT = 550;
 
     public final PacmanGame pacmanGame;
 
