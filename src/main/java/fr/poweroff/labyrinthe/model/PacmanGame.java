@@ -42,6 +42,7 @@ public class PacmanGame implements Game {
     private       boolean       finish         = false;
     private       boolean       pause; //Vérifie si le jeu est en pause
     private       boolean       win            = false;
+    protected     int           life; //nb de vie
 
     /**
      * constructeur avec fichier source pour le help
@@ -53,6 +54,7 @@ public class PacmanGame implements Game {
         countdown  = new Countdown(60);
         score      = 0;
         this.pause = false; //Met le jeu non en pause au départ
+        this.life = 3;
     }
 
     public static void onEvent(Event<?> event) {
@@ -180,5 +182,17 @@ public class PacmanGame implements Game {
 
     public int getScore() {
         return score;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void addlife(){
+        this.life++;
+    }
+
+    public void minuslife(){
+        this.life--;
     }
 }
