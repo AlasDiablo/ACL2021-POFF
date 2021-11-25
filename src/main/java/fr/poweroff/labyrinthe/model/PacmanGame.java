@@ -86,6 +86,11 @@ public class PacmanGame implements Game {
         else if (event.getName().equals("PlayerOnEndTile")) {
             // INSTANCE.setDifficult(INSTANCE.difficult);
             // INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
+
+            //Si le jeu est terminé, le joueur augmente son score avec les munitions qui lui restait
+            if(INSTANCE.getMunition() > 0){
+                INSTANCE.score += INSTANCE.getMunition();
+            }
             INSTANCE.setWin(true);
             INSTANCE.setFinish(true);
         }
