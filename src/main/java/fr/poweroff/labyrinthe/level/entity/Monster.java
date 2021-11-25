@@ -16,7 +16,7 @@ public class Monster extends Entity {
     /**
      * The player sprite path
      */
-    private static final String    SPRITE_PATH = "assets/ghost/";
+    private static final String    SPRITE_PATH = "assets/textures/ghost/";
     private final        int       spriteIndex;
     private final        List<Cmd> directions  = new ArrayList<>(List.of(Cmd.RIGHT, Cmd.LEFT, Cmd.DOWN, Cmd.UP));
     private              boolean   vertical;
