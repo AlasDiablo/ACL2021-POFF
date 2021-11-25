@@ -14,6 +14,7 @@ import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.level.tile.special.TileLife;
 import fr.poweroff.labyrinthe.level.tile.special.TileMunitions;
 import fr.poweroff.labyrinthe.level.tile.special.TileTime;
+import fr.poweroff.labyrinthe.level.tile.special.TileTreasure;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
@@ -59,7 +60,7 @@ public class PacmanGame implements Game {
         countdown  = new Countdown(60);
         score      = 0;
         this.pause = false; //Met le jeu non en pause au départ
-        this.life = 3;
+        this.life = 3; //Mettre un max de 10 environ
         this.munition = 0;
     }
 
@@ -82,6 +83,10 @@ public class PacmanGame implements Game {
             INSTANCE.munition ++;
             TileMunitions tm = (TileMunitions) event.getData();
             tm.changeType();
+        } else if(event.getName().equals("PlayerOnTreasureBonusTile")){
+            INSTANCE.score += 5;
+            TileTreasure tt = (TileTreasure) event.getData();
+            tt.changeType();
         }
         else if (event.getName().equals("PlayerOnEndTile")) {
             // INSTANCE.setDifficult(INSTANCE.difficult);
