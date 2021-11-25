@@ -1,7 +1,6 @@
 package fr.poweroff.labyrinthe.level.tile;
 
 import fr.poweroff.labyrinthe.level.Level;
-import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
@@ -18,16 +17,7 @@ public class TileStart extends Tile {
      * @param y Y coordinate
      */
     public TileStart(int x, int y) {
-        super(x, y, FilesUtils.getImage("tile_start.png"));
-    }
-
-    /**
-     * Constructor how take coordinate
-     *
-     * @param coordinate Coordinate object
-     */
-    public TileStart(Coordinate coordinate) {
-        super(coordinate, FilesUtils.getImage("tile_start.png"));
+        super(x, y, FilesUtils.getImage("assets/textures/tile/start.png"));
     }
 
     /**
