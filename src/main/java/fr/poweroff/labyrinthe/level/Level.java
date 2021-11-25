@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
+import fr.poweroff.labyrinthe.event.TimeOutEvent;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.tile.*;
@@ -36,6 +37,10 @@ public class Level {
      */
     public static final int          WALL_NUMBER  = 6;
     /**
+     * Number of ticks with invincibility after taking damage
+     */
+    public static final int         INVINCIBILITY_TICKS = 60;
+    /**
      * Level evolve used to check tile and entities overlapping and more
      */
     private final       LevelEvolve  levelEvolve;
@@ -56,8 +61,14 @@ public class Level {
      */
     private             Entity       player;
 
+    /**
+     * Counter of ticks since the last damage
+     */
+    private             int         ticksCounterLastDamage;
+
     public Level() {
         this.levelEvolve = new LevelEvolve();
+        this.ticksCounterLastDamage = INVINCIBILITY_TICKS;
         this.init();
     }
 
@@ -379,11 +390,21 @@ public class Level {
                 this.player.getCoordinate().getY(),
                 Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.entities
         ).ifPresent(entity->{
-            if(entity != this.player) {
+            if(entity != this.player && this.ticksCounterLastDamage > INVINCIBILITY_TICKS) {
                 System.out.println("Joueur touche par " + entity.getClass() + ": " + entity.getCoordinate().getX() + ", " + entity.getCoordinate().getY());
+                this.player.lostHealthPoints(1);
+                this.ticksCounterLastDamage = 0;
+
             }
-            }
-        );
+        });
+
+        if (this.player.getHealthPoints() <= 0) {
+            PacmanGame.onEvent(new TimeOutEvent()); //TOCHANGE: add PlayerDiedEvent or replace TimeOutEvent with GameOverEvent
+        }
+
+        this.ticksCounterLastDamage++;
+        System.out.println("tick depuis denier domage: " + this.ticksCounterLastDamage);
+        System.out.println("Points de vie: " + this.player.getHealthPoints());
     }
 
     /**

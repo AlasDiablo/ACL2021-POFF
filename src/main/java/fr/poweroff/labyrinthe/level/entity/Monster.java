@@ -25,6 +25,7 @@ public class Monster extends Entity {
     public Monster(Coordinate coordinate) {
         super(
                 coordinate,
+                1,
                 Monster.getSprite("monster_blinky.png"),
                 Monster.getSprite("monster_clyde.png"),
                 Monster.getSprite("monster_inky.png"),

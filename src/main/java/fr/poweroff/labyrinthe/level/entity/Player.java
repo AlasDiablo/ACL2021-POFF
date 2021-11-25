@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
  * Class how define the player entity
  */
 public class Player extends Entity {
-
     /**
      * The player sprite path
      */
@@ -29,6 +28,7 @@ public class Player extends Entity {
     public Player() {
         super(
                 new Coordinate(0, 0),
+                3,
                 Player.getSprite("pacman_right.png"),
                 Player.getSprite("pacman_down.png"),
                 Player.getSprite("pacman_left.png"),
