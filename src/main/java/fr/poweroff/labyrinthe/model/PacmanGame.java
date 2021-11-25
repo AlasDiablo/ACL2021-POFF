@@ -9,8 +9,11 @@ import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
+import fr.poweroff.labyrinthe.level.tile.Tile;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.level.tile.special.TileLife;
+import fr.poweroff.labyrinthe.level.tile.special.TileMunitions;
+import fr.poweroff.labyrinthe.level.tile.special.TileTime;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
@@ -44,6 +47,7 @@ public class PacmanGame implements Game {
     private       boolean       pause; //Vérifie si le jeu est en pause
     private       boolean       win            = false;
     protected     int           life; //nb de vie
+    protected     int           munition; //Nombre de munition qu'a le joueur
 
     /**
      * constructeur avec fichier source pour le help
@@ -56,6 +60,7 @@ public class PacmanGame implements Game {
         score      = 0;
         this.pause = false; //Met le jeu non en pause au départ
         this.life = 3;
+        this.munition = 0;
     }
 
     public static void onEvent(Event<?> event) {
@@ -69,6 +74,14 @@ public class PacmanGame implements Game {
             INSTANCE.life++;
             TileLife tb = (TileLife) event.getData();
             tb.changeType();
+        }else if(event.getName().equals("PlayerOnTimeBonusTile")){
+            INSTANCE.countdown.setTime();
+            TileTime tb = (TileTime) event.getData();
+            tb.changeType();
+        } else if(event.getName().equals("PlayerOnMunitionBonusTile")){
+            INSTANCE.munition ++;
+            TileMunitions tm = (TileMunitions) event.getData();
+            tm.changeType();
         }
         else if (event.getName().equals("PlayerOnEndTile")) {
             // INSTANCE.setDifficult(INSTANCE.difficult);
@@ -194,6 +207,9 @@ public class PacmanGame implements Game {
         return life;
     }
 
+    public int getMunition() {
+        return munition;
+    }
 
     public void minuslife(){
         this.life--;

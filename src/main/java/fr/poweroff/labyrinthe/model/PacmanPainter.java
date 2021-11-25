@@ -61,7 +61,7 @@ public class PacmanPainter implements GamePainter {
         crayon.drawString(String.valueOf(pacmanGame.getScore()), Level.TITLE_SIZE * 7, 15);
 
         crayon.drawString("Munition: ", Level.TITLE_SIZE * 8, 15);
-        crayon.drawString(String.valueOf(0), Level.TITLE_SIZE * 12, 15);
+        crayon.drawString(String.valueOf(pacmanGame.getMunition()), Level.TITLE_SIZE * 12, 15);
 
         /*
         Affichage des coeurs selon le nombre de vie
