@@ -5,16 +5,10 @@ import com.google.common.collect.ImmutableMap;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
-import fr.poweroff.labyrinthe.event.cases.PlayerOnLifeBonusTileEvent;
-import fr.poweroff.labyrinthe.event.cases.PlayerOnMunitionBonusTileEvent;
-import fr.poweroff.labyrinthe.event.cases.PlayerOnTimeBonusTileEvent;
-import fr.poweroff.labyrinthe.event.cases.PlayerOnTreasureBonusTileEvent;
+import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.tile.*;
-import fr.poweroff.labyrinthe.level.tile.special.TileLife;
-import fr.poweroff.labyrinthe.level.tile.special.TileMunitions;
-import fr.poweroff.labyrinthe.level.tile.special.TileTime;
-import fr.poweroff.labyrinthe.level.tile.special.TileTreasure;
+import fr.poweroff.labyrinthe.level.tile.special.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
@@ -51,6 +45,8 @@ public class Level {
     public static final int          MUNITION_NUMBER = 6;
 
     public static final int          TREASURE_NUMBER = 4;
+
+    public static final int          TRAP_NUMBER = 6;
 
     /**
      * Level evolve used to check tile and entities overlapping and more
@@ -138,7 +134,7 @@ public class Level {
         ImmutableList.Builder<Tile> specialBonusBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> munitionBonusBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> timeBonusBuilder = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Tile> trapBonusBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> trapBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> treasureBonusBuilder = new ImmutableList.Builder<>();
 
         // Read the level map and create tile
@@ -190,6 +186,11 @@ public class Level {
                     currentTile = new TileTreasure(rx, ry);
                     treasureBonusBuilder.add(currentTile);
                     break;
+                    //Create tile trap
+                case TRAP:
+                    currentTile = new TileTrap(rx, ry);
+                    trapBuilder.add(currentTile);
+                    break;
                 // Create ground tile
                 default:
                     currentTile = new TileGround(rx, ry);
@@ -209,6 +210,7 @@ public class Level {
         this.levelEvolve.timeBonusTiles = timeBonusBuilder.build();
         this.levelEvolve.munitionBonusTiles = munitionBonusBuilder.build();
         this.levelEvolve.treasureBonusTiles = treasureBonusBuilder.build();
+        this.levelEvolve.trapTiles = trapBuilder.build();
     }
 
     /**
@@ -231,7 +233,7 @@ public class Level {
         ImmutableList.Builder<Tile> specialBonusBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> munitionBonusBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> timeBonusBuilder = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Tile> trapBonusBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> trapBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> treasureBonusBuilder = new ImmutableList.Builder<>();
 
         // Calculate the level size
@@ -301,6 +303,16 @@ public class Level {
             treasureBonusTile.add(bonusIndex);
         }
 
+        // Create the list of special tile index (trap)
+        List<Integer> trapTile = new ArrayList<>();
+        for (int i = 0; i < TRAP_NUMBER; i++) {
+            int bonusIndex;
+            do {
+                bonusIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+            } while (trapTile.contains(bonusIndex) ||bonusIndex == startPos || bonusIndex == endPos);
+            trapTile.add(bonusIndex);
+        }
+
         var wallNumberWithDifficult = WALL_NUMBER + (WALL_NUMBER / 2 * (difficult - 1));
 
         // Create a random amount of wall
@@ -318,7 +330,7 @@ public class Level {
                 wallIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
             } while (wallTile.contains(wallIndex) || bonusTile.contains(wallIndex) || specialBonusTile.contains(wallIndex)
                     || timeBonusTile.contains(wallIndex) || munitionBonusTile.contains(wallIndex)
-                    || treasureBonusTile.contains(wallIndex)
+                    || treasureBonusTile.contains(wallIndex) || trapTile.contains(wallIndex)
                     || wallIndex == startPos || wallIndex == endPos);
             wallTile.add(wallIndex);
         }
@@ -368,6 +380,9 @@ public class Level {
                     } else if(treasureBonusTile.contains(levelIndex)){
                         currentTile = new TileTreasure(rx, ry);
                         treasureBonusBuilder.add(currentTile);
+                    } else if(trapTile.contains(levelIndex)){
+                        currentTile = new TileTrap(rx, ry);
+                        trapBuilder.add(currentTile);
                     }
                     else {
                         currentTile = new TileGround(rx, ry);
@@ -389,6 +404,7 @@ public class Level {
         this.levelEvolve.timeBonusTiles = timeBonusBuilder.build();
         this.levelEvolve.munitionBonusTiles = munitionBonusBuilder.build();
         this.levelEvolve.treasureBonusTiles = treasureBonusBuilder.build();
+        this.levelEvolve.trapTiles = trapBuilder.build();
 
         this.initMonster(width, height, levelDisposition, entities);
     }
@@ -479,6 +495,7 @@ public class Level {
         liste.addAll(this.levelEvolve.timeBonusTiles);
         liste.addAll(this.levelEvolve.munitionBonusTiles);
         liste.addAll(this.levelEvolve.treasureBonusTiles);
+        liste.addAll(this.levelEvolve.trapTiles);
 
 
         // Check if player is on a bonus tile
@@ -501,6 +518,9 @@ public class Level {
             }
             if (tile.getType() == Tile.Type.ADDTREASURE) { // check if the tile has already been visited
                 PacmanGame.onEvent(new PlayerOnTreasureBonusTileEvent(tile));
+            }
+            if (tile.getType() == Tile.Type.TRAP) { // check if the tile has already been visited
+                PacmanGame.onEvent(new PlayerOnTrapTileEvent(tile));
             }
         });
     }

@@ -11,10 +11,7 @@ import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.Tile;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
-import fr.poweroff.labyrinthe.level.tile.special.TileLife;
-import fr.poweroff.labyrinthe.level.tile.special.TileMunitions;
-import fr.poweroff.labyrinthe.level.tile.special.TileTime;
-import fr.poweroff.labyrinthe.level.tile.special.TileTreasure;
+import fr.poweroff.labyrinthe.level.tile.special.*;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
@@ -86,6 +83,11 @@ public class PacmanGame implements Game {
         } else if(event.getName().equals("PlayerOnTreasureBonusTile")){
             INSTANCE.score += 5;
             TileTreasure tt = (TileTreasure) event.getData();
+            tt.changeType();
+        } else if(event.getName().equals("PlayerOnTrapTile")){
+            INSTANCE.score -= 5;
+            INSTANCE.life--;
+            TileTrap tt = (TileTrap) event.getData();
             tt.changeType();
         }
         else if (event.getName().equals("PlayerOnEndTile")) {
