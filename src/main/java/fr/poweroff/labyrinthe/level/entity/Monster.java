@@ -31,7 +31,7 @@ public class Monster extends Entity {
                 Monster.getSprite("monster_pinky.png"),
                 Monster.getSprite("monster_blue.png")
         );
-        this.spriteIndex = PacmanGame.RANDOM.ints(0, this.sprite.length).findAny().orElse(0);
+        this.spriteIndex = PacmanGame.RANDOM.ints(0, this.sprite.length - 1).findAny().orElse(0);
         this.vertical    = PacmanGame.RANDOM.nextBoolean();
         var bool = PacmanGame.RANDOM.nextBoolean();
         if (this.vertical) {
