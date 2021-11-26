@@ -66,8 +66,8 @@ public class PacmanPainter implements GamePainter {
         /*
         Affichage des coeurs selon le nombre de vie
          */
-        for(int i = 0; i < pacmanGame.getLife(); i++) {
-            crayon.drawImage(FilesUtils.getImage("cases/coeur.png"), Level.TITLE_SIZE * 15 + (16*i), 3, 16, 16, null);
+        for (int i = 0; i < pacmanGame.getLife(); i++) {
+            crayon.drawImage(FilesUtils.getImage("cases/coeur.png"), Level.TITLE_SIZE * 15 + (16 * i), 3, 16, 16, null);
         }
 
     }

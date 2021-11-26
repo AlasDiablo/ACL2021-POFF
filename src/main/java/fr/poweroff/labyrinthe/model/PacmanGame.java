@@ -9,7 +9,6 @@ import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
-import fr.poweroff.labyrinthe.level.tile.Tile;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.level.tile.special.*;
 import fr.poweroff.labyrinthe.utils.Coordinate;
@@ -38,26 +37,26 @@ public class PacmanGame implements Game {
     /**
      * Minuteur du niveau
      */
-    public final  Countdown     countdown;
-    final         Level         level;
-    protected     int           score;
-    private       boolean       finish         = false;
-    private       boolean       pause; //Vérifie si le jeu est en pause
-    private       boolean       win            = false;
-    protected     int           life; //nb de vie
-    protected     int           munition; //Nombre de munition qu'a le joueur
+    public final Countdown countdown;
+    final        Level     level;
+    protected    int       score;
+    protected    int       life; //nb de vie
+    protected    int       munition; //Nombre de munition qu'a le joueur
+    private      boolean   finish = false;
+    private      boolean   pause; //Vérifie si le jeu est en pause
+    private      boolean   win    = false;
 
     /**
      * constructeur avec fichier source pour le help
      */
     public PacmanGame() {
         FilesUtils.setClassLoader(this.getClass().getClassLoader());
-        INSTANCE   = this;
-        this.level = new Level();
-        countdown  = new Countdown(60);
-        score      = 0;
-        this.pause = false; //Met le jeu non en pause au départ
-        this.life = 3; //Mettre un max de 10 environ
+        INSTANCE      = this;
+        this.level    = new Level();
+        countdown     = new Countdown(60);
+        score         = 0;
+        this.pause    = false; //Met le jeu non en pause au départ
+        this.life     = 3; //Mettre un max de 10 environ
         this.munition = 0;
     }
 
@@ -72,30 +71,29 @@ public class PacmanGame implements Game {
             INSTANCE.life++;
             TileLife tb = (TileLife) event.getData();
             tb.changeType();
-        }else if(event.getName().equals("PlayerOnTimeBonusTile")){
+        } else if (event.getName().equals("PlayerOnTimeBonusTile")) {
             INSTANCE.countdown.setTime();
             TileTime tb = (TileTime) event.getData();
             tb.changeType();
-        } else if(event.getName().equals("PlayerOnMunitionBonusTile")){
-            INSTANCE.munition ++;
+        } else if (event.getName().equals("PlayerOnMunitionBonusTile")) {
+            INSTANCE.munition++;
             TileMunitions tm = (TileMunitions) event.getData();
             tm.changeType();
-        } else if(event.getName().equals("PlayerOnTreasureBonusTile")){
+        } else if (event.getName().equals("PlayerOnTreasureBonusTile")) {
             INSTANCE.score += 5;
             TileTreasure tt = (TileTreasure) event.getData();
             tt.changeType();
-        } else if(event.getName().equals("PlayerOnTrapTile")){
+        } else if (event.getName().equals("PlayerOnTrapTile")) {
             INSTANCE.score -= 5;
             INSTANCE.life--;
             TileTrap tt = (TileTrap) event.getData();
             tt.changeType();
-        }
-        else if (event.getName().equals("PlayerOnEndTile")) {
+        } else if (event.getName().equals("PlayerOnEndTile")) {
             // INSTANCE.setDifficult(INSTANCE.difficult);
             // INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
 
             //Si le jeu est terminé, le joueur augmente son score avec les munitions qui lui restait
-            if(INSTANCE.getMunition() > 0){
+            if (INSTANCE.getMunition() > 0) {
                 INSTANCE.score += INSTANCE.getMunition();
             }
             INSTANCE.setWin(true);
@@ -223,7 +221,7 @@ public class PacmanGame implements Game {
         return munition;
     }
 
-    public void minuslife(){
+    public void minuslife() {
         this.life--;
     }
 }
