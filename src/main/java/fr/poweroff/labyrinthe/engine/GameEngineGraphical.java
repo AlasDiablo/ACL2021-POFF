@@ -1,5 +1,11 @@
 package fr.poweroff.labyrinthe.engine;
 
+import fr.poweroff.labyrinthe.utils.Score;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 /**
  * @author Horatiu Cirstea, Vincent Thomas
  * <p>
@@ -48,7 +54,7 @@ public class GameEngineGraphical {
     /**
      * permet de lancer le game
      */
-    public void run() throws InterruptedException {
+    public void run() throws InterruptedException, IOException {
 
         // creation de l'interface graphique
         this.gui = new GraphicalInterface(this.gamePainter, this.gameController);
@@ -119,7 +125,7 @@ public class GameEngineGraphical {
         this.gameController.setNiveau(false);
     }
 
-    private void jouer() throws InterruptedException {
+    private void jouer() throws InterruptedException, IOException {
         // boucle de game
         while (!this.game.isFinished()) {
             // demande controle utilisateur
@@ -128,9 +134,16 @@ public class GameEngineGraphical {
             this.game.evolve(c);
 
             // affiche le game
-            if (this.game.getPause()) {
+            if(this.game.getPause()) {
                 //this.gui.paintPause();
             } else if (this.game.isFinished()) {
+                Score score = new Score();
+                //Sauvegarde du score
+                try {
+                    score.addFile(this.game.getScore());
+                } catch (FileNotFoundException | UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 if (this.game.isWin()) this.gui.paintGagne(); //Affichage de la page game_win
                 else this.gui.paintPerdu(); //Affichage de la page game_over
             } else {

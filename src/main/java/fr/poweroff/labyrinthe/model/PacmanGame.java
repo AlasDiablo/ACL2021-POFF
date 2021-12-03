@@ -209,6 +209,7 @@ public class PacmanGame implements Game {
         this.pause = p;
     }
 
+    @Override
     public int getScore() {
         return score;
     }
