@@ -9,7 +9,7 @@ public class Score {
 
     public Score() {
         try {
-            file = new File("src/main/resources/nouveau_fichier.txt");
+            file = new File("src/main/resources/meilleur_score.txt");
 
             if (file.createNewFile()) {
                 System.out.println("Fichier créé!");
