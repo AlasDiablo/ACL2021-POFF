@@ -5,12 +5,14 @@ import fr.poweroff.labyrinthe.model.PacmanController;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.model.PacmanPainter;
 
+import java.io.IOException;
+
 /**
  * lancement du moteur avec le jeu
  */
 public class Labyrinthe {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
 
         // creation du jeu particulier et de son afficheur
         PacmanGame       game       = new PacmanGame();
