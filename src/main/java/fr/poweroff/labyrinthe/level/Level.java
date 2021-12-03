@@ -37,17 +37,18 @@ public class Level {
      * Minimal number of inner wall in a generated level
      */
     public static final int WALL_NUMBER  = 6;
+    public static int LIFE_NUMBER ;
 
     /**
      * Nombre de timer sur la map
      */
-    public static final int TIMER_NUMBER = 1;
+    public static int TIMER_NUMBER ;
 
-    public static final int MUNITION_NUMBER = 6;
+    public static int MUNITION_NUMBER;
 
-    public static final int TREASURE_NUMBER = 4;
+    public static int TREASURE_NUMBER;
 
-    public static final int TRAP_NUMBER = 6;
+    public static int TRAP_NUMBER;
 
     /**
      * Level evolve used to check tile and entities overlapping and more
@@ -235,6 +236,39 @@ public class Level {
         // Initialize or re-initialize variable
         this.init();
 
+        //Permet de doser le nombre de Tile selon le niveau
+        switch (difficult){
+            case 1 :
+                LIFE_NUMBER = 0;
+                TIMER_NUMBER = 0;
+                MUNITION_NUMBER = 0;
+                TREASURE_NUMBER = 1;
+                TRAP_NUMBER = 30;
+                break;
+            case 2 :
+                LIFE_NUMBER = 0;
+                TIMER_NUMBER = 0;
+                MUNITION_NUMBER = 2;
+                TREASURE_NUMBER = 1;
+                TRAP_NUMBER = 15;
+                break;
+            case 3 :
+                LIFE_NUMBER = 1;
+                TIMER_NUMBER = 1;
+                MUNITION_NUMBER = 3;
+                TREASURE_NUMBER = 2;
+                TRAP_NUMBER = 20;
+                break;
+            default:
+                LIFE_NUMBER = 1;
+                TIMER_NUMBER = 1;
+                MUNITION_NUMBER = 5;
+                TREASURE_NUMBER = 4;
+                TRAP_NUMBER = 25;
+                break;
+
+        }
+
         // Create level tile list
         ImmutableList.Builder<Tile> levelBuilder         = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder          = new ImmutableList.Builder<>();
@@ -270,7 +304,7 @@ public class Level {
         this.createRandomIndexList(BONUS_NUMBER, innerTiles, Tile.Type.BONUS, surface, perimeter);
 
         // Create the list of special bonus tile index (life)
-        this.createRandomIndexList(3, innerTiles, Tile.Type.ADDLIFE, surface, perimeter);
+        this.createRandomIndexList(LIFE_NUMBER, innerTiles, Tile.Type.ADDLIFE, surface, perimeter);
 
         // Create the list of special bonus tile index (time)
         this.createRandomIndexList(TIMER_NUMBER, innerTiles, Tile.Type.ADDTIME, surface, perimeter);
