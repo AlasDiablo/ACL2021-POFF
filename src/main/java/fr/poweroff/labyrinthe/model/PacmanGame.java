@@ -34,10 +34,6 @@ public class PacmanGame implements Game {
     public static final Random     RANDOM;
     private static      PacmanGame INSTANCE;
 
-    public static PacmanGame getINSTANCE() {
-        return INSTANCE;
-    }
-
     static {
         var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
         RANDOM = new Random(seed);
@@ -54,7 +50,6 @@ public class PacmanGame implements Game {
     private      boolean   finish = false;
     private      boolean   pause; //Vérifie si le jeu est en pause
     private      boolean   win    = false;
-
     /**
      * constructeur avec fichier source pour le help
      */

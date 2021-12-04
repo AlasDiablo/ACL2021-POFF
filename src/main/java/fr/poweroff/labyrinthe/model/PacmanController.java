@@ -109,6 +109,9 @@ public class PacmanController implements GameController {
             case KeyEvent.VK_ESCAPE:
                 this.other = Cmd.EXIT;
                 break;
+            case KeyEvent.VK_ENTER:
+                this.other = Cmd.ENTER;
+                break;
         }
     }
 
