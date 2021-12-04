@@ -2,6 +2,7 @@ package fr.poweroff.labyrinthe.model;
 
 import fr.poweroff.labyrinthe.engine.GamePainter;
 import fr.poweroff.labyrinthe.level.Level;
+import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -58,6 +59,17 @@ public class PacmanPainter implements GamePainter {
 
         crayon.drawString("Score: ", Level.TITLE_SIZE * 4, 15);
         crayon.drawString(String.valueOf(pacmanGame.getScore()), Level.TITLE_SIZE * 7, 15);
+
+        crayon.drawString("Munition: ", Level.TITLE_SIZE * 9, 15);
+        crayon.drawString(String.valueOf(pacmanGame.getMunition()), Level.TITLE_SIZE * 13, 15);
+
+        /*
+        Affichage des coeurs selon le nombre de vie
+         */
+        for (int i = 0; i < pacmanGame.getLife(); i++) {
+            crayon.drawImage(FilesUtils.getImage("cases/coeur.png"), Level.TITLE_SIZE * 15 + (16 * i), 3, 16, 16, null);
+        }
+
     }
 
     @Override

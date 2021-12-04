@@ -2,11 +2,14 @@ package fr.poweroff.labyrinthe.level;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
+import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.tile.*;
+import fr.poweroff.labyrinthe.level.tile.special.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
@@ -25,35 +28,48 @@ public class Level {
     /**
      * Size of a title in pixel
      */
-    public static final int          TITLE_SIZE   = 11 * 2;
+    public static final int TITLE_SIZE   = 11 * 2;
     /**
      * Number of bonus in a generated level
      */
-    public static final int          BONUS_NUMBER = 3;
+    public static final int BONUS_NUMBER = 3;
     /**
      * Minimal number of inner wall in a generated level
      */
-    public static final int          WALL_NUMBER  = 6;
+    public static final int WALL_NUMBER  = 6;
+    public static int LIFE_NUMBER ;
+
+    /**
+     * Nombre de timer sur la map
+     */
+    public static int TIMER_NUMBER ;
+
+    public static int MUNITION_NUMBER;
+
+    public static int TREASURE_NUMBER;
+
+    public static int TRAP_NUMBER;
+
     /**
      * Level evolve used to check tile and entities overlapping and more
      */
-    private final       LevelEvolve  levelEvolve;
+    private final LevelEvolve  levelEvolve;
     /**
      * List of all level tiles
      */
-    private             List<Tile>   levelDisposition;
+    private       List<Tile>   levelDisposition;
     /**
      * List of all level entities
      */
-    private             List<Entity> entities;
+    private       List<Entity> entities;
     /**
      * The end tile of the level
      */
-    private             Tile         endTile;
+    private       Tile         endTile;
     /**
      * The player instances
      */
-    private             Entity       player;
+    private       Entity       player;
 
     public Level() {
         this.levelEvolve = new LevelEvolve();
@@ -114,9 +130,14 @@ public class Level {
         this.init();
 
         // Create level tile list
-        ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> levelBuilder         = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> wallBuilder          = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> bonusBuilder         = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> specialBonusBuilder  = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> munitionBonusBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> timeBonusBuilder     = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> trapBuilder          = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> treasureBonusBuilder = new ImmutableList.Builder<>();
 
         // Read the level map and create tile
         level.forEach((coordinate, type) -> {
@@ -147,6 +168,31 @@ public class Level {
                     player.getCoordinate().setX(rx + 2);
                     player.getCoordinate().setY(ry + 2);
                     break;
+                //Create tile for add life
+                case ADDLIFE:
+                    currentTile = new TileLife(rx, ry);
+                    specialBonusBuilder.add(currentTile);
+                    break;
+                //Create tile for add time
+                case ADDTIME:
+                    currentTile = new TileTime(rx, ry);
+                    timeBonusBuilder.add(currentTile);
+                    break;
+                //Creat tile for munitions
+                case ADDMUNITION:
+                    currentTile = new TileMunitions(rx, ry);
+                    munitionBonusBuilder.add(currentTile);
+                    break;
+                //Create tile for treasure
+                case ADDTREASURE:
+                    currentTile = new TileTreasure(rx, ry);
+                    treasureBonusBuilder.add(currentTile);
+                    break;
+                //Create tile trap
+                case TRAP:
+                    currentTile = new TileTrap(rx, ry);
+                    trapBuilder.add(currentTile);
+                    break;
                 // Create ground tile
                 default:
                     currentTile = new TileGround(rx, ry);
@@ -159,9 +205,22 @@ public class Level {
         this.player   = player;
         this.entities = new ArrayList<>(List.of(entities));
         this.entities.add(player);
-        this.levelDisposition       = levelBuilder.build();
-        this.levelEvolve.wallTiles  = wallBuilder.build();
-        this.levelEvolve.bonusTiles = bonusBuilder.build();
+        this.levelDisposition               = levelBuilder.build();
+        this.levelEvolve.wallTiles          = wallBuilder.build();
+        this.levelEvolve.bonusTiles         = bonusBuilder.build();
+        this.levelEvolve.specialBonusTiles  = specialBonusBuilder.build();
+        this.levelEvolve.timeBonusTiles     = timeBonusBuilder.build();
+        this.levelEvolve.munitionBonusTiles = munitionBonusBuilder.build();
+        this.levelEvolve.treasureBonusTiles = treasureBonusBuilder.build();
+        this.levelEvolve.trapTiles          = trapBuilder.build();
+        ImmutableList.Builder<Tile> interactionTiles = new ImmutableList.Builder<>();
+        interactionTiles.addAll(this.levelEvolve.bonusTiles);
+        interactionTiles.addAll(this.levelEvolve.specialBonusTiles);
+        interactionTiles.addAll(this.levelEvolve.timeBonusTiles);
+        interactionTiles.addAll(this.levelEvolve.munitionBonusTiles);
+        interactionTiles.addAll(this.levelEvolve.treasureBonusTiles);
+        interactionTiles.addAll(this.levelEvolve.trapTiles);
+        this.levelEvolve.interactionTiles = interactionTiles.build();
     }
 
     /**
@@ -177,10 +236,48 @@ public class Level {
         // Initialize or re-initialize variable
         this.init();
 
+        //Permet de doser le nombre de Tile selon le niveau
+        switch (difficult){
+            case 1 :
+                LIFE_NUMBER = 0;
+                TIMER_NUMBER = 0;
+                MUNITION_NUMBER = 0;
+                TREASURE_NUMBER = 1;
+                TRAP_NUMBER = 30;
+                break;
+            case 2 :
+                LIFE_NUMBER = 0;
+                TIMER_NUMBER = 0;
+                MUNITION_NUMBER = 2;
+                TREASURE_NUMBER = 1;
+                TRAP_NUMBER = 15;
+                break;
+            case 3 :
+                LIFE_NUMBER = 1;
+                TIMER_NUMBER = 1;
+                MUNITION_NUMBER = 3;
+                TREASURE_NUMBER = 2;
+                TRAP_NUMBER = 20;
+                break;
+            default:
+                LIFE_NUMBER = 1;
+                TIMER_NUMBER = 1;
+                MUNITION_NUMBER = 5;
+                TREASURE_NUMBER = 4;
+                TRAP_NUMBER = 25;
+                break;
+
+        }
+
         // Create level tile list
-        ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Tile> wallBuilder  = new ImmutableList.Builder<>();
-        ImmutableList.Builder<Tile> bonusBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> levelBuilder         = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> wallBuilder          = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> bonusBuilder         = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> specialBonusBuilder  = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> munitionBonusBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> timeBonusBuilder     = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> trapBuilder          = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> treasureBonusBuilder = new ImmutableList.Builder<>();
 
         // Calculate the level size
         var sizeX = (int) Math.floor((float) width / (float) TITLE_SIZE);
@@ -199,15 +296,27 @@ public class Level {
             endPos = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
         }
 
+        Map<Integer, Tile.Type> innerTiles = Maps.newHashMap();
+        innerTiles.put(startPos, Tile.Type.START);
+        innerTiles.put(endPos, Tile.Type.END);
+
         // Create the list of bonus tile index
-        List<Integer> bonusTile = new ArrayList<>();
-        for (int i = 0; i < BONUS_NUMBER; i++) {
-            int bonusIndex;
-            do {
-                bonusIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
-            } while (bonusTile.contains(bonusIndex) || bonusIndex == startPos || bonusIndex == endPos);
-            bonusTile.add(bonusIndex);
-        }
+        this.createRandomIndexList(BONUS_NUMBER, innerTiles, Tile.Type.BONUS, surface, perimeter);
+
+        // Create the list of special bonus tile index (life)
+        this.createRandomIndexList(LIFE_NUMBER, innerTiles, Tile.Type.ADDLIFE, surface, perimeter);
+
+        // Create the list of special bonus tile index (time)
+        this.createRandomIndexList(TIMER_NUMBER, innerTiles, Tile.Type.ADDTIME, surface, perimeter);
+
+        // Create the list of special bonus tile index (munition)
+        this.createRandomIndexList(MUNITION_NUMBER, innerTiles, Tile.Type.ADDMUNITION, surface, perimeter);
+
+        // Create the list of special bonus tile index (treasure)
+        this.createRandomIndexList(TREASURE_NUMBER, innerTiles, Tile.Type.ADDTREASURE, surface, perimeter);
+
+        // Create the list of special tile index (trap)
+        this.createRandomIndexList(TRAP_NUMBER, innerTiles, Tile.Type.TRAP, surface, perimeter);
 
         var wallNumberWithDifficult = WALL_NUMBER + (WALL_NUMBER / 2 * (difficult - 1));
 
@@ -219,14 +328,7 @@ public class Level {
         ).findAny().orElse(wallNumberWithDifficult);
 
         // Create the list of wall tile index
-        List<Integer> wallTile = new ArrayList<>();
-        for (int i = 0; i < wallNumber; i++) {
-            int wallIndex;
-            do {
-                wallIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
-            } while (wallTile.contains(wallIndex) || bonusTile.contains(wallIndex) || wallIndex == startPos || wallIndex == endPos);
-            wallTile.add(wallIndex);
-        }
+        this.createRandomIndexList(wallNumber, innerTiles, Tile.Type.WALL, surface, perimeter);
 
         // Create all tile of the level
         var levelIndex = 0;
@@ -243,25 +345,66 @@ public class Level {
                     wallBuilder.add(currentTile);
                     // Add the other tile into the level
                 } else {
-                    // Create bonus tile
-                    if (bonusTile.contains(levelIndex)) {
-                        currentTile = new TileBonus(rx, ry);
-                        bonusBuilder.add(currentTile);
-                        // Create inner wall tile
-                    } else if (wallTile.contains(levelIndex)) {
-                        currentTile = new TileWall(rx, ry);
-                        wallBuilder.add(currentTile);
-                        // Create start tile and place player onto
-                    } else if (levelIndex == startPos) {
-                        currentTile = new TileStart(rx, ry);
-                        player.getCoordinate().setX(rx + 2);
-                        player.getCoordinate().setY(ry + 2);
-                        // Create end tile
-                    } else if (levelIndex == endPos) {
-                        currentTile  = new TileEnd(rx, ry);
-                        this.endTile = currentTile;
-                        // Create ground tile
-                    } else {
+                    if (innerTiles.containsKey(levelIndex)) {
+                        var type = innerTiles.get(levelIndex);
+                        switch (type) {
+                            // Create start tile and place player onto
+                            case START: {
+                                currentTile = new TileStart(rx, ry);
+                                player.getCoordinate().setX(rx + 2);
+                                player.getCoordinate().setY(ry + 2);
+                                break;
+                            }
+                            // Create end tile
+                            case END: {
+                                currentTile  = new TileEnd(rx, ry);
+                                this.endTile = currentTile;
+                                break;
+                            }
+                            // Create inner wall tile
+                            case WALL: {
+                                currentTile = new TileWall(rx, ry);
+                                wallBuilder.add(currentTile);
+                                break;
+                            }
+                            // Create bonus tile
+                            case BONUS: {
+                                currentTile = new TileBonus(rx, ry);
+                                bonusBuilder.add(currentTile);
+                                break;
+                            }
+                            case ADDLIFE: {
+                                currentTile = new TileLife(rx, ry);
+                                specialBonusBuilder.add(currentTile);
+                                break;
+                            }
+                            case ADDTIME: {
+                                currentTile = new TileTime(rx, ry);
+                                timeBonusBuilder.add(currentTile);
+                                break;
+                            }
+                            case ADDMUNITION: {
+                                currentTile = new TileMunitions(rx, ry);
+                                munitionBonusBuilder.add(currentTile);
+                                break;
+                            }
+                            case ADDTREASURE: {
+                                currentTile = new TileTreasure(rx, ry);
+                                treasureBonusBuilder.add(currentTile);
+                                break;
+                            }
+                            case TRAP: {
+                                currentTile = new TileTrap(rx, ry);
+                                trapBuilder.add(currentTile);
+                                break;
+                            }
+                            // Create ground tile
+                            default: {
+                                currentTile = new TileGround(rx, ry);
+                                break;
+                            }
+                        }
+                    } else { // Create ground tile
                         currentTile = new TileGround(rx, ry);
                     }
                     levelIndex++;
@@ -274,11 +417,33 @@ public class Level {
         this.entities = new ArrayList<>(List.of(entities));
         this.entities.add(player);
 
-        this.levelDisposition       = levelBuilder.build();
-        this.levelEvolve.wallTiles  = wallBuilder.build();
-        this.levelEvolve.bonusTiles = bonusBuilder.build();
-
+        this.levelDisposition               = levelBuilder.build();
+        this.levelEvolve.wallTiles          = wallBuilder.build();
+        this.levelEvolve.bonusTiles         = bonusBuilder.build();
+        this.levelEvolve.specialBonusTiles  = specialBonusBuilder.build();
+        this.levelEvolve.timeBonusTiles     = timeBonusBuilder.build();
+        this.levelEvolve.munitionBonusTiles = munitionBonusBuilder.build();
+        this.levelEvolve.treasureBonusTiles = treasureBonusBuilder.build();
+        this.levelEvolve.trapTiles          = trapBuilder.build();
+        ImmutableList.Builder<Tile> interactionTiles = new ImmutableList.Builder<>();
+        interactionTiles.addAll(this.levelEvolve.bonusTiles);
+        interactionTiles.addAll(this.levelEvolve.specialBonusTiles);
+        interactionTiles.addAll(this.levelEvolve.timeBonusTiles);
+        interactionTiles.addAll(this.levelEvolve.munitionBonusTiles);
+        interactionTiles.addAll(this.levelEvolve.treasureBonusTiles);
+        interactionTiles.addAll(this.levelEvolve.trapTiles);
+        this.levelEvolve.interactionTiles = interactionTiles.build();
         this.initMonster(width, height, levelDisposition, entities);
+    }
+
+    private void createRandomIndexList(int number, Map<Integer, Tile.Type> innerTiles, Tile.Type type, int surface, int perimeter) {
+        for (int i = 0; i < number; i++) {
+            int bonusIndex;
+            do {
+                bonusIndex = (int) Math.floor((surface - perimeter) * PacmanGame.RANDOM.nextFloat());
+            } while (innerTiles.containsKey(bonusIndex));
+            innerTiles.put(bonusIndex, type);
+        }
     }
 
     public void initMonster(int width, int height, List<Tile> levelDisposition, Entity... entities) {
@@ -365,10 +530,33 @@ public class Level {
         this.levelEvolve.overlapFindAny(
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
-                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.levelEvolve.bonusTiles
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.levelEvolve.interactionTiles
         ).ifPresent(tile -> {
-            if (tile.getType() == Tile.Type.BONUS) { // check if the tile has already been visited
-                PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));
+            switch (tile.getType()) {
+                case BONUS: { // check if the tile has already been visited
+                    PacmanGame.onEvent(new PlayerOnBonusTileEvent(tile));
+                    break;
+                }
+                case ADDLIFE: { // check if the tile has already been visited
+                    PacmanGame.onEvent(new PlayerOnLifeBonusTileEvent(tile));
+                    break;
+                }
+                case ADDTIME: { // check if the tile has already been visited
+                    PacmanGame.onEvent(new PlayerOnTimeBonusTileEvent(tile));
+                    break;
+                }
+                case ADDMUNITION: { // check if the tile has already been visited
+                    PacmanGame.onEvent(new PlayerOnMunitionBonusTileEvent(tile));
+                    break;
+                }
+                case ADDTREASURE: { // check if the tile has already been visited
+                    PacmanGame.onEvent(new PlayerOnTreasureBonusTileEvent(tile));
+                    break;
+                }
+                case TRAP: { // check if the tile has already been visited
+                    PacmanGame.onEvent(new PlayerOnTrapTileEvent(tile));
+                    break;
+                }
             }
         });
     }
@@ -394,6 +582,36 @@ public class Level {
          * List of all bonus tile
          */
         private List<Tile> bonusTiles;
+
+        /**
+         * Liste of bonus life
+         */
+        private List<Tile> specialBonusTiles;
+
+        /**
+         * Liste of bonus time
+         */
+        private List<Tile> timeBonusTiles;
+
+        /**
+         * Liste of bonus munition
+         */
+        private List<Tile> munitionBonusTiles;
+
+        /**
+         * Liste of trap
+         */
+        private List<Tile> trapTiles;
+
+        /**
+         * Liste of treasure bonus tiles
+         */
+        private List<Tile> treasureBonusTiles;
+
+        /**
+         *
+         */
+        private List<Tile> interactionTiles;
 
         /**
          * Check if a custom rectangle is not overlapping a wall
