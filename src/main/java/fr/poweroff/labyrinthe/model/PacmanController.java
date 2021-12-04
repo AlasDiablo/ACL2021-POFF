@@ -19,6 +19,7 @@ public class PacmanController implements GameController {
      */
     private boolean menu;
     private boolean niveaux;
+    private boolean bestScore;
     private boolean left;
     private boolean right;
     private boolean up;
@@ -80,6 +81,9 @@ public class PacmanController implements GameController {
     public void setNiveau(boolean n) {
         this.niveaux = n;
     }
+
+    @Override
+    public void setBestScore(boolean s) {this.bestScore = s;}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -190,6 +194,13 @@ public class PacmanController implements GameController {
             //Clic sur "Extreme"
             if (x > 193 && y > 375 && x < 367 && y < 416) {
                 this.other = Cmd.LEVEL4;
+            }
+        }
+
+        if(bestScore){
+            //Clic sur retour
+            if (x > 200 && y > 462 && x < 366 && y < 510) {
+                this.other = Cmd.RETOUR;
             }
         }
     }

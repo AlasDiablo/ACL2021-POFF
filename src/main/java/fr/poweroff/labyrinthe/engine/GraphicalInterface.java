@@ -119,4 +119,8 @@ public class GraphicalInterface {
     public void paintGagne() {
         this.panel.drawGagne();
     }
+
+    public void paintScore() {
+        this.panel.drawBestScore();
+    }
 }

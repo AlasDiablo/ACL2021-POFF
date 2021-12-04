@@ -91,6 +91,17 @@ public class GameEngineGraphical {
                 niveau     = true;
                 menuEnCour = false;
             }
+            if(c.name().equals("SCORES")){
+                this.gameController.setMenu(false);
+                boolean scoreEnCour = true;
+                while(scoreEnCour){
+                    c = this.gameController.getCommand();
+                    this.gameController.setBestScore(true);
+                    this.gui.paintScore();
+                    if(c.name().equals("RETOUR")) scoreEnCour = false;
+                }
+                this.gameController.setBestScore(false);
+            }
 
         }
 
@@ -135,6 +146,12 @@ public class GameEngineGraphical {
 
             // affiche le game
             if(this.game.getPause()) {
+                /*while(this.game.getPause()){
+                    c = this.gameController.getCommand();
+                    this.gui.paintPause();
+                    // fait evoluer le game
+                    this.game.evolve(c);
+                }*/
                 //this.gui.paintPause();
             } else if (this.game.isFinished()) {
                 Score score = new Score();

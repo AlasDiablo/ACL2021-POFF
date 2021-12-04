@@ -3,6 +3,7 @@ package fr.poweroff.labyrinthe.engine;
 import fr.poweroff.labyrinthe.engine.menu.Menu;
 import fr.poweroff.labyrinthe.engine.menu.*;
 import fr.poweroff.labyrinthe.model.PacmanPainter;
+import fr.poweroff.labyrinthe.utils.Score;
 
 import javax.swing.*;
 import java.awt.*;
@@ -118,6 +119,17 @@ public class DrawingPanel extends JPanel {
     public void drawPause() {
         Pause p = new Pause(0, 0);
         currentImage = p.getSprites();
+        this.repaint();
+    }
+
+    public void drawBestScore(){
+        BestScore b = new BestScore(0,0);
+        currentImage = b.getSprites();
+        Score score = new Score(); //Récupération du meilleur score dans le fichier
+        var graphics = currentImage.getGraphics();
+        var font     = new Font("Courier New", Font.BOLD, 60);
+        graphics.setFont(font);
+        graphics.drawString(String.valueOf(score.getBestScore()), 250, 300);
         this.repaint();
     }
 }
