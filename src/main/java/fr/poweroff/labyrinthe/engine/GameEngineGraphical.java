@@ -32,6 +32,8 @@ public class GameEngineGraphical {
 
     private boolean menuEnCour;
     private boolean niveau;
+    private int     menuPosition = 0;
+    private boolean keyInputWait = false;
 
     /**
      * construit un moteur
@@ -47,6 +49,21 @@ public class GameEngineGraphical {
         this.gameController = gameController;
     }
 
+    private void playLevelMusic() {
+        if (!this.menuEnCour && !this.niveau) AudioDriver.playMusic(AudioDriver.Music.IN_MOTION);
+    }
+
+    private void setNiveau(boolean niveau) {
+        this.playLevelMusic();
+        this.niveau = niveau;
+    }
+
+    private void setMenuEnCour(boolean menuEnCour) {
+        this.playLevelMusic();
+        this.menuEnCour = menuEnCour;
+        this.gameController.setMenu(menuEnCour);
+    }
+
     /**
      * permet de lancer le game
      */
@@ -55,46 +72,72 @@ public class GameEngineGraphical {
         // creation de l'interface graphique
         this.gui = new GraphicalInterface(this.gamePainter, this.gameController);
 
-        menuEnCour = true;
-        niveau     = false;
-
         AudioDriver.playMusic(AudioDriver.Music.AMIGA);
 
-        menu();
+        this.setMenuEnCour(true);
+        this.setNiveau(false);
 
-        niveau();
+        while (!this.game.isFinished()) {
 
-        AudioDriver.playMusic(AudioDriver.Music.IN_MOTION);
 
-        jouer();
-
+            if (this.menuEnCour && !this.niveau) menu();
+            else if (!this.menuEnCour && this.niveau) niveau();
+            else {
+                jouer();
+            }
+        }
     }
 
     private void menu() {
-        //boucle de menu
-        while (menuEnCour) {
-            Cmd c = this.gameController.getCommand();
-            this.gameController.setMenu(true);
-            //this.game.evolve(c);
-            this.gui.paintMenu();
+        Cmd c = this.gameController.getCommand();
 
-            //Lancement du jeu (arrêt de la boucle du menu)
-            if (c.name().equals("PLAY")) {
-                this.game.setDifficult(1);
-                menuEnCour = false;
-            }
-
-            if (c.name().equals("QUIT"))
-                this.gui.quit();
-
-            if (c.name().equals("LEVELS")) {
-                niveau     = true;
-                menuEnCour = false;
-            }
-
+        if (c == Cmd.IDLE && this.keyInputWait) {
+            this.keyInputWait = false;
         }
 
-        this.gameController.setMenu(false);
+        if (c == Cmd.UP && !this.keyInputWait) {
+            this.keyInputWait = true;
+            this.menuPosition--;
+            if (this.menuPosition < 0) this.menuPosition = 3;
+        }
+
+        if (c == Cmd.DOWN && !this.keyInputWait) {
+            this.keyInputWait = true;
+            this.menuPosition++;
+            if (this.menuPosition > 3) this.menuPosition = 0;
+        }
+
+        this.gui.paintMenu(this.menuPosition);
+
+        if (c == Cmd.ENTER && !this.keyInputWait) {
+            this.keyInputWait = true;
+
+            if (this.menuPosition == 0) {
+                this.setMenuEnCour(false);
+                this.game.setDifficult(1);
+            }
+
+            if (this.menuPosition == 1) {
+                this.setMenuEnCour(false);
+                this.setNiveau(true);
+            }
+
+            if (this.menuPosition == 3) {
+                this.gui.quit();
+            }
+        }
+
+        if (c.name().equals("PLAY")) {
+            this.game.setDifficult(1);
+            this.setMenuEnCour(false);
+        }
+
+        if (c.name().equals("QUIT")) this.gui.quit();
+
+        if (c.name().equals("LEVELS")) {
+            this.setMenuEnCour(false);
+            this.setNiveau(true);
+        }
     }
 
     private void niveau() {

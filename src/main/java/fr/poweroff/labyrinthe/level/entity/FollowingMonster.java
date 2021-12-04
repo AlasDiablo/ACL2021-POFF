@@ -17,9 +17,9 @@ public class FollowingMonster extends Monster {
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         this.changeDirectionRandomly();
 
-        var top    = levelEvolve.overlapWithPlayer(this.coordinate.getX(), Level.TITLE_SIZE, ENTITY_SIZE, this.coordinate.getY() - Level.TITLE_SIZE);
-        var left   = levelEvolve.overlapWithPlayer(Level.TITLE_SIZE, this.coordinate.getY(), this.coordinate.getX() - Level.TITLE_SIZE, ENTITY_SIZE);
-        var right  = levelEvolve.overlapWithPlayer(
+        var top = levelEvolve.overlapWithPlayer(this.coordinate.getX(), Level.TITLE_SIZE, ENTITY_SIZE, this.coordinate.getY() - Level.TITLE_SIZE);
+        var left = levelEvolve.overlapWithPlayer(Level.TITLE_SIZE, this.coordinate.getY(), this.coordinate.getX() - Level.TITLE_SIZE, ENTITY_SIZE);
+        var right = levelEvolve.overlapWithPlayer(
                 this.coordinate.getX(), this.coordinate.getY(), PacmanPainter.WIDTH - this.coordinate.getX() - Level.TITLE_SIZE, ENTITY_SIZE);
         var bottom = levelEvolve.overlapWithPlayer(
                 this.coordinate.getX(), this.coordinate.getY() + ENTITY_SIZE, ENTITY_SIZE,

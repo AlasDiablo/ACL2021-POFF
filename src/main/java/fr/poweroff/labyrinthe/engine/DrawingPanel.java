@@ -32,27 +32,10 @@ public class DrawingPanel extends JPanel {
      * image en cours est l'image entrain d'etre affichee
      */
     private       BufferedImage currentImage;
-
-    /**
-     * constructeur Il construit les images pour doublebuffering ainsi que le
-     * Panel associe. Les images stockent le painter et on demande au panel la
-     * mise a jour quand le painter est fini
-     */
-    public DrawingPanel(GamePainter painter) {
-        super();
-        this.width  = painter.getWidth();
-        this.height = painter.getHeight();
-        this.setPreferredSize(new Dimension(this.width, this.height));
-        this.painter = painter;
-
-        // cree l'image buffer et son graphics
-        this.nextImage    = new BufferedImage(width, height,
-                                              BufferedImage.TYPE_INT_RGB
-        );
-        this.currentImage = new BufferedImage(width, height,
-                                              BufferedImage.TYPE_INT_RGB
-        );
-    }
+    private       boolean       isInMenu;
+    private       int           menuPointerX;
+    private       int           menuPointerY;
+    private       float         menuAnimation;
 
     /**
      * demande de mettre a jour le rendu de l'image sur le Panel. Creer une
@@ -74,10 +57,7 @@ public class DrawingPanel extends JPanel {
         this.repaint();
     }
 
-    public void drawMenu() {
-        currentImage = Menu.getSprites();
-        this.repaint();
-    }
+    private float menuAnimationAdder;
 
     public void drawNiveau() {
         currentImage = Level.getSprites();
@@ -85,15 +65,60 @@ public class DrawingPanel extends JPanel {
     }
 
     /**
+     * constructeur Il construit les images pour doublebuffering ainsi que le
+     * Panel associe. Les images stockent le painter et on demande au panel la
+     * mise a jour quand le painter est fini
+     */
+    public DrawingPanel(GamePainter painter) {
+        super();
+        this.width  = painter.getWidth();
+        this.height = painter.getHeight();
+        this.setPreferredSize(new Dimension(this.width, this.height));
+        this.painter            = painter;
+        this.isInMenu           = false;
+        this.menuAnimation      = 0f;
+        this.menuAnimationAdder = 0.01f;
+
+        // cree l'image buffer et son graphics
+        this.nextImage    = new BufferedImage(width, height,
+                                              BufferedImage.TYPE_INT_RGB
+        );
+        this.currentImage = new BufferedImage(width, height,
+                                              BufferedImage.TYPE_INT_RGB
+        );
+    }
+
+    public void drawMenu(int menuPosition) {
+        this.currentImage = Menu.getSprites();
+        this.isInMenu     = true;
+        this.menuPointerX = 150;
+        this.menuPointerY = 188 + 56 * menuPosition;
+        this.repaint();
+    }
+
+    /**
      * redefinit la methode paint consiste a dessiner l'image en cours
      *
-     * @param g graphics pour dessiner
+     * @param graphics graphics pour dessiner
      */
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.drawImage(this.currentImage, 0, 0, getWidth(), getHeight(), 0, 0,
-                    getWidth(), getHeight(), null
+    public void paint(Graphics graphics) {
+        super.paint(graphics);
+        graphics.drawImage(this.currentImage, 0, 0, getWidth(), getHeight(), 0, 0,
+                           getWidth(), getHeight(), null
         );
+        if (this.isInMenu) {
+            this.menuAnimation += this.menuAnimationAdder;
+            if (this.menuAnimation >= 10f || this.menuAnimation <= 0f) this.menuAnimationAdder = -this.menuAnimationAdder;
+            graphics.setColor(Color.ORANGE);
+            graphics.fillPolygon(this.triangle(this.menuPointerX + (int) Math.floor(this.menuAnimation), this.menuPointerY));
+            this.isInMenu = false;
+        }
+    }
+
+    private Polygon triangle(int x, int y) {
+        var xs = new int[]{ x, 20 + x, x };
+        var ys = new int[]{ y, 10 + y, 20 + y };
+        return new Polygon(xs, ys, 3);
     }
 
 

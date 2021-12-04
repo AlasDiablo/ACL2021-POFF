@@ -12,6 +12,7 @@ public class AudioDriver {
     private static final String MUSIC_PATH  = "assets/music/";
 
     private static final Minim MINIM = new Minim(FilesUtils.getMinimFileSystem());
+    private static       Music currentMusic;
 
     public static void init() {
         playPowerup();
@@ -101,8 +102,6 @@ public class AudioDriver {
         else sounds = Sounds.SHOOT_2;
         playSounds(sounds);
     }
-
-    private static Music currentMusic;
 
     public static void playMusic(Music music) {
         stopMusic();
