@@ -3,6 +3,7 @@ package fr.poweroff.labyrinthe.engine;
 import fr.poweroff.labyrinthe.engine.menu.Menu;
 import fr.poweroff.labyrinthe.engine.menu.*;
 import fr.poweroff.labyrinthe.model.PacmanPainter;
+import fr.poweroff.labyrinthe.utils.AudioDriver;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,29 +60,7 @@ public class DrawingPanel extends JPanel {
 
     private float menuAnimationAdder;
 
-    /**
-     * constructeur Il construit les images pour doublebuffering ainsi que le
-     * Panel associe. Les images stockent le painter et on demande au panel la
-     * mise a jour quand le painter est fini
-     */
-    public DrawingPanel(GamePainter painter) {
-        super();
-        this.width  = painter.getWidth();
-        this.height = painter.getHeight();
-        this.setPreferredSize(new Dimension(this.width, this.height));
-        this.painter            = painter;
-        this.isInMenu           = false;
-        this.menuAnimation      = 0f;
-        this.menuAnimationAdder = 0.6f;
-
-        // cree l'image buffer et son graphics
-        this.nextImage    = new BufferedImage(width, height,
-                                              BufferedImage.TYPE_INT_RGB
-        );
-        this.currentImage = new BufferedImage(width, height,
-                                              BufferedImage.TYPE_INT_RGB
-        );
-    }
+    private final Color[] colors;
 
     public void drawNiveau(int menuPosition) {
         this.currentImage = Level.getSprites();
@@ -99,6 +78,36 @@ public class DrawingPanel extends JPanel {
         this.repaint();
     }
 
+    private int colorIndex;
+
+    /**
+     * constructeur Il construit les images pour doublebuffering ainsi que le
+     * Panel associe. Les images stockent le painter et on demande au panel la
+     * mise a jour quand le painter est fini
+     */
+    public DrawingPanel(GamePainter painter) {
+        super();
+        this.width  = painter.getWidth();
+        this.height = painter.getHeight();
+        this.setPreferredSize(new Dimension(this.width, this.height));
+        this.painter            = painter;
+        this.isInMenu           = false;
+        this.menuAnimation      = 0f;
+        this.menuAnimationAdder = 0.6f;
+        this.colorIndex         = 0;
+        this.colors             = new Color[]{
+                Color.RED, Color.GREEN, Color.CYAN, Color.ORANGE
+        };
+
+        // cree l'image buffer et son graphics
+        this.nextImage    = new BufferedImage(width, height,
+                                              BufferedImage.TYPE_INT_RGB
+        );
+        this.currentImage = new BufferedImage(width, height,
+                                              BufferedImage.TYPE_INT_RGB
+        );
+    }
+
     /**
      * redefinit la methode paint consiste a dessiner l'image en cours
      *
@@ -112,7 +121,14 @@ public class DrawingPanel extends JPanel {
         if (this.isInMenu) {
             this.menuAnimation += this.menuAnimationAdder;
             if (this.menuAnimation >= 10f || this.menuAnimation <= 0f) this.menuAnimationAdder = -this.menuAnimationAdder;
-            graphics.setColor(Color.ORANGE);
+
+            var beat = AudioDriver.getCurrentMusic().getBeatDetect();
+
+            if (beat.isHat() || beat.isKick() || beat.isSnare()) {
+                this.colorIndex++;
+                if (this.colorIndex >= this.colors.length) this.colorIndex = 0;
+            }
+            graphics.setColor(this.colors[this.colorIndex]);
             graphics.fillPolygon(this.triangle(this.menuPointerX + (int) Math.floor(this.menuAnimation), this.menuPointerY));
             this.isInMenu = false;
         }

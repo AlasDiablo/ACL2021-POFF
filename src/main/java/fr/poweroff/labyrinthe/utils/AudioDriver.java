@@ -1,7 +1,9 @@
 package fr.poweroff.labyrinthe.utils;
 
+import ddf.minim.AudioListener;
 import ddf.minim.AudioPlayer;
 import ddf.minim.Minim;
+import ddf.minim.analysis.BeatDetect;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 
 import javax.sound.sampled.*;
@@ -113,6 +115,10 @@ public class AudioDriver {
         if (currentMusic != null) currentMusic.stop();
     }
 
+    public static Music getCurrentMusic() {
+        return currentMusic;
+    }
+
     public enum Music {
         AMIGA("amiga"),
         IN_MOTION("in_motion");
@@ -120,6 +126,10 @@ public class AudioDriver {
         private final String audioFile;
 
         private AudioPlayer player;
+
+        private BeatDetect beatDetect;
+
+        private BeatListener beatListener;
 
         Music(String name) {
             this.audioFile = MUSIC_PATH + name + ".mp3";
@@ -130,11 +140,39 @@ public class AudioDriver {
                 this.player = MINIM.loadFile(audioFile);
                 this.player.play();
                 this.player.loop();
+                this.beatDetect = new BeatDetect(player.bufferSize(), player.sampleRate());
+                this.beatDetect.setSensitivity(300);
+                this.beatListener = new BeatListener(this.beatDetect, this.player);
+                this.player.addListener(this.beatListener);
             }
+        }
+
+        public BeatDetect getBeatDetect() {
+            return beatDetect;
         }
 
         public void stop() {
             this.player.close();
+            this.beatListener = null;
+            this.beatDetect   = null;
+        }
+
+        public static class BeatListener implements AudioListener {
+            private final BeatDetect  beat;
+            private final AudioPlayer source;
+
+            public BeatListener(BeatDetect beat, AudioPlayer source) {
+                this.source = source;
+                this.beat   = beat;
+            }
+
+            public void samples(float[] samples) {
+                beat.detect(source.mix);
+            }
+
+            public void samples(float[] samplesL, float[] samplesR) {
+                beat.detect(source.mix);
+            }
         }
     }
 
