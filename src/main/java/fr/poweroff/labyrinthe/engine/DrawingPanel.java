@@ -59,11 +59,6 @@ public class DrawingPanel extends JPanel {
 
     private float menuAnimationAdder;
 
-    public void drawNiveau() {
-        currentImage = Level.getSprites();
-        this.repaint();
-    }
-
     /**
      * constructeur Il construit les images pour doublebuffering ainsi que le
      * Panel associe. Les images stockent le painter et on demande au panel la
@@ -77,7 +72,7 @@ public class DrawingPanel extends JPanel {
         this.painter            = painter;
         this.isInMenu           = false;
         this.menuAnimation      = 0f;
-        this.menuAnimationAdder = 0.01f;
+        this.menuAnimationAdder = 0.6f;
 
         // cree l'image buffer et son graphics
         this.nextImage    = new BufferedImage(width, height,
@@ -86,6 +81,14 @@ public class DrawingPanel extends JPanel {
         this.currentImage = new BufferedImage(width, height,
                                               BufferedImage.TYPE_INT_RGB
         );
+    }
+
+    public void drawNiveau(int menuPosition) {
+        this.currentImage = Level.getSprites();
+        this.isInMenu     = true;
+        this.menuPointerX = 150;
+        this.menuPointerY = 174 + 70 * menuPosition;
+        this.repaint();
     }
 
     public void drawMenu(int menuPosition) {

@@ -65,8 +65,8 @@ public class GraphicalInterface {
         this.f.dispose();
     }
 
-    public void paintNiveau() {
-        this.panel.drawNiveau();
+    public void paintNiveau(int menuPosition) {
+        this.panel.drawNiveau(menuPosition);
     }
 
     public void paintPerdu() {
