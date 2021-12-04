@@ -35,21 +35,7 @@ public class GameEngineGraphical {
     private int     menuPosition = 0;
     private boolean keyInputWait = false;
 
-    /**
-     * construit un moteur
-     *
-     * @param game           game a lancer
-     * @param gamePainter    afficheur a utiliser
-     * @param gameController controlleur a utiliser
-     */
-    public GameEngineGraphical(Game game, GamePainter gamePainter, GameController gameController) {
-        // creation du game
-        this.game           = game;
-        this.gamePainter    = gamePainter;
-        this.gameController = gameController;
-        this.niveau         = false;
-        this.menuEnCour     = true;
-    }
+    private boolean cleanNextUnprocessedFrame;
 
     private void playLevelMusic() {
         AudioDriver.playMusic(AudioDriver.Music.IN_MOTION);
@@ -66,6 +52,23 @@ public class GameEngineGraphical {
     }
 
     /**
+     * construit un moteur
+     *
+     * @param game           game a lancer
+     * @param gamePainter    afficheur a utiliser
+     * @param gameController controlleur a utiliser
+     */
+    public GameEngineGraphical(Game game, GamePainter gamePainter, GameController gameController) {
+        // creation du game
+        this.game                      = game;
+        this.gamePainter               = gamePainter;
+        this.gameController            = gameController;
+        this.niveau                    = false;
+        this.menuEnCour                = true;
+        this.cleanNextUnprocessedFrame = false;
+    }
+
+    /**
      * permet de lancer le game
      */
     public void run() throws InterruptedException {
@@ -75,14 +78,33 @@ public class GameEngineGraphical {
 
         AudioDriver.playMusic(AudioDriver.Music.AMIGA);
 
-        while (!this.game.isFinished()) {
-            if (this.menuEnCour && !this.niveau) menu();
-            else if (!this.menuEnCour && this.niveau) niveau();
-            else {
-                jouer();
-            }
+        var frameTime   = 1.0 / 30.0;
+        var time        = (double) System.nanoTime() / (double) 1000000000L;
+        var unprocessed = 0.0;
 
-            Thread.sleep(33, 333);
+        var cleanUnprocessedFrame = this.cleanNextUnprocessedFrame;
+
+        while (!this.game.isFinished()) {
+            var currentTime = (double) System.nanoTime() / (double) 1000000000L;
+            var passed      = currentTime - time;
+            unprocessed += passed;
+            time = currentTime;
+            if (this.cleanNextUnprocessedFrame) {
+                this.cleanNextUnprocessedFrame = false;
+                cleanUnprocessedFrame          = true;
+            }
+            if (cleanUnprocessedFrame) {
+                cleanUnprocessedFrame = false;
+                unprocessed           = 0.0;
+            }
+            while (unprocessed >= frameTime) {
+                unprocessed -= frameTime;
+                if (this.menuEnCour && !this.niveau) menu();
+                else if (!this.menuEnCour && this.niveau) niveau();
+                else {
+                    jouer();
+                }
+            }
         }
     }
 
@@ -124,6 +146,7 @@ public class GameEngineGraphical {
                     this.setMenuEnCour(false);
                     this.playLevelMusic();
                     this.game.setDifficult(1);
+                    this.cleanNextUnprocessedFrame = true;
                     break;
                 case 1:
                     this.menuPosition = 0;
@@ -139,8 +162,10 @@ public class GameEngineGraphical {
         }
 
         if (c.name().equals("PLAY")) {
-            this.game.setDifficult(1);
             this.setMenuEnCour(false);
+            this.playLevelMusic();
+            this.game.setDifficult(1);
+            this.cleanNextUnprocessedFrame = true;
         }
 
         if (c.name().equals("QUIT")) System.exit(0);
@@ -163,6 +188,7 @@ public class GameEngineGraphical {
             this.keyInputWait = true;
             AudioDriver.playSelect();
             this.playLevelMusic();
+            this.cleanNextUnprocessedFrame = true;
 
             switch (this.menuPosition) {
                 case 0:
