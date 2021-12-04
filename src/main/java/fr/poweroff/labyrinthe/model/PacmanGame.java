@@ -34,6 +34,10 @@ public class PacmanGame implements Game {
     public static final Random     RANDOM;
     private static      PacmanGame INSTANCE;
 
+    public static PacmanGame getINSTANCE() {
+        return INSTANCE;
+    }
+
     static {
         var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
         RANDOM = new Random(seed);
