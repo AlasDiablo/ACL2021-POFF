@@ -12,9 +12,9 @@ public class Score {
             file = new File("src/main/resources/meilleur_score.txt");
 
             if (file.createNewFile()) {
-                System.out.println("Fichier créé!");
+                System.out.println();
             } else {
-                System.out.println("Fichier existe déjà.");
+                System.out.println();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,5 +46,22 @@ public class Score {
             writer.println(score);
             writer.close();
         }
+    }
+
+    public int getBestScore(){
+        int s = 0;
+        try(BufferedReader br = new BufferedReader(new FileReader(file)))
+        {
+            String line;
+            while ((line = br.readLine()) != null) {
+                s = Integer.parseInt(line);
+            }
+        }
+        catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        //Si le score était plus petit que le nouveau, on le change
+        return s;
     }
 }
