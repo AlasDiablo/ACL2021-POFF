@@ -78,8 +78,6 @@ public class GameEngineGraphical {
         this.setNiveau(false);
 
         while (!this.game.isFinished()) {
-
-
             if (this.menuEnCour && !this.niveau) menu();
             else if (!this.menuEnCour && this.niveau) niveau();
             else {
@@ -97,12 +95,16 @@ public class GameEngineGraphical {
 
         if (c == Cmd.UP && !this.keyInputWait) {
             this.keyInputWait = true;
+            AudioDriver.playSelect();
+
             this.menuPosition--;
             if (this.menuPosition < 0) this.menuPosition = 3;
         }
 
         if (c == Cmd.DOWN && !this.keyInputWait) {
             this.keyInputWait = true;
+            AudioDriver.playSelect();
+
             this.menuPosition++;
             if (this.menuPosition > 3) this.menuPosition = 0;
         }
@@ -111,6 +113,7 @@ public class GameEngineGraphical {
 
         if (c == Cmd.ENTER && !this.keyInputWait) {
             this.keyInputWait = true;
+            AudioDriver.playSelect();
 
             if (this.menuPosition == 0) {
                 this.setMenuEnCour(false);
@@ -123,7 +126,7 @@ public class GameEngineGraphical {
             }
 
             if (this.menuPosition == 3) {
-                this.gui.quit();
+                System.exit(0);
             }
         }
 
@@ -132,7 +135,7 @@ public class GameEngineGraphical {
             this.setMenuEnCour(false);
         }
 
-        if (c.name().equals("QUIT")) this.gui.quit();
+        if (c.name().equals("QUIT")) System.exit(0);
 
         if (c.name().equals("LEVELS")) {
             this.setMenuEnCour(false);
