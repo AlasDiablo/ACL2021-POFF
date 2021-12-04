@@ -78,7 +78,6 @@ public class PacmanGame implements Game {
             tb.changeType();
             return;
         }
-
         if (event instanceof PlayerOnLifeBonusTileEvent) {
             AudioDriver.playPowerup();
             INSTANCE.life++;

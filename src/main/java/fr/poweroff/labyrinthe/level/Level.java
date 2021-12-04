@@ -50,6 +50,7 @@ public class Level {
     public static int TREASURE_NUMBER;
 
     public static int TRAP_NUMBER;
+    public static int GLUE_NUMBER;
 
     /**
      * Level evolve used to check tile and entities overlapping and more
@@ -138,6 +139,7 @@ public class Level {
         ImmutableList.Builder<Tile> munitionBonusBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> timeBonusBuilder     = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> trapBuilder          = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> glueBuilder          = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> treasureBonusBuilder = new ImmutableList.Builder<>();
 
         // Read the level map and create tile
@@ -214,6 +216,7 @@ public class Level {
         this.levelEvolve.munitionBonusTiles = munitionBonusBuilder.build();
         this.levelEvolve.treasureBonusTiles = treasureBonusBuilder.build();
         this.levelEvolve.trapTiles          = trapBuilder.build();
+        this.levelEvolve.glueTiles = glueBuilder.build();
         ImmutableList.Builder<Tile> interactionTiles = new ImmutableList.Builder<>();
         interactionTiles.addAll(this.levelEvolve.bonusTiles);
         interactionTiles.addAll(this.levelEvolve.specialBonusTiles);
@@ -221,6 +224,7 @@ public class Level {
         interactionTiles.addAll(this.levelEvolve.munitionBonusTiles);
         interactionTiles.addAll(this.levelEvolve.treasureBonusTiles);
         interactionTiles.addAll(this.levelEvolve.trapTiles);
+        interactionTiles.addAll(this.levelEvolve.glueTiles);
         this.levelEvolve.interactionTiles = interactionTiles.build();
     }
 
@@ -245,6 +249,7 @@ public class Level {
                 MUNITION_NUMBER = 0;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 30;
+                GLUE_NUMBER = 5;
                 break;
             case 2 :
                 LIFE_NUMBER = 0;
@@ -252,6 +257,7 @@ public class Level {
                 MUNITION_NUMBER = 2;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 15;
+                GLUE_NUMBER = 10;
                 break;
             case 3 :
                 LIFE_NUMBER = 1;
@@ -259,6 +265,7 @@ public class Level {
                 MUNITION_NUMBER = 3;
                 TREASURE_NUMBER = 2;
                 TRAP_NUMBER = 20;
+                GLUE_NUMBER = 10;
                 break;
             default:
                 LIFE_NUMBER = 1;
@@ -266,6 +273,7 @@ public class Level {
                 MUNITION_NUMBER = 5;
                 TREASURE_NUMBER = 4;
                 TRAP_NUMBER = 25;
+                GLUE_NUMBER = 15;
                 break;
 
         }
@@ -278,6 +286,7 @@ public class Level {
         ImmutableList.Builder<Tile> munitionBonusBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> timeBonusBuilder     = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> trapBuilder          = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> glueBuilder          = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> treasureBonusBuilder = new ImmutableList.Builder<>();
 
         // Calculate the level size
@@ -303,6 +312,9 @@ public class Level {
 
         // Create the list of bonus tile index
         this.createRandomIndexList(BONUS_NUMBER, innerTiles, Tile.Type.BONUS, surface, perimeter);
+
+        // Create the list of glue tile index
+        this.createRandomIndexList(GLUE_NUMBER, innerTiles, Tile.Type.ADDGLUE, surface, perimeter);
 
         // Create the list of special bonus tile index (life)
         this.createRandomIndexList(LIFE_NUMBER, innerTiles, Tile.Type.ADDLIFE, surface, perimeter);
@@ -389,6 +401,11 @@ public class Level {
                                 munitionBonusBuilder.add(currentTile);
                                 break;
                             }
+                            case ADDGLUE: {
+                                currentTile = new TileGlue(rx, ry);
+                                glueBuilder.add(currentTile);
+                                break;
+                            }
                             case ADDTREASURE: {
                                 currentTile = new TileTreasure(rx, ry);
                                 treasureBonusBuilder.add(currentTile);
@@ -426,6 +443,7 @@ public class Level {
         this.levelEvolve.munitionBonusTiles = munitionBonusBuilder.build();
         this.levelEvolve.treasureBonusTiles = treasureBonusBuilder.build();
         this.levelEvolve.trapTiles          = trapBuilder.build();
+        this.levelEvolve.glueTiles = glueBuilder.build();
         ImmutableList.Builder<Tile> interactionTiles = new ImmutableList.Builder<>();
         interactionTiles.addAll(this.levelEvolve.bonusTiles);
         interactionTiles.addAll(this.levelEvolve.specialBonusTiles);
@@ -433,6 +451,7 @@ public class Level {
         interactionTiles.addAll(this.levelEvolve.munitionBonusTiles);
         interactionTiles.addAll(this.levelEvolve.treasureBonusTiles);
         interactionTiles.addAll(this.levelEvolve.trapTiles);
+        interactionTiles.addAll(this.levelEvolve.glueTiles);
         this.levelEvolve.interactionTiles = interactionTiles.build();
         this.initMonster(width, height, levelDisposition, entities);
     }
@@ -609,6 +628,10 @@ public class Level {
          *
          */
         private List<Tile> interactionTiles;
+        /**
+         *Liste of glue tiles
+         */
+        private List<Tile> glueTiles;
 
         /**
          * Check if a custom rectangle is not overlapping a wall
@@ -644,7 +667,18 @@ public class Level {
                             tile.getCoordinate().getY() + TITLE_SIZE < y)
                     );
         }
-
+        /**
+         *  Check if a custom rectangle is overlapping a glue tile
+         *
+         * @param x X position of the rectangle
+         * @param y Y position of the rectangle
+         * @param w Width of the rectangle
+         * @param h Height of the rectangle
+         * @return <ul><li>true if it is overlapping the player</li><li>false if it is not overlapping the player</li></ul>
+         */
+        public boolean overlapWithGlue(int x, int y, int w, int h) {
+            return this.overlap(x, y, w, h, glueTiles);
+        }
         /**
          * Check if a custom rectangle is overlapping the player
          *
