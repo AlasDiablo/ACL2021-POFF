@@ -36,6 +36,10 @@ public class Countdown {
         });
     }
 
+    public void setTime() {
+        this.time += 30;
+    }
+
     /**
      * Demarre le decompte
      */
@@ -87,4 +91,5 @@ public class Countdown {
 
         return minuteString + ":" + secondString;
     }
+
 }
