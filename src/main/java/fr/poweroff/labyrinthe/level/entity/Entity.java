@@ -21,10 +21,6 @@ public abstract class Entity {
      */
     protected final     int             MOVE_SPEED  = 4;
     /**
-     * Health points
-     */
-    private int healthPoints;
-    /**
      * Coordinate of the entity
      */
     protected final     Coordinate      coordinate;
@@ -39,10 +35,9 @@ public abstract class Entity {
      * @param coordinate Coordinate of the entity
      * @param sprite     Sprite of the entity
      */
-    public Entity(Coordinate coordinate, int healthPoints, BufferedImage sprite) {
+    public Entity(Coordinate coordinate,BufferedImage sprite) {
         this.coordinate = coordinate;
         this.sprite     = new BufferedImage[]{ sprite };
-        this.healthPoints = healthPoints;
     }
 
     /**
@@ -51,10 +46,9 @@ public abstract class Entity {
      * @param coordinate Coordinate of the entity
      * @param sprites    Array of sprite use by the entity
      */
-    public Entity(Coordinate coordinate, int healthPoints, BufferedImage... sprites) {
+    public Entity(Coordinate coordinate, BufferedImage... sprites) {
         this.coordinate = coordinate;
         this.sprite     = sprites;
-        this.healthPoints = healthPoints;
     }
 
     /**
@@ -74,23 +68,6 @@ public abstract class Entity {
     public Coordinate getCoordinate() {
         return coordinate;
     }
-
-    /**
-     * Function use to decrease health points
-     * @param d
-     */
-    public void lostHealthPoints(int d) {this.healthPoints -= d;}
-
-    /**
-     * Function use to increase health points
-     * @param h
-     */
-    public void regenerateHealthPoints(int h) {this.healthPoints += h;}
-
-    /**
-     * Function to get health points
-     */
-    public int getHealthPoints() {return healthPoints;}
 
     /**
      * Function used to draw the enetity

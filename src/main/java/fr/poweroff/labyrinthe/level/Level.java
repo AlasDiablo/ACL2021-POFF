@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
+import fr.poweroff.labyrinthe.event.PlayerOnMonsterEvent;
 import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.tile.*;
@@ -74,7 +75,7 @@ public class Level {
     /**
      * The player instances
      */
-    private       Entity       player;
+    private      Entity       player;
 
     /**
      * Counter of ticks since the last damage
@@ -568,26 +569,17 @@ public class Level {
         });
 
         //check if player touch a monster
-        this.levelEvolve.overlapEntity(
+       this.levelEvolve.overlapEntity(
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
                 Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.entities
         ).ifPresent(entity->{
             if(entity != this.player && this.ticksCounterLastDamage > INVINCIBILITY_TICKS) {
-                System.out.println("Joueur touche par " + entity.getClass() + ": " + entity.getCoordinate().getX() + ", " + entity.getCoordinate().getY());
-                this.player.lostHealthPoints(1);
+                PacmanGame.onEvent(new PlayerOnMonsterEvent());
                 this.ticksCounterLastDamage = 0;
-
             }
         });
-
-        if (this.player.getHealthPoints() <= 0) {
-            PacmanGame.onEvent(new TimeOutEvent()); //TOCHANGE: add PlayerDiedEvent or replace TimeOutEvent with GameOverEvent
-        }
-
         this.ticksCounterLastDamage++;
-        System.out.println("tick depuis denier domage: " + this.ticksCounterLastDamage);
-        System.out.println("Points de vie: " + this.player.getHealthPoints());
     }
 
     /**
@@ -602,7 +594,7 @@ public class Level {
     /**
      * Inner class use for describe interaction with the level
      */
-    public static class LevelEvolve {
+    public class LevelEvolve {
         /**
          * List of all wall tile
          */

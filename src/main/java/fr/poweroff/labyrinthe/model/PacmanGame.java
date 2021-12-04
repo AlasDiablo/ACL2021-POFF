@@ -89,6 +89,9 @@ public class PacmanGame implements Game {
             INSTANCE.life--;
             TileTrap tt = (TileTrap) event.getData();
             tt.changeType();
+        } else if (event.getName().equals("PlayerOnMonster")) {
+          INSTANCE.score -= 5;
+          INSTANCE.life --;
         } else if (event.getName().equals("PlayerOnEndTile")) {
             // INSTANCE.setDifficult(INSTANCE.difficult);
             // INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
@@ -144,7 +147,7 @@ public class PacmanGame implements Game {
         }
 
         //Tester si le timer est fini
-        if (this.countdown.isFinish()) {
+        if (this.countdown.isFinish() || INSTANCE.life <= 0) {
             PacmanGame.onEvent(new TimeOutEvent());
         }
 
