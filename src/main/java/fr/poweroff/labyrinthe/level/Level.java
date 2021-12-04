@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 /**
  * Class use tu create a level and handle each game tick
@@ -500,11 +501,7 @@ public class Level {
             graphics.setColor(Color.RED);
             graphics.drawRect(pos.getX(), pos.getY(), TITLE_SIZE, TITLE_SIZE);
         });
-        this.entities.forEach(entity -> {
-            var pos = entity.getCoordinate();
-            graphics.setColor(Color.BLUE);
-            graphics.drawRect(pos.getX(), pos.getY(), Entity.ENTITY_SIZE, Entity.ENTITY_SIZE);
-        });
+        this.entities.forEach(entity -> entity.drawHitBox(graphics));
     }
 
     /**
@@ -573,7 +570,7 @@ public class Level {
     /**
      * Inner class use for describe interaction with the level
      */
-    public static class LevelEvolve {
+    public class LevelEvolve {
         /**
          * List of all wall tile
          */
@@ -641,6 +638,25 @@ public class Level {
         public boolean overlap(int x, int y, int w, int h, List<Tile> tiles) {
             return tiles
                     .stream()
+                    .anyMatch(tile -> !(x + w < tile.getCoordinate().getX() ||
+                            tile.getCoordinate().getX() + TITLE_SIZE < x ||
+                            y + h < tile.getCoordinate().getY() ||
+                            tile.getCoordinate().getY() + TITLE_SIZE < y)
+                    );
+        }
+
+        /**
+         * Check if a custom rectangle is overlapping the player
+         *
+         * @param x X position of the rectangle
+         * @param y Y position of the rectangle
+         * @param w Width of the rectangle
+         * @param h Height of the rectangle
+         *
+         * @return <ul><li>true if it is overlapping the player</li><li>false if it is not overlapping the player</li></ul>
+         */
+        public boolean overlapWithPlayer(int x, int y, int w, int h) {
+            return Stream.of(Level.this.player)
                     .anyMatch(tile -> !(x + w < tile.getCoordinate().getX() ||
                             tile.getCoordinate().getX() + TITLE_SIZE < x ||
                             y + h < tile.getCoordinate().getY() ||

@@ -7,6 +7,7 @@ import fr.poweroff.labyrinthe.event.Event;
 import fr.poweroff.labyrinthe.event.TimeOutEvent;
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.entity.Entity;
+import fr.poweroff.labyrinthe.level.entity.FollowingMonster;
 import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
@@ -106,6 +107,9 @@ public class PacmanGame implements Game {
         List<Entity> monsters = Lists.newArrayList();
         for (int i = 0; i < difficult * 2 - 2; i++) {
             monsters.add(new Monster(new Coordinate(0, 0)));
+        }
+        for (int i = 0; i < difficult - 1; i++) {
+            monsters.add(new FollowingMonster(new Coordinate(0, 0)));
         }
         this.level.init(
                 PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, new Player(), monsters.toArray(new Entity[]{ })
