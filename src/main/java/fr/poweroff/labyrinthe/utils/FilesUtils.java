@@ -9,6 +9,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -84,7 +85,7 @@ public class FilesUtils {
 
     public static AudioInputStream getAudioStream(String url) {
         try {
-            return AudioSystem.getAudioInputStream(Objects.requireNonNull(classLoader.getResourceAsStream(url)));
+            return AudioSystem.getAudioInputStream(new BufferedInputStream(Objects.requireNonNull(classLoader.getResourceAsStream(url))));
         } catch (UnsupportedAudioFileException | IOException e) {
             throw new RuntimeException(e);
         }
