@@ -2,6 +2,8 @@ package fr.poweroff.labyrinthe.engine;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 /**
@@ -20,12 +22,12 @@ public class GraphicalInterface {
 
     /**
      * la construction de l'interface graphique: JFrame avec panel pour le game
-     *
-     * @param gamePainter    l'afficheur a utiliser dans le moteur
+     *  @param gamePainter    l'afficheur a utiliser dans le moteur
      * @param gameController l'afficheur a utiliser dans le moteur
      */
     public GraphicalInterface(GamePainter gamePainter, GameController gameController) {
         f = new JFrame();
+        f.setResizable(false);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // attacher le panel contenant l'afficheur du game
@@ -41,29 +43,36 @@ public class GraphicalInterface {
         // Créer le menu
         JMenu menu = new JMenu("Menu");
         // Créer les éléments du menu
-        JMenuItem e1, e2, e3, e4;
+        /*JMenuItem e1, e2, e3, e4;
         e1 = new JMenuItem("Rejouer");
         e2 = new JMenuItem("Niveaux");
         e3 = new JMenuItem("Scores");
         e4 = new JMenuItem("Quitter");
 
+        e1.addActionListener(actionEvent -> {
+            try {
+                gameEngineGraphical.jouer();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
 
         //Quitte le jeu
-        e4.addActionListener(actionEvent -> f.dispose());
+        e4.addActionListener(actionEvent -> quit());
         //Ajout des item au menu
         menu.add(e1);
         menu.add(e2);
         menu.add(e3);
-        menu.add(e4);
+        menu.add(e4);*/
         //Ajout du menu à la barre
         menubar.add(menu);
 
         menubar.setBackground(Color.GRAY);
         menu.setBackground(Color.GRAY);
-        e1.setBackground(Color.GRAY);
+        /*e1.setBackground(Color.GRAY);
         e2.setBackground(Color.GRAY);
         e3.setBackground(Color.GRAY);
-        e4.setBackground(Color.GRAY);
+        e4.setBackground(Color.GRAY);*/
 
         // Ajouter la barre de menu au frame
         f.setJMenuBar(menubar);
@@ -101,5 +110,13 @@ public class GraphicalInterface {
 
     public void paintPerdu() {
         this.panel.drawPerdu();
+    }
+
+    public void paintPause() {
+        this.panel.drawPause();
+    }
+
+    public void paintGagne() {
+        this.panel.drawGagne();
     }
 }

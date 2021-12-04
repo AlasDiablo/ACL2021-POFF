@@ -5,8 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -52,7 +54,7 @@ public class FilesUtils {
         if (BUFFERED_IMAGE_MAP.containsKey(url))
             return BUFFERED_IMAGE_MAP.get(url);
         try {
-            var image = ImageIO.read(new File(Objects.requireNonNull(classLoader.getResource(url)).getFile()));
+            var image = ImageIO.read(Objects.requireNonNull(classLoader.getResource(url)));
             BUFFERED_IMAGE_MAP.put(url, image);
             return image;
         } catch (IOException e) {
@@ -77,5 +79,13 @@ public class FilesUtils {
             json = JsonParser.parseReader(reader);
         }
         return json;
+    }
+
+    public static AudioInputStream getAudioStream(String url) {
+        try {
+            return AudioSystem.getAudioInputStream(Objects.requireNonNull(classLoader.getResourceAsStream(url)));
+        } catch (UnsupportedAudioFileException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

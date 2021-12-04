@@ -15,15 +15,27 @@ public interface Game {
      */
     void evolve(Cmd userCmd);
 
-    void Compteur();
+    void compteur();
 
     void setFinish(boolean finish);
+
+    boolean isWin();
+
+    void setWin(boolean win);
 
     /**
      * @return true si et seulement si le jeu est fini
      */
     boolean isFinished();
 
-    boolean isFinishCompteur();
+    /**
+     * Met en pause le jeu
+     */
+    void pause();
 
+    boolean getPause();
+
+    void setPause(boolean p);
+
+    void setDifficult(int difficult);
 }

@@ -36,11 +36,22 @@ public class Countdown {
         });
     }
 
+    public void setTime() {
+        this.time += 30;
+    }
+
     /**
      * Demarre le decompte
      */
     public void start() {
         this.timer.start();
+    }
+
+    /**
+     * Mettre en pause le decompte
+     */
+    public void pause() {
+        this.timer.stop();
     }
 
     /**
@@ -80,4 +91,5 @@ public class Countdown {
 
         return minuteString + ":" + secondString;
     }
+
 }

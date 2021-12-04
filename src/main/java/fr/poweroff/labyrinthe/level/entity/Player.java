@@ -16,21 +16,19 @@ public class Player extends Entity {
     /**
      * The player sprite path
      */
-    private static final String SPRITE_PATH = "assets/player/";
+    private static final String SPRITE_PATH = "assets/textures/player/";
 
     /**
      * The current player sprite
      */
-    private              int    spriteIndex;
+    private int spriteIndex;
 
     /**
      * Default constructor of the player
-     *
-     * @param coordinate the start position of the player
      */
-    public Player(Coordinate coordinate) {
+    public Player() {
         super(
-                coordinate,
+                new Coordinate(0, 0),
                 Player.getSprite("pacman_right.png"),
                 Player.getSprite("pacman_down.png"),
                 Player.getSprite("pacman_left.png"),
@@ -45,7 +43,9 @@ public class Player extends Entity {
 
     /**
      * Funcion use to get the player sprite
+     *
      * @param name the name of the sprite
+     *
      * @return the sprite as a buffered image
      */
     private static BufferedImage getSprite(String name) {

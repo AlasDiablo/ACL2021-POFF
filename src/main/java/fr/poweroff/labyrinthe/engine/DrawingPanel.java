@@ -1,8 +1,8 @@
 package fr.poweroff.labyrinthe.engine;
 
-import fr.poweroff.labyrinthe.engine.menu.Level;
 import fr.poweroff.labyrinthe.engine.menu.Menu;
-import fr.poweroff.labyrinthe.engine.menu.Perdu;
+import fr.poweroff.labyrinthe.engine.menu.*;
+import fr.poweroff.labyrinthe.model.PacmanPainter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,14 +75,12 @@ public class DrawingPanel extends JPanel {
     }
 
     public void drawMenu() {
-        Menu m = new Menu(0, 0);
-        currentImage = m.getSprites();
+        currentImage = Menu.getSprites();
         this.repaint();
     }
 
     public void drawNiveau() {
-        Level l = new Level(0, 0);
-        currentImage = l.getSprites();
+        currentImage = Level.getSprites();
         this.repaint();
     }
 
@@ -100,8 +98,21 @@ public class DrawingPanel extends JPanel {
 
 
     public void drawPerdu() {
-        Perdu p = new Perdu(0, 0);
-        currentImage = p.getSprites();
+        currentImage = Perdu.getSprites();
+        this.repaint();
+    }
+
+    public void drawGagne() {
+        currentImage = Gagne.getSprites();
+        var graphics = currentImage.getGraphics();
+        var font     = new Font("Courier New", Font.BOLD, 28);
+        graphics.setFont(font);
+        graphics.drawString(String.valueOf(((PacmanPainter) this.painter).pacmanGame.getScore()), 300, 410);
+        this.repaint();
+    }
+
+    public void drawPause() {
+        currentImage = Pause.getSprites();
         this.repaint();
     }
 }
