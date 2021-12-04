@@ -37,7 +37,7 @@ public class TileTrap extends Tile {
      * @param y Y coordinate
      */
     public TileTrap(int x, int y) {
-        super(x, y, FilesUtils.getImage("cases/piege.png"), FilesUtils.getImage("tile_ground.png"));
+        super(x, y, FilesUtils.getImage("assets/textures/tile/trap.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.TRAP;
         image = 0;
     }
@@ -48,7 +48,7 @@ public class TileTrap extends Tile {
      * @param coordinate Coordinate object
      */
     public TileTrap(Coordinate coordinate) {
-        super(coordinate, FilesUtils.getImage("cases/piege.png"), FilesUtils.getImage("tile_ground.png"));
+        super(coordinate, FilesUtils.getImage("assets/textures/tile/trap.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.TRAP;
     }
 

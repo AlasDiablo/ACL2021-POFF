@@ -37,7 +37,7 @@ public class TileTreasure extends Tile {
      * @param y Y coordinate
      */
     public TileTreasure(int x, int y) {
-        super(x, y, FilesUtils.getImage("cases/coffre2.png"), FilesUtils.getImage("tile_ground.png"));
+        super(x, y, FilesUtils.getImage("assets/textures/tile/treasure.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.ADDTREASURE;
         image = 0;
     }
@@ -48,7 +48,7 @@ public class TileTreasure extends Tile {
      * @param coordinate Coordinate object
      */
     public TileTreasure(Coordinate coordinate) {
-        super(coordinate, FilesUtils.getImage("cases/coffre2.png"), FilesUtils.getImage("tile_ground.png"));
+        super(coordinate, FilesUtils.getImage("assets/textures/tile/treasure.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.ADDTREASURE;
     }
 

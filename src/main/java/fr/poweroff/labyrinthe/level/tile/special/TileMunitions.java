@@ -37,7 +37,7 @@ public class TileMunitions extends Tile {
      * @param y Y coordinate
      */
     public TileMunitions(int x, int y) {
-        super(x, y, FilesUtils.getImage("cases/munition.png"), FilesUtils.getImage("tile_ground.png"));
+        super(x, y, FilesUtils.getImage("assets/textures/tile/munitions.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.ADDMUNITION;
         image = 0;
     }
@@ -48,7 +48,7 @@ public class TileMunitions extends Tile {
      * @param coordinate Coordinate object
      */
     public TileMunitions(Coordinate coordinate) {
-        super(coordinate, FilesUtils.getImage("cases/munition.png"), FilesUtils.getImage("tile_ground.png"));
+        super(coordinate, FilesUtils.getImage("assets/textures/tile/munitions.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.ADDMUNITION;
     }
 

@@ -37,7 +37,7 @@ public class TileTime extends Tile {
      * @param y Y coordinate
      */
     public TileTime(int x, int y) {
-        super(x, y, FilesUtils.getImage("cases/sablier.png"), FilesUtils.getImage("tile_ground.png"));
+        super(x, y, FilesUtils.getImage("assets/textures/tile/time.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.ADDTIME;
         image = 0;
     }
@@ -48,7 +48,7 @@ public class TileTime extends Tile {
      * @param coordinate Coordinate object
      */
     public TileTime(Coordinate coordinate) {
-        super(coordinate, FilesUtils.getImage("cases/sablier.png"), FilesUtils.getImage("tile_ground.png"));
+        super(coordinate, FilesUtils.getImage("assets/textures/tile/time.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.ADDTIME;
     }
 
