@@ -10,6 +10,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,6 +87,16 @@ public class FilesUtils {
             return AudioSystem.getAudioInputStream(Objects.requireNonNull(classLoader.getResourceAsStream(url)));
         } catch (UnsupportedAudioFileException | IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static MinimFileSystem getMinimFileSystem() {
+        return new MinimFileSystem();
+    }
+
+    public static class MinimFileSystem {
+        public InputStream createInput(String url) {
+            return Objects.requireNonNull(classLoader.getResourceAsStream(url));
         }
     }
 }

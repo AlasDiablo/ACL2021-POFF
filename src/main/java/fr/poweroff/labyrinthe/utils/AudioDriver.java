@@ -1,12 +1,17 @@
 package fr.poweroff.labyrinthe.utils;
 
+import ddf.minim.AudioPlayer;
+import ddf.minim.Minim;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
 
 public class AudioDriver {
-    private static final String PATH = "assets/sounds/";
+    private static final String SOUNDS_PATH = "assets/sounds/";
+    private static final String MUSIC_PATH  = "assets/music/";
+
+    private static final Minim MINIM = new Minim(FilesUtils.getMinimFileSystem());
 
     public static void init() {
         playPowerup();
@@ -97,6 +102,43 @@ public class AudioDriver {
         playSounds(sounds);
     }
 
+    private static Music currentMusic;
+
+    public static void playMusic(Music music) {
+        stopMusic();
+        currentMusic = music;
+        music.play();
+    }
+
+    public static void stopMusic() {
+        if (currentMusic != null) currentMusic.stop();
+    }
+
+    public enum Music {
+        AMIGA("amiga"),
+        IN_MOTION("in_motion");
+
+        private final String audioFile;
+
+        private AudioPlayer player;
+
+        Music(String name) {
+            this.audioFile = MUSIC_PATH + name + ".mp3";
+        }
+
+        public void play() {
+            if (this.player == null) {
+                this.player = MINIM.loadFile(audioFile);
+                this.player.play();
+                this.player.loop();
+            }
+        }
+
+        public void stop() {
+            this.player.close();
+        }
+    }
+
     public enum Sounds implements LineListener {
         COIN_1("coin_1"),
         COIN_2("coin_2"),
@@ -121,7 +163,7 @@ public class AudioDriver {
         private Clip clip;
 
         Sounds(String name) {
-            this.audioFile = PATH + name + ".wav";
+            this.audioFile = SOUNDS_PATH + name + ".wav";
         }
 
         public AudioInputStream getAudioStream() {
@@ -132,17 +174,12 @@ public class AudioDriver {
             if (this.clip == null) {
                 var audioStream = this.getAudioStream();
                 try {
-                    AudioFormat format = audioStream.getFormat();
-
-                    DataLine.Info info = new DataLine.Info(Clip.class, format);
-
-                    Clip audioClip = (Clip) AudioSystem.getLine(info);
-
-                    audioClip.addLineListener(this);
-
-                    audioClip.open(audioStream);
-
-                    audioClip.start();
+                    AudioFormat   format = audioStream.getFormat();
+                    DataLine.Info info   = new DataLine.Info(Clip.class, format);
+                    this.clip = (Clip) AudioSystem.getLine(info);
+                    this.clip.addLineListener(this);
+                    this.clip.open(audioStream);
+                    this.clip.start();
                 } catch (LineUnavailableException | IOException ignored) {
                 }
             }

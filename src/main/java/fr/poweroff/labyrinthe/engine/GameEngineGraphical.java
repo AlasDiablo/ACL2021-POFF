@@ -1,5 +1,7 @@
 package fr.poweroff.labyrinthe.engine;
 
+import fr.poweroff.labyrinthe.utils.AudioDriver;
+
 /**
  * @author Horatiu Cirstea, Vincent Thomas
  * <p>
@@ -56,9 +58,13 @@ public class GameEngineGraphical {
         menuEnCour = true;
         niveau     = false;
 
+        AudioDriver.playMusic(AudioDriver.Music.AMIGA);
+
         menu();
 
         niveau();
+
+        AudioDriver.playMusic(AudioDriver.Music.IN_MOTION);
 
         jouer();
 
