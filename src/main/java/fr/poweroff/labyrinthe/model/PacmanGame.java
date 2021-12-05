@@ -4,7 +4,10 @@ import com.google.common.collect.Lists;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.event.Event;
+import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
+import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.event.TimeOutEvent;
+import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.entity.FollowingMonster;
@@ -12,6 +15,7 @@ import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.level.tile.special.*;
+import fr.poweroff.labyrinthe.utils.AudioDriver;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.Countdown;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
@@ -46,7 +50,6 @@ public class PacmanGame implements Game {
     private      boolean   finish = false;
     private      boolean   pause; //Vérifie si le jeu est en pause
     private      boolean   win    = false;
-
     /**
      * constructeur avec fichier source pour le help
      */
@@ -62,37 +65,67 @@ public class PacmanGame implements Game {
     }
 
     public static void onEvent(Event<?> event) {
-        if (event.getName().equals("TimeOut")) {
+        if (event instanceof TimeOutEvent) {
             INSTANCE.setFinish(true);
-        } else if (event.getName().equals("PlayerOnBonusTile")) {
+            return;
+        }
+
+        if (event instanceof PlayerOnBonusTileEvent) {
+            AudioDriver.playCoin();
             INSTANCE.score++;
             TileBonus tb = (TileBonus) event.getData();
             tb.changeType();
-        } else if (event.getName().equals("PlayerOnLifeBonusTile")) {
+            return;
+        }
+
+        if (event instanceof PlayerOnLifeBonusTileEvent) {
+            AudioDriver.playPowerup();
             INSTANCE.life++;
             TileLife tb = (TileLife) event.getData();
             tb.changeType();
-        } else if (event.getName().equals("PlayerOnTimeBonusTile")) {
+            return;
+        }
+
+        if (event instanceof PlayerOnTimeBonusTileEvent) {
+            AudioDriver.playPowerup();
             INSTANCE.countdown.setTime();
             TileTime tb = (TileTime) event.getData();
             tb.changeType();
-        } else if (event.getName().equals("PlayerOnMunitionBonusTile")) {
+            return;
+        }
+
+        if (event instanceof PlayerOnMunitionBonusTileEvent) {
+            AudioDriver.playPowerup();
             INSTANCE.munition++;
             TileMunitions tm = (TileMunitions) event.getData();
             tm.changeType();
-        } else if (event.getName().equals("PlayerOnTreasureBonusTile")) {
+            return;
+        }
+
+        if (event instanceof PlayerOnTreasureBonusTileEvent) {
+            AudioDriver.playCoin();
             INSTANCE.score += 5;
             TileTreasure tt = (TileTreasure) event.getData();
             tt.changeType();
-        } else if (event.getName().equals("PlayerOnTrapTile")) {
+            return;
+        }
+
+        if (event instanceof PlayerOnTrapTileEvent) {
+            AudioDriver.playExplosion();
             INSTANCE.score -= 5;
             INSTANCE.life--;
             TileTrap tt = (TileTrap) event.getData();
             tt.changeType();
-        } else if (event.getName().equals("PlayerOnMonster")) {
+
+        } 
+      
+        if (event instanceof PlayerOnMonsterEvent) {
           INSTANCE.score -= 5;
           INSTANCE.life --;
-        } else if (event.getName().equals("PlayerOnEndTile")) {
+        } 
+        
+        if (event instanceof PlayerOnEndTileEvent) {
+
             // INSTANCE.setDifficult(INSTANCE.difficult);
             // INSTANCE.level.init(PacmanPainter.WIDTH, PacmanPainter.HEIGHT, INSTANCE.player);
 

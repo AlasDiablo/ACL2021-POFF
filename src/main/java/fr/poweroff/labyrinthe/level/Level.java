@@ -39,12 +39,12 @@ public class Level {
      * Minimal number of inner wall in a generated level
      */
     public static final int WALL_NUMBER  = 6;
-    public static int LIFE_NUMBER ;
+    public static       int LIFE_NUMBER;
 
     /**
      * Nombre de timer sur la map
      */
-    public static int TIMER_NUMBER ;
+    public static int TIMER_NUMBER;
 
     public static int MUNITION_NUMBER;
 
@@ -249,22 +249,22 @@ public class Level {
         this.init();
 
         //Permet de doser le nombre de Tile selon le niveau
-        switch (difficult){
-            case 1 :
+        switch (difficult) {
+            case 1:
                 LIFE_NUMBER = 0;
                 TIMER_NUMBER = 0;
                 MUNITION_NUMBER = 0;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 30;
                 break;
-            case 2 :
+            case 2:
                 LIFE_NUMBER = 0;
                 TIMER_NUMBER = 0;
                 MUNITION_NUMBER = 2;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 15;
                 break;
-            case 3 :
+            case 3:
                 LIFE_NUMBER = 1;
                 TIMER_NUMBER = 1;
                 MUNITION_NUMBER = 3;
