@@ -2,12 +2,16 @@ package fr.poweroff.labyrinthe.level;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
+import fr.poweroff.labyrinthe.event.PlayerOnMonsterEvent;
 import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.entity.Entity;
+import fr.poweroff.labyrinthe.level.entity.FollowingMonster;
+import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.level.tile.special.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
@@ -15,11 +19,10 @@ import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 /**
  * Class use tu create a level and handle each game tick
@@ -37,12 +40,12 @@ public class Level {
      * Minimal number of inner wall in a generated level
      */
     public static final int WALL_NUMBER  = 6;
-    public static int LIFE_NUMBER ;
+    public static       int LIFE_NUMBER;
 
     /**
      * Nombre de timer sur la map
      */
-    public static int TIMER_NUMBER ;
+    public static int TIMER_NUMBER;
 
     public static int MUNITION_NUMBER;
 
@@ -50,6 +53,10 @@ public class Level {
 
     public static int TRAP_NUMBER;
 
+    /**
+     * Number of ticks with invincibility after taking damage
+     */
+    public static final int         INVINCIBILITY_TICKS = 60;
     /**
      * Level evolve used to check tile and entities overlapping and more
      */
@@ -69,10 +76,16 @@ public class Level {
     /**
      * The player instances
      */
-    private       Entity       player;
+    private      Entity       player;
+
+    /**
+     * Counter of ticks since the last damage
+     */
+    private             int         ticksCounterLastDamage;
 
     public Level() {
         this.levelEvolve = new LevelEvolve();
+        this.ticksCounterLastDamage = INVINCIBILITY_TICKS;
         this.init();
     }
 
@@ -91,11 +104,13 @@ public class Level {
      *
      * @param levelFile file containing the level
      * @param player    player instances
-     * @param entities  the list of all entities in the game (excluded from player)
      */
-    public void init(String levelFile, Entity player, Entity... entities) {
+    public void init(String levelFile, Entity player) {
         // Variable containing the tile liste
         ImmutableMap.Builder<Coordinate, Tile.Type> levelMap = new ImmutableMap.Builder<>();
+
+        List<Entity> monsters = Lists.newArrayList();
+
         // Json object containing an array who represent the level
         var json = FilesUtils.getJson(levelFile);
         // Json array containing the level
@@ -109,13 +124,34 @@ public class Level {
             // read column
             line.forEach(tile -> {
                 var tileName = tile.getAsString();
-                levelMap.put(new Coordinate(x.getAndIncrement(), y.get()), Tile.Type.valueOf(tileName));
+                switch (tileName) {
+                    case "":
+                        levelMap.put(new Coordinate(x.getAndIncrement(), y.get()), Tile.Type.GROUND);
+                        break;
+                    case "M":
+                        levelMap.put(new Coordinate(x.getAndIncrement(), y.get()), Tile.Type.GROUND);
+                        monsters.add(new Monster(new Coordinate(x.get(), y.get())));
+                        break;
+                    case "MF":
+                        levelMap.put(new Coordinate(x.getAndIncrement(), y.get()), Tile.Type.GROUND);
+                        monsters.add(new FollowingMonster(new Coordinate(x.get(), y.get())));
+                        break;
+                    default:
+                        var tmpX = x.getAndIncrement();
+                        var tmpY = y.get();
+                        try {
+                            levelMap.put(new Coordinate(tmpX, tmpY), Tile.Type.valueOf(tileName));
+                        } catch (IllegalArgumentException e) {
+                            levelMap.put(new Coordinate(tmpX, tmpY), Tile.Type.GROUND);
+                        }
+                        break;
+                }
             });
             y.getAndIncrement();
             x.set(0);
         });
         // Call an other init function to finish the work
-        this.init(levelMap.build(), player, entities);
+        this.init(levelMap.build(), player, monsters.toArray(new Entity[]{ }));
     }
 
     /**
@@ -138,6 +174,7 @@ public class Level {
         ImmutableList.Builder<Tile> timeBonusBuilder     = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> trapBuilder          = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> treasureBonusBuilder = new ImmutableList.Builder<>();
+        List<Entity>                entitiesBuilder      = Lists.newArrayList();
 
         // Read the level map and create tile
         level.forEach((coordinate, type) -> {
@@ -201,10 +238,19 @@ public class Level {
             levelBuilder.add(currentTile);
         });
 
+
+        Arrays.stream(entities).forEach(entity -> {
+            var coordinate = entity.getCoordinate();
+            entity.getCoordinate().setX((coordinate.getX() - 1) * TITLE_SIZE + 2);
+            entity.getCoordinate().setY(coordinate.getY() * TITLE_SIZE + 2);
+            entitiesBuilder.add(entity);
+        });
+        entitiesBuilder.add(player);
+
+
         // Store all local variable into the level
-        this.player   = player;
-        this.entities = new ArrayList<>(List.of(entities));
-        this.entities.add(player);
+        this.player                         = player;
+        this.entities                       = entitiesBuilder;
         this.levelDisposition               = levelBuilder.build();
         this.levelEvolve.wallTiles          = wallBuilder.build();
         this.levelEvolve.bonusTiles         = bonusBuilder.build();
@@ -237,22 +283,22 @@ public class Level {
         this.init();
 
         //Permet de doser le nombre de Tile selon le niveau
-        switch (difficult){
-            case 1 :
+        switch (difficult) {
+            case 1:
                 LIFE_NUMBER = 0;
-                TIMER_NUMBER = 0;
+                TIMER_NUMBER = 1;
                 MUNITION_NUMBER = 0;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 30;
                 break;
-            case 2 :
-                LIFE_NUMBER = 0;
-                TIMER_NUMBER = 0;
+            case 2:
+                LIFE_NUMBER = 1;
+                TIMER_NUMBER = 1;
                 MUNITION_NUMBER = 2;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 15;
                 break;
-            case 3 :
+            case 3:
                 LIFE_NUMBER = 1;
                 TIMER_NUMBER = 1;
                 MUNITION_NUMBER = 3;
@@ -500,11 +546,7 @@ public class Level {
             graphics.setColor(Color.RED);
             graphics.drawRect(pos.getX(), pos.getY(), TITLE_SIZE, TITLE_SIZE);
         });
-        this.entities.forEach(entity -> {
-            var pos = entity.getCoordinate();
-            graphics.setColor(Color.BLUE);
-            graphics.drawRect(pos.getX(), pos.getY(), Entity.ENTITY_SIZE, Entity.ENTITY_SIZE);
-        });
+        this.entities.forEach(entity -> entity.drawHitBox(graphics));
     }
 
     /**
@@ -559,6 +601,19 @@ public class Level {
                 }
             }
         });
+
+        //check if player touch a monster
+       this.levelEvolve.overlapEntity(
+                this.player.getCoordinate().getX(),
+                this.player.getCoordinate().getY(),
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.entities
+        ).ifPresent(entity->{
+            if(entity != this.player && this.ticksCounterLastDamage > INVINCIBILITY_TICKS) {
+                PacmanGame.onEvent(new PlayerOnMonsterEvent());
+                this.ticksCounterLastDamage = 0;
+            }
+        });
+        this.ticksCounterLastDamage++;
     }
 
     /**
@@ -573,7 +628,7 @@ public class Level {
     /**
      * Inner class use for describe interaction with the level
      */
-    public static class LevelEvolve {
+    public class LevelEvolve {
         /**
          * List of all wall tile
          */
@@ -649,6 +704,25 @@ public class Level {
         }
 
         /**
+         * Check if a custom rectangle is overlapping the player
+         *
+         * @param x X position of the rectangle
+         * @param y Y position of the rectangle
+         * @param w Width of the rectangle
+         * @param h Height of the rectangle
+         *
+         * @return <ul><li>true if it is overlapping the player</li><li>false if it is not overlapping the player</li></ul>
+         */
+        public boolean overlapWithPlayer(int x, int y, int w, int h) {
+            return Stream.of(Level.this.player)
+                    .anyMatch(tile -> !(x + w < tile.getCoordinate().getX() ||
+                            tile.getCoordinate().getX() + TITLE_SIZE < x ||
+                            y + h < tile.getCoordinate().getY() ||
+                            tile.getCoordinate().getY() + TITLE_SIZE < y)
+                    );
+        }
+
+        /**
          * Check if a custom rectangle is overlapping a list of tile and return the corresponding tile
          *
          * @param x     X position of the rectangle
@@ -666,6 +740,27 @@ public class Level {
                             tile.getCoordinate().getX() + TITLE_SIZE < x ||
                             y + h < tile.getCoordinate().getY() ||
                             tile.getCoordinate().getY() + TITLE_SIZE < y)
+                    )
+                    .findAny();
+        }
+
+
+        /**
+         * Check if a entity overlapping a list of entity
+         * @param x X position of the tested entity
+         * @param y Y position of the tested entity
+         * @param w Widht of a entity
+         * @param h Height of a entity
+         * @param entities list of entities to be check
+         * @return the overlapping entity
+         */
+        public Optional<Entity> overlapEntity(int x, int y, int w, int h, List<Entity> entities) {
+            return entities
+                    .stream()
+                    .filter(entitie -> !(x + w < entitie.getCoordinate().getX() ||
+                            entitie.getCoordinate().getX() + entitie.ENTITY_SIZE < x ||
+                            y + h < entitie.getCoordinate().getY() ||
+                            entitie.getCoordinate().getY() + entitie.ENTITY_SIZE < y)
                     )
                     .findAny();
         }

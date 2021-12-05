@@ -37,7 +37,7 @@ public class TileLife extends Tile {
      * @param y Y coordinate
      */
     public TileLife(int x, int y) {
-        super(x, y, FilesUtils.getImage("cases/coeur_case.png"), FilesUtils.getImage("tile_ground.png"));
+        super(x, y, FilesUtils.getImage("assets/textures/tile/life.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.ADDLIFE;
         image = 0;
     }
@@ -48,7 +48,7 @@ public class TileLife extends Tile {
      * @param coordinate Coordinate object
      */
     public TileLife(Coordinate coordinate) {
-        super(coordinate, FilesUtils.getImage("cases/coeur_case.png"), FilesUtils.getImage("tile_ground.png"));
+        super(coordinate, FilesUtils.getImage("assets/textures/tile/life.png"), FilesUtils.getImage("assets/textures/tile/ground.png"));
         state = Type.ADDLIFE;
     }
 

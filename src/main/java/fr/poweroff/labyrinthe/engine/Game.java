@@ -37,7 +37,7 @@ public interface Game {
 
     void setPause(boolean p);
 
-    void setDifficult(int difficult);
-
     int getScore();
+
+    void setDifficult(int difficult, String customLevel);
 }

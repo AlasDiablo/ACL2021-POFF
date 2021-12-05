@@ -4,6 +4,7 @@ import fr.poweroff.labyrinthe.engine.GameEngineGraphical;
 import fr.poweroff.labyrinthe.model.PacmanController;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.model.PacmanPainter;
+import fr.poweroff.labyrinthe.utils.AudioDriver;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ public class Labyrinthe {
 
         // classe qui lance le moteur de jeu generique
         GameEngineGraphical engine = new GameEngineGraphical(game, painter, controller);
+        AudioDriver.init();
         engine.run();
     }
 

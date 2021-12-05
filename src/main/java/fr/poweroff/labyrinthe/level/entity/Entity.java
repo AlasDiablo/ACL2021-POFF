@@ -35,7 +35,7 @@ public abstract class Entity {
      * @param coordinate Coordinate of the entity
      * @param sprite     Sprite of the entity
      */
-    public Entity(Coordinate coordinate, BufferedImage sprite) {
+    public Entity(Coordinate coordinate,BufferedImage sprite) {
         this.coordinate = coordinate;
         this.sprite     = new BufferedImage[]{ sprite };
     }
@@ -83,4 +83,10 @@ public abstract class Entity {
      * @param levelEvolve Level evolve object
      */
     public abstract void evolve(Cmd cmd, LevelEvolve levelEvolve);
+
+
+    public void drawHitBox(Graphics2D graphics) {
+        graphics.setColor(Color.BLUE);
+        graphics.drawRect(this.getCoordinate().getX(), this.getCoordinate().getY(), ENTITY_SIZE, ENTITY_SIZE);
+    }
 }

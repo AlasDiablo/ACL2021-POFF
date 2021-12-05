@@ -17,8 +17,8 @@ public class PacmanPainter implements GamePainter {
     /**
      * la taille des cases
      */
-    static final int WIDTH  = 550;
-    static final int HEIGHT = 550;
+    public static final int WIDTH  = 550;
+    public static final int HEIGHT = 550;
 
     public final PacmanGame pacmanGame;
 
@@ -58,18 +58,23 @@ public class PacmanPainter implements GamePainter {
         crayon.drawString(pacmanGame.getCountdown().getMinutesSeconds(), Level.TITLE_SIZE, 15);
 
         crayon.drawString("Score: ", Level.TITLE_SIZE * 4, 15);
-        crayon.drawString(String.valueOf(pacmanGame.getScore()), Level.TITLE_SIZE * 7, 15);
+        crayon.drawString(String.valueOf(pacmanGame.getScore()), Level.TITLE_SIZE * 7 - 8, 15);
 
         crayon.drawString("Munition: ", Level.TITLE_SIZE * 9, 15);
         crayon.drawString(String.valueOf(pacmanGame.getMunition()), Level.TITLE_SIZE * 13, 15);
 
-        /*
-        Affichage des coeurs selon le nombre de vie
-         */
-        for (int i = 0; i < pacmanGame.getLife(); i++) {
-            crayon.drawImage(FilesUtils.getImage("cases/coeur.png"), Level.TITLE_SIZE * 15 + (16 * i), 3, 16, 16, null);
-        }
+        crayon.drawImage(FilesUtils.getImage("cases/coeur.png"), Level.TITLE_SIZE * 15, 3, 16, 16, null);
+        crayon.drawString("x", Level.TITLE_SIZE * 15 + 18, 15);
+        crayon.drawString(String.valueOf(pacmanGame.getLife()), Level.TITLE_SIZE * 15 + (16 * 2), 15);
 
+        crayon.drawString("Stage: ", Level.TITLE_SIZE * 18, 15);
+        crayon.drawString(String.valueOf(pacmanGame.getStage()), Level.TITLE_SIZE * 21 - 8, 15);
+
+        if (this.pacmanGame.getPause()) {
+            Font fontPause = new Font("Courier New", Font.BOLD, 24);
+            crayon.setFont(fontPause);
+            crayon.drawString("Press P to un-pause", 145, 255);
+        }
     }
 
     @Override

@@ -12,11 +12,10 @@ import java.awt.image.BufferedImage;
  * Class how define the player entity
  */
 public class Player extends Entity {
-
     /**
      * The player sprite path
      */
-    private static final String SPRITE_PATH = "assets/player/";
+    private static final String SPRITE_PATH = "assets/textures/player/";
 
     /**
      * The current player sprite
