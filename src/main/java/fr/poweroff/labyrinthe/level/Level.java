@@ -8,6 +8,7 @@ import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.entity.Entity;
+import fr.poweroff.labyrinthe.level.entity.LightTrap;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.level.tile.special.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
@@ -50,6 +51,7 @@ public class Level {
     public static int TREASURE_NUMBER;
 
     public static int TRAP_NUMBER;
+    public static int LIGHT_TRAP_NUMBER;
     public static int GLUE_NUMBER;
 
     /**
@@ -72,7 +74,7 @@ public class Level {
      * The player instances
      */
     private       Entity       player;
-
+    ArrayList<LightTrap> ligthTrapList;
     public Level() {
         this.levelEvolve = new LevelEvolve();
         this.init();
@@ -131,6 +133,8 @@ public class Level {
         // Initialize or re-initialize variable
         this.init();
 
+        // Create list of light trap entity
+        ligthTrapList = new ArrayList<LightTrap>();
         // Create level tile list
         ImmutableList.Builder<Tile> levelBuilder         = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder          = new ImmutableList.Builder<>();
@@ -141,6 +145,7 @@ public class Level {
         ImmutableList.Builder<Tile> trapBuilder          = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> glueBuilder          = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> treasureBonusBuilder = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> lightTrapBuilder    = new ImmutableList.Builder<>();
 
         // Read the level map and create tile
         level.forEach((coordinate, type) -> {
@@ -176,6 +181,17 @@ public class Level {
                     currentTile = new TileLife(rx, ry);
                     specialBonusBuilder.add(currentTile);
                     break;
+                case GLUE:
+                    currentTile = new TileGlue(rx, ry);
+                    glueBuilder.add(currentTile);
+                    break;
+                case LIGHTTRAP: {
+                    TileLightTrap tmp = new TileLightTrap(rx, ry);
+                    currentTile = tmp;
+                    ligthTrapList.add(new LightTrap(currentTile.getCoordinate(),tmp.getDirection()));
+                    lightTrapBuilder.add(currentTile);
+                    break;
+                }
                 //Create tile for add time
                 case ADDTIME:
                     currentTile = new TileTime(rx, ry);
@@ -216,6 +232,7 @@ public class Level {
         this.levelEvolve.munitionBonusTiles = munitionBonusBuilder.build();
         this.levelEvolve.treasureBonusTiles = treasureBonusBuilder.build();
         this.levelEvolve.trapTiles          = trapBuilder.build();
+        this.levelEvolve.lightTrapTiles          = lightTrapBuilder.build();
         this.levelEvolve.glueTiles = glueBuilder.build();
         ImmutableList.Builder<Tile> interactionTiles = new ImmutableList.Builder<>();
         interactionTiles.addAll(this.levelEvolve.bonusTiles);
@@ -224,8 +241,10 @@ public class Level {
         interactionTiles.addAll(this.levelEvolve.munitionBonusTiles);
         interactionTiles.addAll(this.levelEvolve.treasureBonusTiles);
         interactionTiles.addAll(this.levelEvolve.trapTiles);
+        interactionTiles.addAll(this.levelEvolve.lightTrapTiles);
         interactionTiles.addAll(this.levelEvolve.glueTiles);
         this.levelEvolve.interactionTiles = interactionTiles.build();
+        this.initLightTrap(ligthTrapList);
     }
 
     /**
@@ -249,7 +268,8 @@ public class Level {
                 MUNITION_NUMBER = 0;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 30;
-                GLUE_NUMBER = 5;
+                LIGHT_TRAP_NUMBER = 3;
+                GLUE_NUMBER = 25;
                 break;
             case 2:
                 LIFE_NUMBER = 0;
@@ -257,6 +277,7 @@ public class Level {
                 MUNITION_NUMBER = 2;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 15;
+                LIGHT_TRAP_NUMBER = 5;
                 GLUE_NUMBER = 10;
                 break;
             case 3:
@@ -265,6 +286,7 @@ public class Level {
                 MUNITION_NUMBER = 3;
                 TREASURE_NUMBER = 2;
                 TRAP_NUMBER = 20;
+                LIGHT_TRAP_NUMBER = 2;
                 GLUE_NUMBER = 10;
                 break;
             default:
@@ -273,11 +295,13 @@ public class Level {
                 MUNITION_NUMBER = 5;
                 TREASURE_NUMBER = 4;
                 TRAP_NUMBER = 25;
+                LIGHT_TRAP_NUMBER = 4;
                 GLUE_NUMBER = 15;
                 break;
 
         }
-
+        // Create list of light trap entity
+         ligthTrapList = new ArrayList<LightTrap>();
         // Create level tile list
         ImmutableList.Builder<Tile> levelBuilder         = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder          = new ImmutableList.Builder<>();
@@ -286,6 +310,7 @@ public class Level {
         ImmutableList.Builder<Tile> munitionBonusBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> timeBonusBuilder     = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> trapBuilder          = new ImmutableList.Builder<>();
+        ImmutableList.Builder<Tile> lightTrapBuilder     = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> glueBuilder          = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> treasureBonusBuilder = new ImmutableList.Builder<>();
 
@@ -314,7 +339,7 @@ public class Level {
         this.createRandomIndexList(BONUS_NUMBER, innerTiles, Tile.Type.BONUS, surface, perimeter);
 
         // Create the list of glue tile index
-        this.createRandomIndexList(GLUE_NUMBER, innerTiles, Tile.Type.ADDGLUE, surface, perimeter);
+        this.createRandomIndexList(GLUE_NUMBER, innerTiles, Tile.Type.GLUE, surface, perimeter);
 
         // Create the list of special bonus tile index (life)
         this.createRandomIndexList(LIFE_NUMBER, innerTiles, Tile.Type.ADDLIFE, surface, perimeter);
@@ -330,6 +355,8 @@ public class Level {
 
         // Create the list of special tile index (trap)
         this.createRandomIndexList(TRAP_NUMBER, innerTiles, Tile.Type.TRAP, surface, perimeter);
+        // Create the list of special tile index (lightTrap)
+        this.createRandomIndexList(LIGHT_TRAP_NUMBER,innerTiles, Tile.Type.LIGHTTRAP,surface,perimeter);
 
         var wallNumberWithDifficult = WALL_NUMBER + (WALL_NUMBER / 2 * (difficult - 1));
 
@@ -401,9 +428,16 @@ public class Level {
                                 munitionBonusBuilder.add(currentTile);
                                 break;
                             }
-                            case ADDGLUE: {
+                            case GLUE: {
                                 currentTile = new TileGlue(rx, ry);
                                 glueBuilder.add(currentTile);
+                                break;
+                            }
+                            case LIGHTTRAP: {
+                                TileLightTrap tmp = new TileLightTrap(rx, ry);
+                                currentTile = tmp;
+                                lightTrapBuilder.add(currentTile);
+                                ligthTrapList.add(new LightTrap(currentTile.getCoordinate(),tmp.getDirection()));
                                 break;
                             }
                             case ADDTREASURE: {
@@ -443,6 +477,7 @@ public class Level {
         this.levelEvolve.munitionBonusTiles = munitionBonusBuilder.build();
         this.levelEvolve.treasureBonusTiles = treasureBonusBuilder.build();
         this.levelEvolve.trapTiles          = trapBuilder.build();
+        this.levelEvolve.lightTrapTiles          = lightTrapBuilder.build();
         this.levelEvolve.glueTiles = glueBuilder.build();
         ImmutableList.Builder<Tile> interactionTiles = new ImmutableList.Builder<>();
         interactionTiles.addAll(this.levelEvolve.bonusTiles);
@@ -451,9 +486,11 @@ public class Level {
         interactionTiles.addAll(this.levelEvolve.munitionBonusTiles);
         interactionTiles.addAll(this.levelEvolve.treasureBonusTiles);
         interactionTiles.addAll(this.levelEvolve.trapTiles);
+        interactionTiles.addAll(this.levelEvolve.lightTrapTiles);
         interactionTiles.addAll(this.levelEvolve.glueTiles);
         this.levelEvolve.interactionTiles = interactionTiles.build();
         this.initMonster(width, height, levelDisposition, entities);
+        this.initLightTrap(ligthTrapList);
     }
 
     private void createRandomIndexList(int number, Map<Integer, Tile.Type> innerTiles, Tile.Type type, int surface, int perimeter) {
@@ -464,6 +501,9 @@ public class Level {
             } while (innerTiles.containsKey(bonusIndex));
             innerTiles.put(bonusIndex, type);
         }
+    }
+    public void initLightTrap(ArrayList<LightTrap> lightTrapArrayList) {
+        lightTrapArrayList.forEach( lightTrap -> lightTrap.set_rayLight(levelEvolve));
     }
 
     public void initMonster(int width, int height, List<Tile> levelDisposition, Entity... entities) {
@@ -502,11 +542,13 @@ public class Level {
      * @param graphics drawing object
      */
     public void draw(Graphics2D graphics) {
+
         // Draw all tiles
         this.levelDisposition.forEach(tile -> tile.draw(graphics));
         // Draw all entities
         this.entities.forEach(entity -> entity.draw(graphics));
         // this.drawHitBox(graphics);
+        this.ligthTrapList.forEach(lightTrap -> lightTrap.draw(graphics));
     }
 
     /**
@@ -623,6 +665,10 @@ public class Level {
          * Liste of treasure bonus tiles
          */
         private List<Tile> treasureBonusTiles;
+        /**
+         * Liste of light trap tiles
+         */
+        private List<Tile> lightTrapTiles;
 
         /**
          *

@@ -127,6 +127,7 @@ public abstract class Tile {
      */
     public enum Type {
         GROUND, WALL, START, END, BONUS,
-        ADDLIFE, ADDMUNITION, ADDTIME, TRAP, ADDTREASURE,ADDGLUE
+        ADDLIFE, ADDMUNITION, ADDTIME, TRAP,
+        ADDTREASURE, GLUE,LIGHTTRAP
     }
 }

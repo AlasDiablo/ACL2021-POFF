@@ -36,7 +36,7 @@ public class TileGlue extends Tile {
      */
     @Override
     public Type getType() {
-        return Type.ADDGLUE;
+        return Type.GLUE;
     }
 
 
