@@ -104,13 +104,16 @@ public class AudioDriver {
     }
 
     public static void playMusic(Music music) {
-        stopMusic();
         currentMusic = music;
         music.play();
     }
 
     public static void stopMusic() {
         if (currentMusic != null) currentMusic.stop();
+    }
+
+    public static Music getCurrentMusic() {
+        return currentMusic;
     }
 
     public enum Music {
@@ -128,13 +131,14 @@ public class AudioDriver {
         public void play() {
             if (this.player == null) {
                 this.player = MINIM.loadFile(audioFile);
-                this.player.play();
-                this.player.loop();
             }
+            this.player.play();
+            this.player.loop();
         }
 
         public void stop() {
-            this.player.close();
+            this.player.rewind();
+            this.player.pause();
         }
     }
 
