@@ -3,6 +3,7 @@ package fr.poweroff.labyrinthe.model;
 import com.google.common.collect.Lists;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.Game;
+import fr.poweroff.labyrinthe.event.*;
 import fr.poweroff.labyrinthe.event.Event;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
