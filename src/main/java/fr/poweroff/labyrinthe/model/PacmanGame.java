@@ -3,7 +3,7 @@ package fr.poweroff.labyrinthe.model;
 import com.google.common.collect.Lists;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.Game;
-import fr.poweroff.labyrinthe.event.Event;
+import fr.poweroff.labyrinthe.event.*;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.event.TimeOutEvent;
@@ -50,6 +50,9 @@ public class PacmanGame implements Game {
     private      boolean   finish = false;
     private      boolean   pause; //Vérifie si le jeu est en pause
     private      boolean   win    = false;
+    private int difficult;
+    private int stage;
+
     /**
      * constructeur avec fichier source pour le help
      */
@@ -63,9 +66,6 @@ public class PacmanGame implements Game {
         this.life     = 3; //Mettre un max de 10 environ
         this.munition = 0;
     }
-
-    private int difficult;
-    private int stage;
 
     public static void onEvent(Event<?> event) {
         if (event instanceof TimeOutEvent) {
@@ -115,11 +115,16 @@ public class PacmanGame implements Game {
 
         if (event instanceof PlayerOnTrapTileEvent) {
             AudioDriver.playExplosion();
-            INSTANCE.score -= 5;
+            INSTANCE.score--;
             INSTANCE.life--;
             TileTrap tt = (TileTrap) event.getData();
             tt.changeType();
             return;
+        }
+
+        if (event instanceof PlayerOnMonsterEvent) {
+          INSTANCE.life--;
+          return;
         }
 
         if (event instanceof PlayerOnEndTileEvent) {
@@ -200,7 +205,7 @@ public class PacmanGame implements Game {
         }
 
         //Tester si le timer est fini
-        if (this.countdown.isFinish()) {
+        if (this.countdown.isFinish() || INSTANCE.life <= 0) {
             PacmanGame.onEvent(new TimeOutEvent());
         }
 

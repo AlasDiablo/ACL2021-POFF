@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
+import fr.poweroff.labyrinthe.event.PlayerOnMonsterEvent;
 import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.entity.FollowingMonster;
@@ -53,6 +54,10 @@ public class Level {
     public static int TRAP_NUMBER;
 
     /**
+     * Number of ticks with invincibility after taking damage
+     */
+    public static final int         INVINCIBILITY_TICKS = 60;
+    /**
      * Level evolve used to check tile and entities overlapping and more
      */
     private final LevelEvolve  levelEvolve;
@@ -71,10 +76,16 @@ public class Level {
     /**
      * The player instances
      */
-    private       Entity       player;
+    private      Entity       player;
+
+    /**
+     * Counter of ticks since the last damage
+     */
+    private             int         ticksCounterLastDamage;
 
     public Level() {
         this.levelEvolve = new LevelEvolve();
+        this.ticksCounterLastDamage = INVINCIBILITY_TICKS;
         this.init();
     }
 
@@ -590,6 +601,19 @@ public class Level {
                 }
             }
         });
+
+        //check if player touch a monster
+       this.levelEvolve.overlapEntity(
+                this.player.getCoordinate().getX(),
+                this.player.getCoordinate().getY(),
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.entities
+        ).ifPresent(entity->{
+            if(entity != this.player && this.ticksCounterLastDamage > INVINCIBILITY_TICKS) {
+                PacmanGame.onEvent(new PlayerOnMonsterEvent());
+                this.ticksCounterLastDamage = 0;
+            }
+        });
+        this.ticksCounterLastDamage++;
     }
 
     /**
@@ -716,6 +740,27 @@ public class Level {
                             tile.getCoordinate().getX() + TITLE_SIZE < x ||
                             y + h < tile.getCoordinate().getY() ||
                             tile.getCoordinate().getY() + TITLE_SIZE < y)
+                    )
+                    .findAny();
+        }
+
+
+        /**
+         * Check if a entity overlapping a list of entity
+         * @param x X position of the tested entity
+         * @param y Y position of the tested entity
+         * @param w Widht of a entity
+         * @param h Height of a entity
+         * @param entities list of entities to be check
+         * @return the overlapping entity
+         */
+        public Optional<Entity> overlapEntity(int x, int y, int w, int h, List<Entity> entities) {
+            return entities
+                    .stream()
+                    .filter(entitie -> !(x + w < entitie.getCoordinate().getX() ||
+                            entitie.getCoordinate().getX() + entitie.ENTITY_SIZE < x ||
+                            y + h < entitie.getCoordinate().getY() ||
+                            entitie.getCoordinate().getY() + entitie.ENTITY_SIZE < y)
                     )
                     .findAny();
         }
