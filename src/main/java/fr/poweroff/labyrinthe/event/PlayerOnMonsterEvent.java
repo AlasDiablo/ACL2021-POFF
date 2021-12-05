@@ -1,9 +1,6 @@
 package fr.poweroff.labyrinthe.event;
 
-import fr.poweroff.labyrinthe.level.tile.Tile;
-import fr.poweroff.labyrinthe.level.tile.TileGround;
-
-public class PlayerOnMonsterEvent implements Event<Boolean>{
+public class PlayerOnMonsterEvent implements Event<Boolean> {
 
     @Override
     public String getName() {

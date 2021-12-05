@@ -17,20 +17,19 @@ public class RailGunProjectile extends Entity {
     /**
      * Speed of the projectile
      */
-    private static final int PROJECTILE_SPEED = 20;
+    private static final int    PROJECTILE_SPEED = 20;
     /**
      * The Projectile sprite path
      */
-    private static final String SPRITE_PATH = "assets/textures/projectiles/";
-
-    /**
-     * The current player sprite
-     */
-    private int spriteIndex;
+    private static final String SPRITE_PATH      = "assets/textures/projectiles/";
     /**
      * Direction of the projectile
      */
-    protected            Cmd       direction;
+    protected            Cmd    direction;
+    /**
+     * The current player sprite
+     */
+    private              int    spriteIndex;
 
     /**
      * Default constructor of the player
@@ -44,7 +43,7 @@ public class RailGunProjectile extends Entity {
                 RailGunProjectile.getSprite("projectile_up.png")
         );
         this.spriteIndex = 0;
-        this.direction = direction;
+        this.direction   = direction;
     }
 
     /**
@@ -82,8 +81,8 @@ public class RailGunProjectile extends Entity {
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         //System.out.println("Player direction: " + this.direction.toString());
-        var x = this.coordinate.getX();
-        var y = this.coordinate.getY();
+        var x    = this.coordinate.getX();
+        var y    = this.coordinate.getY();
         var newx = x;
         var newy = y;
 
@@ -93,12 +92,12 @@ public class RailGunProjectile extends Entity {
                 this.spriteIndex = 1;
                 break;
             case LEFT:
-                newx += - PROJECTILE_SPEED;
+                newx += -PROJECTILE_SPEED;
                 this.spriteIndex = 2;
 
                 break;
             case UP:
-                newy += - PROJECTILE_SPEED;
+                newy += -PROJECTILE_SPEED;
                 this.spriteIndex = 3;
 
                 break;
@@ -109,14 +108,14 @@ public class RailGunProjectile extends Entity {
 
                 break;
             case LEFT_DOWN:
-                newx += - PROJECTILE_SPEED;
+                newx += -PROJECTILE_SPEED;
                 newy += PROJECTILE_SPEED;
                 this.spriteIndex = 1;
 
                 break;
             case LEFT_UP:
-                newx += - PROJECTILE_SPEED;
-                newy += - PROJECTILE_SPEED;
+                newx += -PROJECTILE_SPEED;
+                newy += -PROJECTILE_SPEED;
                 this.spriteIndex = 1;
 
                 break;
@@ -128,7 +127,7 @@ public class RailGunProjectile extends Entity {
                 break;
             case RIGHT_UP:
                 newx += PROJECTILE_SPEED;
-                newy += - PROJECTILE_SPEED;
+                newy += -PROJECTILE_SPEED;
                 this.spriteIndex = 1;
 
                 break;
@@ -136,7 +135,7 @@ public class RailGunProjectile extends Entity {
         if (levelEvolve.notOverlap(x, y, ENTITY_SIZE, ENTITY_SIZE)) {
             this.coordinate.setX(newx);
             this.coordinate.setY(newy);
-        }else{
+        } else {
             PacmanGame.onEvent(new ProjectileOnSomethingEvent(this));
         }
     }
@@ -144,6 +143,7 @@ public class RailGunProjectile extends Entity {
     public void move(LevelEvolve levelEvolve) {
 
     }
+
     @Override
     public Cmd getDirection() {
         return null;

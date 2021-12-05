@@ -31,6 +31,19 @@ public class PacmanController implements GameController {
     private char rawCommand;
 
     /**
+     * construction du controleur par defaut le controleur n'a pas de commande
+     */
+    public PacmanController() {
+        this.left       = false;
+        this.right      = false;
+        this.up         = false;
+        this.down       = false;
+        this.other      = null;
+        this.pause      = null;
+        this.rawCommand = (char) -1;
+    }
+
+    /**
      * quand on demande les commandes, le controleur retourne la commande en
      * cours
      *
@@ -51,19 +64,6 @@ public class PacmanController implements GameController {
         if (this.up) return Cmd.UP;
         if (this.down) return Cmd.DOWN;
         return Cmd.IDLE;
-    }
-
-    /**
-     * construction du controleur par defaut le controleur n'a pas de commande
-     */
-    public PacmanController() {
-        this.left       = false;
-        this.right      = false;
-        this.up         = false;
-        this.down       = false;
-        this.other      = null;
-        this.pause      = null;
-        this.rawCommand = (char) -1;
     }
 
     @Override
@@ -127,7 +127,7 @@ public class PacmanController implements GameController {
             case KeyEvent.VK_ENTER:
                 this.other = Cmd.ENTER;
                 break;
-            case  KeyEvent.VK_I:
+            case KeyEvent.VK_I:
                 this.other = Cmd.SHOT;
                 break;
             case KeyEvent.VK_BACK_SPACE:
@@ -226,7 +226,7 @@ public class PacmanController implements GameController {
             }
         }
 
-        if(bestScore){
+        if (bestScore) {
             //Clic sur retour
             if (x > 200 && y > 462 && x < 366 && y < 510) {
                 this.other = Cmd.RETOUR;

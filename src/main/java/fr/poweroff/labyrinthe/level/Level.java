@@ -34,67 +34,61 @@ public class Level {
     /**
      * Size of a title in pixel
      */
-    public static final int TITLE_SIZE   = 11 * 2;
+    public static final int          TITLE_SIZE          = 11 * 2;
     /**
      * Number of bonus in a generated level
      */
-    public static final int BONUS_NUMBER = 3;
+    public static final int          BONUS_NUMBER        = 3;
     /**
      * Minimal number of inner wall in a generated level
      */
-    public static final int WALL_NUMBER  = 6;
-    public static       int LIFE_NUMBER;
-
-    /**
-     * Nombre de timer sur la map
-     */
-    public static int TIMER_NUMBER;
-
-    public static int MUNITION_NUMBER;
-
-    public static int RAIlGUN_NUMBER;
-
-    public static int TREASURE_NUMBER;
-
-    public static int TRAP_NUMBER;
-
+    public static final int          WALL_NUMBER         = 6;
     /**
      * Number of ticks with invincibility after taking damage
      */
-    public static final int         INVINCIBILITY_TICKS = 60;
+    public static final int          INVINCIBILITY_TICKS = 60;
+    public static       int          LIFE_NUMBER;
+    /**
+     * Nombre de timer sur la map
+     */
+    public static       int          TIMER_NUMBER;
+    public static       int          MUNITION_NUMBER;
+    public static       int          RAIlGUN_NUMBER;
+    public static       int          TREASURE_NUMBER;
+    public static       int          TRAP_NUMBER;
     /**
      * Level evolve used to check tile and entities overlapping and more
      */
-    private final LevelEvolve  levelEvolve;
+    private final       LevelEvolve  levelEvolve;
     /**
      * List of all level tiles
      */
-    private       List<Tile>   levelDisposition;
+    private             List<Tile>   levelDisposition;
     /**
      * List of all level entities
      */
-    private       List<Entity> entities;
+    private             List<Entity> entities;
 
     /**
      * Entities to remove
      */
-    private        List<Entity> entitiesToRemove;
+    private List<Entity> entitiesToRemove;
     /**
      * The end tile of the level
      */
-    private       Tile         endTile;
+    private Tile         endTile;
     /**
      * The player instances
      */
-    private      Entity       player;
+    private Entity       player;
 
     /**
      * Counter of ticks since the last damage
      */
-    private             int         ticksCounterLastDamage;
+    private int ticksCounterLastDamage;
 
     public Level() {
-        this.levelEvolve = new LevelEvolve();
+        this.levelEvolve            = new LevelEvolve();
         this.ticksCounterLastDamage = INVINCIBILITY_TICKS;
         this.init();
     }
@@ -104,7 +98,7 @@ public class Level {
      */
     private void init() {
         this.levelDisposition = List.of();
-     //   this.entities         = List.of();
+        //   this.entities         = List.of();
         this.entitiesToRemove = new ArrayList<>();
         this.endTile          = null;
         this.player           = null;
@@ -278,6 +272,7 @@ public class Level {
         interactionTiles.addAll(this.levelEvolve.trapTiles);
         this.levelEvolve.interactionTiles = interactionTiles.build();
     }
+
     /**
      * Initialize the level from the window size
      *
@@ -628,34 +623,36 @@ public class Level {
         });
 
         //check if player touch a monster
-       this.levelEvolve.overlapEntity(
+        this.levelEvolve.overlapEntity(
                 this.player.getCoordinate().getX(),
                 this.player.getCoordinate().getY(),
                 Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.entities
-        ).ifPresent(entity->{
-            if(entity != this.player && this.ticksCounterLastDamage > INVINCIBILITY_TICKS) {
+        ).ifPresent(entity -> {
+            if (entity != this.player && this.ticksCounterLastDamage > INVINCIBILITY_TICKS) {
                 PacmanGame.onEvent(new PlayerOnMonsterEvent());
                 this.ticksCounterLastDamage = 0;
             }
         });
 
-       List<Entity> listeProjectile = new ArrayList<>();
-       for(Entity entity: this.entities) {
-        if (entity instanceof RailGunProjectile) {listeProjectile.add(entity);}
-       }
+        List<Entity> listeProjectile = new ArrayList<>();
+        for (Entity entity: this.entities) {
+            if (entity instanceof RailGunProjectile) {
+                listeProjectile.add(entity);
+            }
+        }
 
-       for(Entity entity: this.entities) {
-           if (entity instanceof Monster) {
-               this.levelEvolve.overlapEntity(
-                       entity.getCoordinate().getX(),
-                       entity.getCoordinate().getY(),
-                       Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, listeProjectile
-               ).ifPresent(t-> {
-                PacmanGame.onEvent(new ProjectileOnSomethingEvent((RailGunProjectile) t));
-                this.removeEntity(entity);
-               });
-           }
-       }
+        for (Entity entity: this.entities) {
+            if (entity instanceof Monster) {
+                this.levelEvolve.overlapEntity(
+                        entity.getCoordinate().getX(),
+                        entity.getCoordinate().getY(),
+                        Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, listeProjectile
+                ).ifPresent(t -> {
+                    PacmanGame.onEvent(new ProjectileOnSomethingEvent((RailGunProjectile) t));
+                    this.removeEntity(entity);
+                });
+            }
+        }
 
         this.ticksCounterLastDamage++;
     }
@@ -671,18 +668,16 @@ public class Level {
 
     /**
      * Shot a bullet
-     *
      */
     public void shot() {
         AudioDriver.playShoot();
         int xBullet = this.player.getCoordinate().getX();
         int yBullet = this.player.getCoordinate().getY();
-        this.entities.add(new RailGunProjectile(new Coordinate(xBullet,yBullet), this.player.getDirection()));
+        this.entities.add(new RailGunProjectile(new Coordinate(xBullet, yBullet), this.player.getDirection()));
     }
 
     /**
      * Delete an entity in the list entities
-     *
      */
     public void removeEntity(Entity entity) {
         this.entitiesToRemove.add(entity);
@@ -810,11 +805,13 @@ public class Level {
 
         /**
          * Check if a entity overlapping a list of entity
-         * @param x X position of the tested entity
-         * @param y Y position of the tested entity
-         * @param w Widht of a entity
-         * @param h Height of a entity
+         *
+         * @param x        X position of the tested entity
+         * @param y        Y position of the tested entity
+         * @param w        Widht of a entity
+         * @param h        Height of a entity
          * @param entities list of entities to be check
+         *
          * @return the overlapping entity
          */
         public Optional<Entity> overlapEntity(int x, int y, int w, int h, List<Entity> entities) {

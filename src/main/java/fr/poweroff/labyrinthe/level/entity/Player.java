@@ -16,16 +16,14 @@ public class Player extends Entity {
      * The player sprite path
      */
     private static final String SPRITE_PATH = "assets/textures/player/";
-
-    /**
-     * The current player sprite
-     */
-    private int spriteIndex;
-
     /**
      * Current direction of the player
      */
-    protected Cmd direction;
+    protected            Cmd    direction;
+    /**
+     * The current player sprite
+     */
+    private              int    spriteIndex;
 
     /**
      * Default constructor of the player

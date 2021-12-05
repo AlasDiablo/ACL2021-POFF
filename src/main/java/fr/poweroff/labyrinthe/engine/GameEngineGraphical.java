@@ -208,7 +208,7 @@ public class GameEngineGraphical {
             this.setCurrentGameState(GameState.IN_LEVEL);
         }
 
-        if(c.name().equals("SCORES")) {
+        if (c.name().equals("SCORES")) {
             this.setCurrentGameState(GameState.IN_SCORE);
 //            this.gameController.setMenu(false);
 //            boolean scoreEnCour = true;
@@ -282,9 +282,13 @@ public class GameEngineGraphical {
         Cmd c = this.gameController.getCommand();
         // affiche le game
         if (this.game.isFinished()) {
+            var ch = this.gameController.getRawCommand();
+
+            if ((ch != (char) -1 && Character.isLetter(ch)) || c == Cmd.RETURN || c == Cmd.ENTER) {
+                AudioDriver.playSelect();
+            }
 
             if (this.name.length() <= 8) {
-                var ch = this.gameController.getRawCommand();
                 if (ch != (char) -1 && Character.isLetter(ch)) {
                     var letter = Character.toString(ch);
                     this.name += letter;

@@ -35,7 +35,7 @@ public abstract class Entity {
      * @param coordinate Coordinate of the entity
      * @param sprite     Sprite of the entity
      */
-    public Entity(Coordinate coordinate,BufferedImage sprite) {
+    public Entity(Coordinate coordinate, BufferedImage sprite) {
         this.coordinate = coordinate;
         this.sprite     = new BufferedImage[]{ sprite };
     }
@@ -75,6 +75,7 @@ public abstract class Entity {
      * @return Command
      */
     public abstract Cmd getDirection();
+
     /**
      * Function used to draw the enetity
      *

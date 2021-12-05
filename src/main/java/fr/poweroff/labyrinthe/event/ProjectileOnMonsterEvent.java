@@ -2,8 +2,8 @@ package fr.poweroff.labyrinthe.event;
 
 import fr.poweroff.labyrinthe.level.entity.RailGunProjectile;
 
-public class ProjectileOnMonsterEvent implements Event<Boolean>{
-    private RailGunProjectile projectile;
+public class ProjectileOnMonsterEvent implements Event<Boolean> {
+    private final RailGunProjectile projectile;
 
     public ProjectileOnMonsterEvent(RailGunProjectile projectile) {
         this.projectile = projectile;

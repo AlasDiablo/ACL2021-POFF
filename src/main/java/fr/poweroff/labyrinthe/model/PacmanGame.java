@@ -31,6 +31,7 @@ public class PacmanGame implements Game {
     static {
         initRandomGenerator();
     }
+
     /**
      * Minuteur du niveau
      */
@@ -44,6 +45,8 @@ public class PacmanGame implements Game {
     private      boolean   finish;
     private      boolean   win;
     private      boolean   pause; //Vérifie si le jeu est en pause
+    private      int       difficult;
+    private      int       stage;
 
     /**
      * constructeur avec fichier source pour le help
@@ -51,20 +54,17 @@ public class PacmanGame implements Game {
     public PacmanGame() {
         FilesUtils.setClassLoader(this.getClass().getClassLoader());
         Score.init();
-        INSTANCE      = this;
-        this.level    = new Level();
-        countdown     = new Countdown(60);
-        score         = 0;
-        this.got_railgun = false;
-        this.pause    = false; //Met le jeu non en pause au départ
-        this.life     = 3; //Mettre un max de 10 environ
-        this.munition = 0;
+        INSTANCE             = this;
+        this.level           = new Level();
+        countdown            = new Countdown(60);
+        score                = 0;
+        this.got_railgun     = false;
+        this.pause           = false; //Met le jeu non en pause au départ
+        this.life            = 3; //Mettre un max de 10 environ
+        this.munition        = 0;
         this.counterLastShot = 0;
 
     }
-
-    private int difficult;
-    private int stage;
 
     private static void initRandomGenerator() {
         var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
@@ -149,11 +149,15 @@ public class PacmanGame implements Game {
 
         if (event instanceof PlayerOnEndTileEvent) {
             INSTANCE.stage++;
-            int newDifficult = INSTANCE.difficult + (int) Math.floor(INSTANCE.stage / 25.0f);
             if (INSTANCE.stage % 100 == 0) {
-                INSTANCE.setDifficult(newDifficult, "assets/levels/level_1.json");
+                INSTANCE.setDifficult(INSTANCE.difficult, "assets/levels/level_1.json");
+                return;
             }
-            INSTANCE.setDifficult(newDifficult, null);
+            if (INSTANCE.stage % 25 == 0) {
+                INSTANCE.setDifficult(INSTANCE.difficult + 1, "assets/levels/level_2.json");
+                return;
+            }
+            INSTANCE.setDifficult(INSTANCE.difficult, null);
         }
     }
 
@@ -225,9 +229,9 @@ public class PacmanGame implements Game {
             PacmanGame.onEvent(new TimeOutEvent());
         }
 
-        if (this.got_railgun && this.munition-1 >= 0 && this.counterLastShot >= 10 && commande == Cmd.SHOT) {
+        if (this.got_railgun && this.munition - 1 >= 0 && this.counterLastShot >= 10 && commande == Cmd.SHOT) {
             this.counterLastShot = 0;
-            this.munition --;
+            this.munition--;
             this.level.shot();
         }
         this.counterLastShot++;

@@ -36,10 +36,6 @@ public class Countdown {
         });
     }
 
-    public void setTime(int time) {
-        this.time = time;
-    }
-
     /**
      * Demarre le decompte
      */
@@ -59,6 +55,10 @@ public class Countdown {
      */
     public int getTime() {
         return this.time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 
     /**
