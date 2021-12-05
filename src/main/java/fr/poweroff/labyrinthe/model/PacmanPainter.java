@@ -61,7 +61,7 @@ public class PacmanPainter implements GamePainter {
         crayon.drawString(String.valueOf(pacmanGame.getScore()), Level.TITLE_SIZE * 7 - 8, 15);
 
         if (pacmanGame.isGot_railgun()) {
-            crayon.drawImage(FilesUtils.getImage("cases/railgun.png"), Level.TITLE_SIZE * 6 + 60, 2, 16, 16, null);
+            crayon.drawImage(FilesUtils.getImage("assets/textures/gui/railgun.png"), Level.TITLE_SIZE * 6 + 60, 3, 16, 16, null);
         }
         crayon.drawString("Munition: ", Level.TITLE_SIZE * 10, 15);
         crayon.drawString(String.valueOf(pacmanGame.getMunition()), Level.TITLE_SIZE * 14, 15);
