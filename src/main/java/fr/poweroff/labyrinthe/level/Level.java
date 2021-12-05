@@ -5,10 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import fr.poweroff.labyrinthe.engine.Cmd;
-import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
-import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
-import fr.poweroff.labyrinthe.event.PlayerOnMonsterEvent;
-import fr.poweroff.labyrinthe.event.ProjectileOnSomethingEvent;
+import fr.poweroff.labyrinthe.event.*;
 import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.entity.Entity;
 import fr.poweroff.labyrinthe.level.entity.RailGunProjectile;
@@ -650,7 +647,7 @@ public class Level {
                        entity.getCoordinate().getY(),
                        Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, listeProjectile
                ).ifPresent(t-> {
-                PacmanGame.onEvent(new ProjectileOnSomethingEvent((RailGunProjectile) t));
+                PacmanGame.onEvent(new ProjectileOnMonsterEvent((RailGunProjectile) t));
                 this.removeEntity(entity);
                });
            }

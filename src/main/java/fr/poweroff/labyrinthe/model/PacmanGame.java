@@ -122,6 +122,12 @@ public class PacmanGame implements Game {
             return;
         }
 
+        if (event instanceof ProjectileOnMonsterEvent) {
+            INSTANCE.level.removeEntity(((ProjectileOnMonsterEvent) event).getProjectile());
+            INSTANCE.score+=2;
+            return;
+        }
+
         if (event instanceof PlayerOnTreasureBonusTileEvent) {
             AudioDriver.playCoin();
             INSTANCE.score += 5;
