@@ -1,7 +1,9 @@
 package fr.poweroff.labyrinthe.engine;
 
+import fr.poweroff.labyrinthe.engine.menu.BestScore;
+import fr.poweroff.labyrinthe.engine.menu.Fin;
+import fr.poweroff.labyrinthe.engine.menu.Level;
 import fr.poweroff.labyrinthe.engine.menu.Menu;
-import fr.poweroff.labyrinthe.engine.menu.*;
 import fr.poweroff.labyrinthe.model.PacmanPainter;
 import fr.poweroff.labyrinthe.utils.Score;
 
@@ -85,7 +87,10 @@ public class DrawingPanel extends JPanel {
     }
 
     public void drawNiveau(int menuPosition) {
-        this.currentImage = Level.getSprites();
+        var graphics = currentImage.getGraphics();
+        graphics.drawImage(Level.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
+                           getWidth(), getHeight(), null
+        );
         this.isInMenu     = true;
         this.menuPointerX = 150;
         this.menuPointerY = 174 + 70 * menuPosition;
@@ -93,7 +98,10 @@ public class DrawingPanel extends JPanel {
     }
 
     public void drawMenu(int menuPosition) {
-        this.currentImage = Menu.getSprites();
+        var graphics = currentImage.getGraphics();
+        graphics.drawImage(Menu.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
+                           getWidth(), getHeight(), null
+        );
         this.isInMenu     = true;
         this.menuPointerX = 150;
         this.menuPointerY = 188 + 56 * menuPosition;
@@ -125,23 +133,16 @@ public class DrawingPanel extends JPanel {
         return new Polygon(xs, ys, 3);
     }
 
-
-    public void drawPerdu() {
-        currentImage = Perdu.getSprites();
-        this.repaint();
-    }
-
-    public void drawGagne() {
-        currentImage = Gagne.getSprites();
+    public void drawFin(String name) {
         var graphics = currentImage.getGraphics();
-        var font     = new Font("Courier New", Font.BOLD, 28);
+        graphics.drawImage(Fin.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
+                           getWidth(), getHeight(), null
+        );
+        var font = new Font("Courier New", Font.BOLD, 28);
         graphics.setFont(font);
-        graphics.drawString(String.valueOf(((PacmanPainter) this.painter).pacmanGame.getScore()), 300, 410);
-        this.repaint();
-    }
+        graphics.drawString(name, 217, 378);
 
-    public void drawPause() {
-        currentImage = Pause.getSprites();
+        graphics.drawString(String.valueOf(((PacmanPainter) this.painter).pacmanGame.getScore()), 217, 430);
         this.repaint();
     }
 
@@ -152,7 +153,7 @@ public class DrawingPanel extends JPanel {
         var graphics = currentImage.getGraphics();
         var font     = new Font("Courier New", Font.BOLD, 60);
         graphics.setFont(font);
-        graphics.drawString(String.valueOf(score.getBestScore()), 250, 300);
+        //graphics.drawString(String.valueOf(score.getBestScore()), 250, 300);
         this.repaint();
     }
 }

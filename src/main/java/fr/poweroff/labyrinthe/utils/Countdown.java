@@ -36,8 +36,8 @@ public class Countdown {
         });
     }
 
-    public void setTime() {
-        this.time += 30;
+    public void setTime(int time) {
+        this.time = time;
     }
 
     /**

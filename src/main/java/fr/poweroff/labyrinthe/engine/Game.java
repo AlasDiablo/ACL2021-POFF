@@ -28,6 +28,8 @@ public interface Game {
      */
     boolean isFinished();
 
+    void preStart();
+
     /**
      * Met en pause le jeu
      */

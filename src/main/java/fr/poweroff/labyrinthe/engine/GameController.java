@@ -18,6 +18,8 @@ public interface GameController extends KeyListener, MouseListener {
      */
     Cmd getCommand();
 
+    char getRawCommand();
+
     boolean menu();
 
     boolean niveau();

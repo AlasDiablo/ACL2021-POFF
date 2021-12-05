@@ -4,9 +4,6 @@ import com.google.common.collect.Lists;
 import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.engine.Game;
 import fr.poweroff.labyrinthe.event.*;
-import fr.poweroff.labyrinthe.event.PlayerOnBonusTileEvent;
-import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
-import fr.poweroff.labyrinthe.event.TimeOutEvent;
 import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.entity.Entity;
@@ -15,10 +12,7 @@ import fr.poweroff.labyrinthe.level.entity.Monster;
 import fr.poweroff.labyrinthe.level.entity.Player;
 import fr.poweroff.labyrinthe.level.tile.TileBonus;
 import fr.poweroff.labyrinthe.level.tile.special.*;
-import fr.poweroff.labyrinthe.utils.AudioDriver;
-import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.Countdown;
-import fr.poweroff.labyrinthe.utils.FilesUtils;
+import fr.poweroff.labyrinthe.utils.*;
 
 import java.util.List;
 import java.util.Random;
@@ -31,13 +25,14 @@ import java.util.Random;
  */
 public class PacmanGame implements Game {
 
-    public static final Random     RANDOM;
-    private static      PacmanGame INSTANCE;
+    public static  Random     RANDOM;
+    private static PacmanGame INSTANCE;
 
     static {
-        var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
-        RANDOM = new Random(seed);
+        initRandomGenerator();
     }
+
+    private boolean finish;
 
     /**
      * Minuteur du niveau
@@ -47,24 +42,26 @@ public class PacmanGame implements Game {
     protected    int       score;
     protected    int       life; //nb de vie
     protected    int       munition; //Nombre de munition qu'a le joueur
-    private      boolean   finish = false;
+    private      boolean   win;
     private      boolean   pause; //Vérifie si le jeu est en pause
-    private      boolean   win    = false;
-    private int difficult;
-    private int stage;
 
     /**
      * constructeur avec fichier source pour le help
      */
     public PacmanGame() {
         FilesUtils.setClassLoader(this.getClass().getClassLoader());
-        INSTANCE      = this;
-        this.level    = new Level();
-        countdown     = new Countdown(60);
-        score         = 0;
-        this.pause    = false; //Met le jeu non en pause au départ
-        this.life     = 3; //Mettre un max de 10 environ
-        this.munition = 0;
+        Score.init();
+        INSTANCE       = this;
+        this.level     = new Level();
+        this.countdown = new Countdown(60);
+    }
+
+    private int difficult;
+    private int stage;
+
+    private static void initRandomGenerator() {
+        var seed = (long) (Math.sqrt(Math.exp(Math.random() * 65)) * 100);
+        RANDOM = new Random(seed);
     }
 
     public static void onEvent(Event<?> event) {
@@ -91,7 +88,7 @@ public class PacmanGame implements Game {
 
         if (event instanceof PlayerOnTimeBonusTileEvent) {
             AudioDriver.playPowerup();
-            INSTANCE.countdown.setTime();
+            INSTANCE.countdown.setTime(INSTANCE.countdown.getTime() + 30);
             TileTime tb = (TileTime) event.getData();
             tb.changeType();
             return;
@@ -146,6 +143,18 @@ public class PacmanGame implements Game {
 //            INSTANCE.setWin(true);
 //            INSTANCE.setFinish(true);
         }
+    }
+
+    public void preStart() {
+        initRandomGenerator();
+        this.score    = 0;
+        this.pause    = false; //Met le jeu non en pause au départ
+        this.life     = 3; //Mettre un max de 10 environ
+        this.munition = 0;
+        this.finish   = false;
+        this.win      = false;
+        this.countdown.pause();
+        this.countdown.setTime(60);
     }
 
     @Override

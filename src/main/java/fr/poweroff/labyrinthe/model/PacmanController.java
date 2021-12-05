@@ -28,17 +28,7 @@ public class PacmanController implements GameController {
     private Cmd     other;
     private Cmd     pause;
 
-    /**
-     * construction du controleur par defaut le controleur n'a pas de commande
-     */
-    public PacmanController() {
-        this.left  = false;
-        this.right = false;
-        this.up    = false;
-        this.down  = false;
-        this.other = null;
-        this.pause = null;
-    }
+    private char rawCommand;
 
     /**
      * quand on demande les commandes, le controleur retourne la commande en
@@ -61,6 +51,26 @@ public class PacmanController implements GameController {
         if (this.up) return Cmd.UP;
         if (this.down) return Cmd.DOWN;
         return Cmd.IDLE;
+    }
+
+    /**
+     * construction du controleur par defaut le controleur n'a pas de commande
+     */
+    public PacmanController() {
+        this.left       = false;
+        this.right      = false;
+        this.up         = false;
+        this.down       = false;
+        this.other      = null;
+        this.pause      = null;
+        this.rawCommand = (char) -1;
+    }
+
+    @Override
+    public char getRawCommand() {
+        var tmp = this.rawCommand;
+        this.rawCommand = (char) -1;
+        return tmp;
     }
 
     @Override
@@ -88,6 +98,7 @@ public class PacmanController implements GameController {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        this.rawCommand = e.getKeyChar();
         switch (e.getKeyCode()) {
             case KeyEvent.VK_Q: // azerty
             case KeyEvent.VK_A: // qwerty
@@ -115,6 +126,9 @@ public class PacmanController implements GameController {
                 break;
             case KeyEvent.VK_ENTER:
                 this.other = Cmd.ENTER;
+                break;
+            case KeyEvent.VK_BACK_SPACE:
+                this.other = Cmd.RETURN;
                 break;
         }
     }
