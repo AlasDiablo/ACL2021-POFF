@@ -39,6 +39,7 @@ public class PacmanGame implements Game {
     protected    int       score;
     protected    int       life; //nb de vie
     protected    int       munition; //Nombre de munition qu'a le joueur
+    protected    int       counterLastShot; //Nombre de munition qu'a le joueur
     protected    boolean   got_railgun;
     private      boolean   finish = false;
     private      boolean   win;
@@ -58,6 +59,7 @@ public class PacmanGame implements Game {
         this.pause    = false; //Met le jeu non en pause au départ
         this.life     = 3; //Mettre un max de 10 environ
         this.munition = 0;
+        this.counterLastShot = 0;
     }
 
     private int difficult;
@@ -236,10 +238,13 @@ public class PacmanGame implements Game {
             PacmanGame.onEvent(new TimeOutEvent());
         }
 
-        if (this.got_railgun && this.munition-1 >= 0 && commande == Cmd.SHOT) {
+        if (this.got_railgun && this.munition-1 >= 0 && this.counterLastShot >= 10 && commande == Cmd.SHOT) {
+            this.counterLastShot = 0;
             this.munition --;
             this.level.shot();
         }
+        this.counterLastShot++;
+
         //Met en pause le jeu
         if (commande == Cmd.PAUSE) {
             if (this.pause) {
