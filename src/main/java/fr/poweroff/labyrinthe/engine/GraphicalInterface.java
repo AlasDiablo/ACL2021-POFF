@@ -69,15 +69,11 @@ public class GraphicalInterface {
         this.panel.drawNiveau(menuPosition);
     }
 
-    public void paintPerdu() {
-        this.panel.drawPerdu();
+    public void paintFin(String name) {
+        this.panel.drawFin(name);
     }
 
-    public void paintPause() {
-        this.panel.drawPause();
-    }
-
-    public void paintGagne() {
-        this.panel.drawGagne();
+    public void paintScore() {
+        this.panel.drawBestScore();
     }
 }

@@ -18,6 +18,8 @@ public interface GameController extends KeyListener, MouseListener {
      */
     Cmd getCommand();
 
+    char getRawCommand();
+
     boolean menu();
 
     boolean niveau();
@@ -26,4 +28,5 @@ public interface GameController extends KeyListener, MouseListener {
 
     void setNiveau(boolean n);
 
+    void setBestScore(boolean s);
 }

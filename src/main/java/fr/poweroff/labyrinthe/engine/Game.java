@@ -28,6 +28,8 @@ public interface Game {
      */
     boolean isFinished();
 
+    void preStart();
+
     /**
      * Met en pause le jeu
      */
@@ -36,6 +38,8 @@ public interface Game {
     boolean getPause();
 
     void setPause(boolean p);
+
+    int getScore();
 
     void setDifficult(int difficult, String customLevel);
 }
