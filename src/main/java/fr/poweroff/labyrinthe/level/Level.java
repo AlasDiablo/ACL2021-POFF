@@ -9,6 +9,7 @@ import fr.poweroff.labyrinthe.event.PlayerOnEndTileEvent;
 import fr.poweroff.labyrinthe.event.PlayerOnMonsterEvent;
 import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.entity.Entity;
+import fr.poweroff.labyrinthe.level.entity.RailGunProjectile;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.level.tile.special.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
@@ -47,6 +48,8 @@ public class Level {
     public static int TIMER_NUMBER;
 
     public static int MUNITION_NUMBER;
+
+    public static int RAIlGUN_NUMBER;
 
     public static int TREASURE_NUMBER;
 
@@ -140,7 +143,6 @@ public class Level {
     public void init(Map<Coordinate, Tile.Type> level, Entity player, Entity... entities) {
         // Initialize or re-initialize variable
         this.init();
-
         // Create level tile list
         ImmutableList.Builder<Tile> levelBuilder         = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder          = new ImmutableList.Builder<>();
@@ -261,6 +263,7 @@ public class Level {
                 LIFE_NUMBER = 0;
                 TIMER_NUMBER = 0;
                 MUNITION_NUMBER = 2;
+                RAIlGUN_NUMBER = 1;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 15;
                 break;
@@ -268,6 +271,7 @@ public class Level {
                 LIFE_NUMBER = 1;
                 TIMER_NUMBER = 1;
                 MUNITION_NUMBER = 3;
+                RAIlGUN_NUMBER = 1;
                 TREASURE_NUMBER = 2;
                 TRAP_NUMBER = 20;
                 break;
@@ -275,6 +279,7 @@ public class Level {
                 LIFE_NUMBER = 1;
                 TIMER_NUMBER = 1;
                 MUNITION_NUMBER = 5;
+                RAIlGUN_NUMBER = 1;
                 TREASURE_NUMBER = 4;
                 TRAP_NUMBER = 25;
                 break;
@@ -323,6 +328,9 @@ public class Level {
 
         // Create the list of special bonus tile index (munition)
         this.createRandomIndexList(MUNITION_NUMBER, innerTiles, Tile.Type.ADDMUNITION, surface, perimeter);
+
+        // Create the list of special bonus tile index (railgun)
+        this.createRandomIndexList(RAIlGUN_NUMBER, innerTiles, Tile.Type.RAILGUN, surface, perimeter);
 
         // Create the list of special bonus tile index (treasure)
         this.createRandomIndexList(TREASURE_NUMBER, innerTiles, Tile.Type.ADDTREASURE, surface, perimeter);
@@ -397,6 +405,11 @@ public class Level {
                             }
                             case ADDMUNITION: {
                                 currentTile = new TileMunitions(rx, ry);
+                                munitionBonusBuilder.add(currentTile);
+                                break;
+                            }
+                            case RAILGUN: {
+                                currentTile = new TileRailGun(rx, ry);
                                 munitionBonusBuilder.add(currentTile);
                                 break;
                             }
@@ -557,6 +570,10 @@ public class Level {
                     PacmanGame.onEvent(new PlayerOnMunitionBonusTileEvent(tile));
                     break;
                 }
+                case RAILGUN: { // check if the tile has already been visited
+                    PacmanGame.onEvent(new PlayerOnRailGunBonusTileEvent(tile));
+                    break;
+                }
                 case ADDTREASURE: { // check if the tile has already been visited
                     PacmanGame.onEvent(new PlayerOnTreasureBonusTileEvent(tile));
                     break;
@@ -589,6 +606,18 @@ public class Level {
      */
     public List<Tile> getLevelDisposition() {
         return this.levelDisposition;
+    }
+
+    /**
+     * Shot a bullet
+     *
+     */
+    public void shot() {
+        int xBullet = this.player.getCoordinate().getX();
+        int yBullet = this.player.getCoordinate().getY();
+        System.out.println("Player direction: " + this.player.getDirection().toString());
+
+        this.entities.add(new RailGunProjectile(new Coordinate(xBullet,yBullet), this.player.getDirection()));
     }
 
     /**
@@ -730,5 +759,6 @@ public class Level {
                     )
                     .findAny();
         }
+
     }
 }

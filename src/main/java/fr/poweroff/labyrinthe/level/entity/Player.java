@@ -23,6 +23,11 @@ public class Player extends Entity {
     private int spriteIndex;
 
     /**
+     * Current direction of the player
+     */
+    protected Cmd direction;
+
+    /**
      * Default constructor of the player
      */
     public Player() {
@@ -74,33 +79,42 @@ public class Player extends Entity {
      */
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
+
         var x = this.coordinate.getX();
         var y = this.coordinate.getY();
 
         switch (cmd) {
             case DOWN:
                 this.spriteIndex = 1;
+                this.direction = cmd;
                 break;
             case RIGHT:
                 this.spriteIndex = 0;
+                this.direction = cmd;
                 break;
             case LEFT:
                 this.spriteIndex = 2;
+                this.direction = cmd;
                 break;
             case UP:
                 this.spriteIndex = 3;
+                this.direction = cmd;
                 break;
             case LEFT_DOWN:
                 this.spriteIndex = 7;
+                this.direction = cmd;
                 break;
             case LEFT_UP:
                 this.spriteIndex = 6;
+                this.direction = cmd;
                 break;
             case RIGHT_DOWN:
                 this.spriteIndex = 5;
+                this.direction = cmd;
                 break;
             case RIGHT_UP:
                 this.spriteIndex = 4;
+                this.direction = cmd;
                 break;
         }
 
@@ -127,5 +141,10 @@ public class Player extends Entity {
             if (levelEvolve.notOverlap(newX, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(newX);
             else if (levelEvolve.notOverlap(x + 1, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(x + 1);
         }
+    }
+
+
+    public Cmd getDirection() {
+        return direction;
     }
 }

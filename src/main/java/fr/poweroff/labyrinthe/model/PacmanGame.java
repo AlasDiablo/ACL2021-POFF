@@ -103,6 +103,14 @@ public class PacmanGame implements Game {
             return;
         }
 
+        if (event instanceof PlayerOnRailGunBonusTileEvent) {
+            AudioDriver.playPowerup();
+            INSTANCE.munition++;
+            TileRailGun trg = (TileRailGun) event.getData();
+            trg.changeType();
+            return;
+        }
+
         if (event instanceof PlayerOnTreasureBonusTileEvent) {
             AudioDriver.playCoin();
             INSTANCE.score += 5;
@@ -185,7 +193,10 @@ public class PacmanGame implements Game {
             PacmanGame.onEvent(new TimeOutEvent());
         }
 
-
+        if (commande == Cmd.SHOT) {
+            System.out.println("Keypress: SHOT");
+            this.level.shot();
+        }
         //Met en pause le jeu
         if (commande == Cmd.PAUSE) {
             if (this.pause) {

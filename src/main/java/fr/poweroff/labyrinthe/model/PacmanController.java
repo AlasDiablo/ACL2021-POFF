@@ -112,6 +112,9 @@ public class PacmanController implements GameController {
             case KeyEvent.VK_ENTER:
                 this.other = Cmd.ENTER;
                 break;
+            case  KeyEvent.VK_I:
+                this.other = Cmd.SHOT;
+                break;
         }
     }
 
