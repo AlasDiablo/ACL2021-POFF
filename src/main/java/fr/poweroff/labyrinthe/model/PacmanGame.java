@@ -32,8 +32,6 @@ public class PacmanGame implements Game {
         initRandomGenerator();
     }
 
-    private boolean finish;
-
     /**
      * Minuteur du niveau
      */
