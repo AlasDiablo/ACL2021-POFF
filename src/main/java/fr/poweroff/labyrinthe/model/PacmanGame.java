@@ -170,6 +170,7 @@ public class PacmanGame implements Game {
         this.finish      = false;
         this.win         = false;
         this.got_railgun = false;
+        this.stage       = 0;
         this.countdown.pause();
         this.countdown.setTime(60);
     }
