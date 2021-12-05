@@ -31,9 +31,6 @@ public class PacmanGame implements Game {
     static {
         initRandomGenerator();
     }
-
-    private boolean finish;
-
     /**
      * Minuteur du niveau
      */
@@ -42,6 +39,8 @@ public class PacmanGame implements Game {
     protected    int       score;
     protected    int       life; //nb de vie
     protected    int       munition; //Nombre de munition qu'a le joueur
+    protected    boolean   got_railgun;
+    private      boolean   finish = false;
     private      boolean   win;
     private      boolean   pause; //Vérifie si le jeu est en pause
 
@@ -51,9 +50,14 @@ public class PacmanGame implements Game {
     public PacmanGame() {
         FilesUtils.setClassLoader(this.getClass().getClassLoader());
         Score.init();
-        INSTANCE       = this;
-        this.level     = new Level();
-        this.countdown = new Countdown(60);
+        INSTANCE      = this;
+        this.level    = new Level();
+        countdown     = new Countdown(60);
+        score         = 0;
+        this.got_railgun = false;
+        this.pause    = false; //Met le jeu non en pause au départ
+        this.life     = 3; //Mettre un max de 10 environ
+        this.munition = 0;
     }
 
     private int difficult;
@@ -99,6 +103,20 @@ public class PacmanGame implements Game {
             INSTANCE.munition++;
             TileMunitions tm = (TileMunitions) event.getData();
             tm.changeType();
+            return;
+        }
+
+        if (event instanceof PlayerOnRailGunBonusTileEvent) {
+            AudioDriver.playPowerup();
+            INSTANCE.got_railgun = true;
+            INSTANCE.munition++;
+            TileRailGun trg = (TileRailGun) event.getData();
+            trg.changeType();
+            return;
+        }
+
+        if (event instanceof ProjectileOnSomethingEvent) {
+            INSTANCE.level.removeEntity(((ProjectileOnSomethingEvent) event).getProjectile());
             return;
         }
 
@@ -218,7 +236,10 @@ public class PacmanGame implements Game {
             PacmanGame.onEvent(new TimeOutEvent());
         }
 
-
+        if (this.got_railgun && this.munition-1 >= 0 && commande == Cmd.SHOT) {
+            this.munition --;
+            this.level.shot();
+        }
         //Met en pause le jeu
         if (commande == Cmd.PAUSE) {
             if (this.pause) {
@@ -294,6 +315,10 @@ public class PacmanGame implements Game {
 
     public int getMunition() {
         return munition;
+    }
+
+    public boolean isGot_railgun() {
+        return got_railgun;
     }
 
     public void minuslife() {
