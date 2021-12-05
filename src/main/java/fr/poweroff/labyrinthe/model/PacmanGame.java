@@ -232,7 +232,6 @@ public class PacmanGame implements Game {
         if (commande == Cmd.EXIT) {
             this.setFinish(true);
         }
-
         //Tester si le timer est fini
         if (this.countdown.isFinish() || INSTANCE.life <= 0) {
             PacmanGame.onEvent(new TimeOutEvent());
