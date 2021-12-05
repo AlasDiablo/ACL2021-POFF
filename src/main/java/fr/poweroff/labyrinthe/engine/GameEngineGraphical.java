@@ -145,7 +145,7 @@ public class GameEngineGraphical {
                 case 0:
                     this.setMenuEnCour(false);
                     this.playLevelMusic();
-                    this.game.setDifficult(1);
+                    this.game.setDifficult(1, null);
                     this.cleanNextUnprocessedFrame = true;
                     break;
                 case 1:
@@ -164,7 +164,7 @@ public class GameEngineGraphical {
         if (c.name().equals("PLAY")) {
             this.setMenuEnCour(false);
             this.playLevelMusic();
-            this.game.setDifficult(1);
+            this.game.setDifficult(1, null);
             this.cleanNextUnprocessedFrame = true;
         }
 
@@ -192,19 +192,19 @@ public class GameEngineGraphical {
 
             switch (this.menuPosition) {
                 case 0:
-                    this.game.setDifficult(1);
+                    this.game.setDifficult(1, null);
                     this.setNiveau(false);
                     break;
                 case 1:
-                    this.game.setDifficult(2);
+                    this.game.setDifficult(2, null);
                     this.setNiveau(false);
                     break;
                 case 2:
-                    this.game.setDifficult(3);
+                    this.game.setDifficult(3, null);
                     this.setNiveau(false);
                     break;
                 case 3:
-                    this.game.setDifficult(4);
+                    this.game.setDifficult(4, null);
                     this.setNiveau(false);
                     break;
             }
@@ -212,19 +212,19 @@ public class GameEngineGraphical {
 
         switch (c.name()) {
             case "LEVEL1":
-                this.game.setDifficult(1);
+                this.game.setDifficult(1, null);
                 this.setNiveau(false);
                 break;
             case "LEVEL2":
-                this.game.setDifficult(2);
+                this.game.setDifficult(2, null);
                 this.setNiveau(false);
                 break;
             case "LEVEL3":
-                this.game.setDifficult(3);
+                this.game.setDifficult(3, null);
                 niveau = false;
                 break;
             case "LEVEL4":
-                this.game.setDifficult(4);
+                this.game.setDifficult(4, null);
                 this.setNiveau(false);
                 break;
         }
@@ -237,9 +237,7 @@ public class GameEngineGraphical {
         this.game.evolve(c);
 
         // affiche le game
-        if (this.game.getPause()) {
-            //this.gui.paintPause();
-        } else if (this.game.isFinished()) {
+        if (this.game.isFinished()) {
             if (this.game.isWin()) this.gui.paintGagne(); //Affichage de la page game_win
             else this.gui.paintPerdu(); //Affichage de la page game_over
         } else {
