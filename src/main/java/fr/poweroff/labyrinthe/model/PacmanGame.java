@@ -125,7 +125,14 @@ public class PacmanGame implements Game {
         if (event instanceof PlayerOnEndTileEvent) {
             INSTANCE.stage++;
             int newDifficult = INSTANCE.difficult + (int) Math.floor(INSTANCE.stage / 25.0f);
-            INSTANCE.setDifficult(newDifficult);
+
+
+            if (INSTANCE.stage % 100 == 0) {
+                INSTANCE.setDifficult(newDifficult, "levels/level_1.json");
+            }
+
+
+            INSTANCE.setDifficult(newDifficult, null);
 
             //Si le jeu est terminé, le joueur augmente son score avec les munitions qui lui restait
 //            if (INSTANCE.getMunition() > 0) {
@@ -137,21 +144,29 @@ public class PacmanGame implements Game {
     }
 
     @Override
-    public void setDifficult(int difficult) {
+    public void setDifficult(int difficult, String customLevel) {
         this.difficult = Math.min(difficult, 4);
 
+        if (customLevel != null) {
+            this.level.init(customLevel, new Player());
+        } else {
+            List<Entity> monsters = Lists.newArrayList();
+            for (int i = 0; i < difficult * 2 - 2; i++) {
+                monsters.add(new Monster(new Coordinate(0, 0)));
+            }
+            for (int i = 0; i < difficult - 1; i++) {
+                monsters.add(new FollowingMonster(new Coordinate(0, 0)));
+            }
+            this.level.init(
+                    PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, new Player(), monsters.toArray(new Entity[]{ })
+            );
+        }
+
         // this.level.init("levels/level_1.json", new Player());
-        List<Entity> monsters = Lists.newArrayList();
-        for (int i = 0; i < difficult * 2 - 2; i++) {
-            monsters.add(new Monster(new Coordinate(0, 0)));
-        }
-        for (int i = 0; i < difficult - 1; i++) {
-            monsters.add(new FollowingMonster(new Coordinate(0, 0)));
-        }
-        this.level.init(
-                PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, new Player(), monsters.toArray(new Entity[]{ })
-        );
-        this.compteur();
+
+
+        this.pause(); //Met en pause
+        this.setPause(true); //signal que le jeu est en pause
     }
 
     /**
@@ -160,6 +175,10 @@ public class PacmanGame implements Game {
     @Override
     public void compteur() {
         countdown.start();
+    }
+
+    public int getStage() {
+        return stage;
     }
 
     /**

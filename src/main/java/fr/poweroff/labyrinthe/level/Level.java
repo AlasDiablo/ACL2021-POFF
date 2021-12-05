@@ -275,7 +275,7 @@ public class Level {
         switch (difficult) {
             case 1:
                 LIFE_NUMBER = 0;
-                TIMER_NUMBER = 0;
+                TIMER_NUMBER = 1;
                 MUNITION_NUMBER = 0;
                 TREASURE_NUMBER = 1;
                 TRAP_NUMBER = 30;
