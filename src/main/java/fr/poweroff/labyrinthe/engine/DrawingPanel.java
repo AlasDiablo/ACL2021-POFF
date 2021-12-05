@@ -10,6 +10,7 @@ import fr.poweroff.labyrinthe.utils.Score;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DrawingPanel extends JPanel {
 
@@ -146,13 +147,20 @@ public class DrawingPanel extends JPanel {
         this.repaint();
     }
 
-    public void drawBestScore(){
-        BestScore b = new BestScore(0,0);
-        currentImage = b.getSprites();
-        Score score = new Score(); //Récupération du meilleur score dans le fichier
+    public void drawBestScore() {
         var graphics = currentImage.getGraphics();
-        var font     = new Font("Courier New", Font.BOLD, 60);
+        graphics.drawImage(BestScore.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
+                           getWidth(), getHeight(), null
+        );
+        var font = new Font("Courier New", Font.BOLD, 32);
         graphics.setFont(font);
+        var i = new AtomicInteger(0);
+        Score.getScores().forEach(jsonObject -> {
+            var score = jsonObject.get("name").getAsString();
+            score += " - ";
+            score += jsonObject.get("score").getAsInt();
+            graphics.drawString(score, 180, 280 + 42 * i.getAndIncrement());
+        });
         //graphics.drawString(String.valueOf(score.getBestScore()), 250, 300);
         this.repaint();
     }

@@ -58,18 +58,26 @@ public class GameEngineGraphical {
 
     private void setCurrentGameState(GameState currentGameState) {
         this.currentGameState = currentGameState;
-        if (currentGameState == GameState.IN_GAME || currentGameState == GameState.IN_SCORE) {
+        if (currentGameState == GameState.IN_GAME) {
             this.gameController.setMenu(false);
             this.gameController.setNiveau(false);
+            this.gameController.setBestScore(false);
         }
         if (currentGameState == GameState.IN_MENU) {
             this.gameController.setMenu(true);
             this.gameController.setNiveau(false);
+            this.gameController.setBestScore(false);
 
         }
         if (currentGameState == GameState.IN_LEVEL) {
             this.gameController.setMenu(true);
             this.gameController.setNiveau(false);
+            this.gameController.setBestScore(false);
+        }
+        if (currentGameState == GameState.IN_SCORE) {
+            this.gameController.setMenu(false);
+            this.gameController.setNiveau(false);
+            this.gameController.setBestScore(true);
         }
         if (currentGameState == GameState.IN_SCORE || currentGameState == GameState.IN_MENU || currentGameState == GameState.IN_LEVEL) {
             if (AudioDriver.getCurrentMusic() != AudioDriver.Music.AMIGA) {
@@ -151,6 +159,7 @@ public class GameEngineGraphical {
                         this.niveau();
                         break;
                     case IN_SCORE:
+                        this.score();
                         break;
                     case IN_GAME:
                         this.jouer();
@@ -181,7 +190,7 @@ public class GameEngineGraphical {
                     this.setCurrentGameState(GameState.IN_LEVEL);
                     break;
                 case 2:
-                    // this.setCurrentGameState(GameState.IN_SCORE);
+                    this.setCurrentGameState(GameState.IN_SCORE);
                     break;
                 case 3:
                     this.quitGame = true;
@@ -200,17 +209,17 @@ public class GameEngineGraphical {
             this.setCurrentGameState(GameState.IN_LEVEL);
         }
 
-        if(c.name().equals("SCORES")){
-            // this.setCurrentGameState(GameState.IN_SCORE);
-            this.gameController.setMenu(false);
-            boolean scoreEnCour = true;
-            while(scoreEnCour){
-                c = this.gameController.getCommand();
-                this.gameController.setBestScore(true);
-                this.gui.paintScore();
-                if(c.name().equals("RETOUR")) scoreEnCour = false;
-            }
-            this.gameController.setBestScore(false);
+        if(c.name().equals("SCORES")) {
+            this.setCurrentGameState(GameState.IN_SCORE);
+//            this.gameController.setMenu(false);
+//            boolean scoreEnCour = true;
+//            while(scoreEnCour){
+//                c = this.gameController.getCommand();
+//                this.gameController.setBestScore(true);
+//                this.gui.paintScore();
+//                if(c.name().equals("RETOUR")) scoreEnCour = false;
+//            }
+//            this.gameController.setBestScore(false);
         }
     }
 
@@ -256,6 +265,16 @@ public class GameEngineGraphical {
             case "LEVEL4":
                 this.startGame(4);
                 break;
+        }
+    }
+
+    private void score() {
+        Cmd c = this.gameController.getCommand();
+
+        this.gui.paintScore();
+
+        if (c == Cmd.RETURN || c.name().equals("RETOUR")) {
+            this.setCurrentGameState(GameState.IN_MENU);
         }
     }
 
