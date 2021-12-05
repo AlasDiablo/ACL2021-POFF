@@ -130,7 +130,7 @@ public class PacmanGame implements Game {
 
 
             if (INSTANCE.stage % 100 == 0) {
-                INSTANCE.setDifficult(newDifficult, "levels/level_1.json");
+                INSTANCE.setDifficult(newDifficult, "assets/levels/level_1.json");
             }
 
 
