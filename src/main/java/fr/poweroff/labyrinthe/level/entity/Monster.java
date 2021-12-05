@@ -84,6 +84,7 @@ public class Monster extends Entity {
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         this.changeDirectionRandomly();
+
         this.move(levelEvolve);
     }
 

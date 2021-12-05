@@ -60,14 +60,17 @@ public class PacmanPainter implements GamePainter {
         crayon.drawString("Score: ", Level.TITLE_SIZE * 4, 15);
         crayon.drawString(String.valueOf(pacmanGame.getScore()), Level.TITLE_SIZE * 7, 15);
 
-        crayon.drawString("Munition: ", Level.TITLE_SIZE * 9, 15);
-        crayon.drawString(String.valueOf(pacmanGame.getMunition()), Level.TITLE_SIZE * 13, 15);
+        if (pacmanGame.isGot_railgun()) {
+            crayon.drawImage(FilesUtils.getImage("cases/railgun.png"), Level.TITLE_SIZE * 6 + 60, 2, 16, 16, null);
+        }
+        crayon.drawString("Munition: ", Level.TITLE_SIZE * 10, 15);
+        crayon.drawString(String.valueOf(pacmanGame.getMunition()), Level.TITLE_SIZE * 14, 15);
 
         /*
         Affichage des coeurs selon le nombre de vie
          */
-        for (int i = 0; i < pacmanGame.getLife(); i++) {
-            crayon.drawImage(FilesUtils.getImage("cases/coeur.png"), Level.TITLE_SIZE * 15 + (16 * i), 3, 16, 16, null);
+       for (int i = 0; i < pacmanGame.getLife(); i++) {
+            crayon.drawImage(FilesUtils.getImage("cases/coeur.png"), Level.TITLE_SIZE * 16 + (16 * i), 3, 16, 16, null);
         }
 
     }

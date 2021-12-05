@@ -40,7 +40,9 @@ public class Player extends Entity {
                 Player.getSprite("pacman_right_up.png"),
                 Player.getSprite("pacman_right_down.png"),
                 Player.getSprite("pacman_left_up.png"),
-                Player.getSprite("pacman_left_down.png")
+                Player.getSprite("pacman_left_down.png"),
+                Player.getSprite("pacman_railgun_right.png")
+
         );
         this.spriteIndex = 0;
     }
