@@ -58,6 +58,7 @@ public class GameEngineGraphical {
 
     private void setCurrentGameState(GameState currentGameState) {
         this.currentGameState = currentGameState;
+        this.menuPosition     = 0;
         if (currentGameState == GameState.IN_GAME) {
             this.gameController.setMenu(false);
             this.gameController.setNiveau(false);
@@ -186,7 +187,6 @@ public class GameEngineGraphical {
                     this.startGame(1);
                     break;
                 case 1:
-                    this.menuPosition = 0;
                     this.setCurrentGameState(GameState.IN_LEVEL);
                     break;
                 case 2:
@@ -205,7 +205,6 @@ public class GameEngineGraphical {
         if (c.name().equals("QUIT")) this.quitGame = true;
 
         if (c.name().equals("LEVELS")) {
-            this.menuPosition = 0;
             this.setCurrentGameState(GameState.IN_LEVEL);
         }
 

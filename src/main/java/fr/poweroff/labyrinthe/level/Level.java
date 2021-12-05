@@ -11,12 +11,13 @@ import fr.poweroff.labyrinthe.event.PlayerOnMonsterEvent;
 import fr.poweroff.labyrinthe.event.ProjectileOnSomethingEvent;
 import fr.poweroff.labyrinthe.event.cases.*;
 import fr.poweroff.labyrinthe.level.entity.Entity;
-import fr.poweroff.labyrinthe.level.entity.RailGunProjectile;
 import fr.poweroff.labyrinthe.level.entity.FollowingMonster;
 import fr.poweroff.labyrinthe.level.entity.Monster;
+import fr.poweroff.labyrinthe.level.entity.RailGunProjectile;
 import fr.poweroff.labyrinthe.level.tile.*;
 import fr.poweroff.labyrinthe.level.tile.special.*;
 import fr.poweroff.labyrinthe.model.PacmanGame;
+import fr.poweroff.labyrinthe.utils.AudioDriver;
 import fr.poweroff.labyrinthe.utils.Coordinate;
 import fr.poweroff.labyrinthe.utils.FilesUtils;
 
@@ -673,6 +674,7 @@ public class Level {
      *
      */
     public void shot() {
+        AudioDriver.playShoot();
         int xBullet = this.player.getCoordinate().getX();
         int yBullet = this.player.getCoordinate().getY();
         this.entities.add(new RailGunProjectile(new Coordinate(xBullet,yBullet), this.player.getDirection()));
@@ -819,9 +821,9 @@ public class Level {
             return entities
                     .stream()
                     .filter(entitie -> !(x + w < entitie.getCoordinate().getX() ||
-                            entitie.getCoordinate().getX() + entitie.ENTITY_SIZE < x ||
+                            entitie.getCoordinate().getX() + Entity.ENTITY_SIZE < x ||
                             y + h < entitie.getCoordinate().getY() ||
-                            entitie.getCoordinate().getY() + entitie.ENTITY_SIZE < y)
+                            entitie.getCoordinate().getY() + Entity.ENTITY_SIZE < y)
                     )
                     .findAny();
         }

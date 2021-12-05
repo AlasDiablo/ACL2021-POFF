@@ -41,7 +41,7 @@ public class PacmanGame implements Game {
     protected    int       munition; //Nombre de munition qu'a le joueur
     protected    int       counterLastShot; //Nombre de munition qu'a le joueur
     protected    boolean   got_railgun;
-    private      boolean   finish = false;
+    private      boolean   finish;
     private      boolean   win;
     private      boolean   pause; //Vérifie si le jeu est en pause
 
@@ -60,6 +60,7 @@ public class PacmanGame implements Game {
         this.life     = 3; //Mettre un max de 10 environ
         this.munition = 0;
         this.counterLastShot = 0;
+
     }
 
     private int difficult;
@@ -118,6 +119,7 @@ public class PacmanGame implements Game {
         }
 
         if (event instanceof ProjectileOnSomethingEvent) {
+            AudioDriver.playHit();
             INSTANCE.level.removeEntity(((ProjectileOnSomethingEvent) event).getProjectile());
             return;
         }
@@ -140,39 +142,30 @@ public class PacmanGame implements Game {
         }
 
         if (event instanceof PlayerOnMonsterEvent) {
-          INSTANCE.life--;
-          return;
+            AudioDriver.playHit();
+            INSTANCE.life--;
+            return;
         }
 
         if (event instanceof PlayerOnEndTileEvent) {
             INSTANCE.stage++;
             int newDifficult = INSTANCE.difficult + (int) Math.floor(INSTANCE.stage / 25.0f);
-
-
             if (INSTANCE.stage % 100 == 0) {
                 INSTANCE.setDifficult(newDifficult, "assets/levels/level_1.json");
             }
-
-
             INSTANCE.setDifficult(newDifficult, null);
-
-            //Si le jeu est terminé, le joueur augmente son score avec les munitions qui lui restait
-//            if (INSTANCE.getMunition() > 0) {
-//                INSTANCE.score += INSTANCE.getMunition();
-//            }
-//            INSTANCE.setWin(true);
-//            INSTANCE.setFinish(true);
         }
     }
 
     public void preStart() {
         initRandomGenerator();
-        this.score    = 0;
-        this.pause    = false; //Met le jeu non en pause au départ
-        this.life     = 3; //Mettre un max de 10 environ
-        this.munition = 0;
-        this.finish   = false;
-        this.win      = false;
+        this.score       = 0;
+        this.pause       = false; //Met le jeu non en pause au départ
+        this.life        = 3; //Mettre un max de 10 environ
+        this.munition    = 0;
+        this.finish      = false;
+        this.win         = false;
+        this.got_railgun = false;
         this.countdown.pause();
         this.countdown.setTime(60);
     }
@@ -195,10 +188,6 @@ public class PacmanGame implements Game {
                     PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, new Player(), monsters.toArray(new Entity[]{ })
             );
         }
-
-        // this.level.init("levels/level_1.json", new Player());
-
-
         this.pause(); //Met en pause
         this.setPause(true); //signal que le jeu est en pause
     }
@@ -222,7 +211,6 @@ public class PacmanGame implements Game {
      */
     @Override
     public void evolve(Cmd commande) {
-
         //Ne met à jour le jeu que si nous ne somme pas en pause
         //Sinon elle le remet à jour qu'à la prochaine fois qu'on clic sur pause
         if (!pause) this.level.evolve(commande);
@@ -254,7 +242,6 @@ public class PacmanGame implements Game {
                 this.setPause(true); //signal que le jeu est en pause
             }
         }
-
     }
 
     @Override
@@ -323,9 +310,5 @@ public class PacmanGame implements Game {
 
     public boolean isGot_railgun() {
         return got_railgun;
-    }
-
-    public void minuslife() {
-        this.life--;
     }
 }
