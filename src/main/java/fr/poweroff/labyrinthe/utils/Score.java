@@ -11,14 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Score {
 
-    private static final File             SCORE_DIR  = new File(System.getProperty("user.home"), ".poweroff-games");
-    private static final File             SCORE_FILE = new File(SCORE_DIR, "pac-pac-score.json");
-    private static final List<JsonObject> SCORES     = Lists.newArrayList();
-    private static       boolean          CAN_WRITE  = true;
+    private static final File SCORE_DIR = new File(System.getProperty("user.home"), ".poweroff-games");
+    private static final File SCORE_FILE = new File(SCORE_DIR, "pac-pac-score.json");
+    private static final List<JsonObject> SCORES = Lists.newArrayList();
+    private static boolean CAN_WRITE = true;
 
     public static void init() {
         try {
-            var scoreDirResult  = SCORE_DIR.mkdir();
+            var scoreDirResult = SCORE_DIR.mkdir();
             var scoreFileResult = SCORE_FILE.createNewFile();
 
             if (scoreDirResult) {
@@ -34,7 +34,7 @@ public class Score {
 
         try {
             var parsedJson = JsonParser.parseReader(new FileReader(SCORE_FILE));
-            var json       = parsedJson.getAsJsonObject();
+            var json = parsedJson.getAsJsonObject();
             SCORES.add(json.get("0").getAsJsonObject());
             SCORES.add(json.get("1").getAsJsonObject());
             SCORES.add(json.get("2").getAsJsonObject());
@@ -61,7 +61,7 @@ public class Score {
         if (!CAN_WRITE) return;
         try {
             var json = new JsonObject();
-            var i    = new AtomicInteger(0);
+            var i = new AtomicInteger(0);
             SCORES.forEach(jsonObject -> json.add(String.valueOf(i.getAndIncrement()), jsonObject));
             var writer = new FileWriter(SCORE_FILE);
             writer.write(json.toString());
@@ -73,7 +73,7 @@ public class Score {
 
     public static void addScore(String name, int score) {
         var index = new AtomicInteger(-1);
-        var i     = new AtomicInteger(0);
+        var i = new AtomicInteger(0);
         SCORES.forEach(jsonObject -> {
             if (score >= jsonObject.get("score").getAsInt()) {
                 index.set(i.get());

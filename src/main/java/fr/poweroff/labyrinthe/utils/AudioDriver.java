@@ -9,10 +9,10 @@ import java.io.IOException;
 
 public class AudioDriver {
     private static final String SOUNDS_PATH = "assets/sounds/";
-    private static final String MUSIC_PATH  = "assets/music/";
+    private static final String MUSIC_PATH = "assets/music/";
 
     private static final Minim MINIM = new Minim(FilesUtils.getMinimFileSystem());
-    private static       Music currentMusic;
+    private static Music currentMusic;
 
     public static void init() {
         playPowerup();
@@ -23,7 +23,7 @@ public class AudioDriver {
     }
 
     public static void playCoin() {
-        var    random_int = PacmanGame.RANDOM.nextInt(2);
+        var random_int = PacmanGame.RANDOM.nextInt(2);
         Sounds sounds;
         if (random_int == 0) sounds = Sounds.COIN_1;
         else sounds = Sounds.COIN_2;
@@ -31,7 +31,7 @@ public class AudioDriver {
     }
 
     public static void playExplosion() {
-        var    random_int = PacmanGame.RANDOM.nextInt(5);
+        var random_int = PacmanGame.RANDOM.nextInt(5);
         Sounds sounds;
         switch (random_int) {
             default:
@@ -54,7 +54,7 @@ public class AudioDriver {
     }
 
     public static void playHit() {
-        var    random_int = PacmanGame.RANDOM.nextInt(3);
+        var random_int = PacmanGame.RANDOM.nextInt(3);
         Sounds sounds;
         switch (random_int) {
             default:
@@ -71,7 +71,7 @@ public class AudioDriver {
     }
 
     public static void playPowerup() {
-        var    random_int = PacmanGame.RANDOM.nextInt(3);
+        var random_int = PacmanGame.RANDOM.nextInt(3);
         Sounds sounds;
         switch (random_int) {
             default:
@@ -88,7 +88,7 @@ public class AudioDriver {
     }
 
     public static void playSelect() {
-        var    random_int = PacmanGame.RANDOM.nextInt(2);
+        var random_int = PacmanGame.RANDOM.nextInt(2);
         Sounds sounds;
         if (random_int == 0) sounds = Sounds.SELECT_1;
         else sounds = Sounds.SELECT_2;
@@ -96,7 +96,7 @@ public class AudioDriver {
     }
 
     public static void playShoot() {
-        var    random_int = PacmanGame.RANDOM.nextInt(2);
+        var random_int = PacmanGame.RANDOM.nextInt(2);
         Sounds sounds;
         if (random_int == 0) sounds = Sounds.SHOOT_1;
         else sounds = Sounds.SHOOT_2;
@@ -177,8 +177,8 @@ public class AudioDriver {
             if (this.clip == null) {
                 var audioStream = this.getAudioStream();
                 try {
-                    AudioFormat   format = audioStream.getFormat();
-                    DataLine.Info info   = new DataLine.Info(Clip.class, format);
+                    AudioFormat format = audioStream.getFormat();
+                    DataLine.Info info = new DataLine.Info(Clip.class, format);
                     this.clip = (Clip) AudioSystem.getLine(info);
                     this.clip.addLineListener(this);
                     this.clip.open(audioStream);

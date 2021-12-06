@@ -15,19 +15,19 @@ public abstract class Entity {
     /**
      * Default entity size
      */
-    public static final int             ENTITY_SIZE = 18;
+    public static final int ENTITY_SIZE = 18;
     /**
      * Default move speed of an entity
      */
-    protected final     int             MOVE_SPEED  = 4;
+    protected final int MOVE_SPEED = 4;
     /**
      * Coordinate of the entity
      */
-    protected final     Coordinate      coordinate;
+    protected final Coordinate coordinate;
     /**
      * List of spirits of the entity
      */
-    protected final     BufferedImage[] sprite;
+    protected final BufferedImage[] sprite;
 
     /**
      * Default constructor of the entity how take one sprite
@@ -37,7 +37,7 @@ public abstract class Entity {
      */
     public Entity(Coordinate coordinate, BufferedImage sprite) {
         this.coordinate = coordinate;
-        this.sprite     = new BufferedImage[]{ sprite };
+        this.sprite = new BufferedImage[]{sprite};
     }
 
     /**
@@ -48,7 +48,7 @@ public abstract class Entity {
      */
     public Entity(Coordinate coordinate, BufferedImage... sprites) {
         this.coordinate = coordinate;
-        this.sprite     = sprites;
+        this.sprite = sprites;
     }
 
     /**

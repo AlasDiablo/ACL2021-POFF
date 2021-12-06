@@ -19,11 +19,11 @@ public class Player extends Entity {
     /**
      * Current direction of the player
      */
-    protected            Cmd    direction;
+    protected Cmd direction;
     /**
      * The current player sprite
      */
-    private              int    spriteIndex;
+    private int spriteIndex;
 
     /**
      * Default constructor of the player
@@ -49,7 +49,6 @@ public class Player extends Entity {
      * Funcion use to get the player sprite
      *
      * @param name the name of the sprite
-     *
      * @return the sprite as a buffered image
      */
     private static BufferedImage getSprite(String name) {
@@ -118,10 +117,10 @@ public class Player extends Entity {
                 break;
         }
         var currentMoveSpeed = MOVE_SPEED;
-        if(levelEvolve.overlapWithGlue(x,y,ENTITY_SIZE,ENTITY_SIZE))
-            currentMoveSpeed = MOVE_SPEED/ 2;
+        if (levelEvolve.overlapWithGlue(x, y, ENTITY_SIZE, ENTITY_SIZE))
+            currentMoveSpeed = MOVE_SPEED / 2;
         else
-           currentMoveSpeed = MOVE_SPEED ;
+            currentMoveSpeed = MOVE_SPEED;
 
         if (cmd == Cmd.UP || cmd == Cmd.LEFT_UP || cmd == Cmd.RIGHT_UP) {
             var newY = y - currentMoveSpeed;

@@ -1,6 +1,5 @@
 package fr.poweroff.labyrinthe.level.tile.special;
 
-import com.jcraft.jsch.Random;
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.entity.LightTrap;
 import fr.poweroff.labyrinthe.level.tile.Tile;
@@ -19,17 +18,19 @@ public class TileLightTrap extends Tile {
      * Trap with launcher of raylight
      */
     private LightTrap rayLight;
-    private int direction;
+    private final int direction;
+
     /**
      * Constructor how take coordinate
-     *  @param x X coordinate
+     *
+     * @param x X coordinate
      * @param y Y coordinate
      */
     public TileLightTrap(int x, int y) {
         super(x, y, FilesUtils.getImage("assets/textures/tile/lightTrapUp.png"),
-                    FilesUtils.getImage("assets/textures/tile/lightTrapDown.png"),
-                    FilesUtils.getImage("assets/textures/tile/lightTrapLeft.png"),
-                    FilesUtils.getImage("assets/textures/tile/lightTrapRight.png"));
+                FilesUtils.getImage("assets/textures/tile/lightTrapDown.png"),
+                FilesUtils.getImage("assets/textures/tile/lightTrapLeft.png"),
+                FilesUtils.getImage("assets/textures/tile/lightTrapRight.png"));
         direction = PacmanGame.RANDOM.nextInt(4);
         rayLight = null;
     }
@@ -69,7 +70,7 @@ public class TileLightTrap extends Tile {
         return Type.LIGHTTRAP;
     }
 
-    public void construct_rayLight(LightTrap ltAssocied){
+    public void construct_rayLight(LightTrap ltAssocied) {
 
     }
 

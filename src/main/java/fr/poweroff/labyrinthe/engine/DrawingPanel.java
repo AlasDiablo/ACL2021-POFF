@@ -22,24 +22,24 @@ public class DrawingPanel extends JPanel {
     /**
      * la clase chargee de Dessiner
      */
-    private final GamePainter   painter;
+    private final GamePainter painter;
     /**
      * la taille des images
      */
-    private final int           width;
-    private final int           height;
+    private final int width;
+    private final int height;
     /**
      * image suivante est l'image cachee sur laquelle dessiner
      */
-    private       BufferedImage nextImage;
+    private BufferedImage nextImage;
     /**
      * image en cours est l'image entrain d'etre affichee
      */
-    private       BufferedImage currentImage;
-    private       boolean       isInMenu;
-    private       int           menuPointerX;
-    private       int           menuPointerY;
-    private       float         menuAnimation;
+    private BufferedImage currentImage;
+    private boolean isInMenu;
+    private int menuPointerX;
+    private int menuPointerY;
+    private float menuAnimation;
     private float menuAnimationAdder;
 
     /**
@@ -49,20 +49,20 @@ public class DrawingPanel extends JPanel {
      */
     public DrawingPanel(GamePainter painter) {
         super();
-        this.width  = painter.getWidth();
+        this.width = painter.getWidth();
         this.height = painter.getHeight();
         this.setPreferredSize(new Dimension(this.width, this.height));
-        this.painter            = painter;
-        this.isInMenu           = false;
-        this.menuAnimation      = 0f;
+        this.painter = painter;
+        this.isInMenu = false;
+        this.menuAnimation = 0f;
         this.menuAnimationAdder = 0.6f;
 
         // cree l'image buffer et son graphics
-        this.nextImage    = new BufferedImage(width, height,
-                                              BufferedImage.TYPE_INT_RGB
+        this.nextImage = new BufferedImage(width, height,
+                BufferedImage.TYPE_INT_RGB
         );
         this.currentImage = new BufferedImage(width, height,
-                                              BufferedImage.TYPE_INT_RGB
+                BufferedImage.TYPE_INT_RGB
         );
     }
 
@@ -89,9 +89,9 @@ public class DrawingPanel extends JPanel {
     public void drawNiveau(int menuPosition) {
         var graphics = currentImage.getGraphics();
         graphics.drawImage(Level.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
-                           getWidth(), getHeight(), null
+                getWidth(), getHeight(), null
         );
-        this.isInMenu     = true;
+        this.isInMenu = true;
         this.menuPointerX = 150;
         this.menuPointerY = 174 + 70 * menuPosition;
         this.repaint();
@@ -100,9 +100,9 @@ public class DrawingPanel extends JPanel {
     public void drawMenu(int menuPosition) {
         var graphics = currentImage.getGraphics();
         graphics.drawImage(Menu.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
-                           getWidth(), getHeight(), null
+                getWidth(), getHeight(), null
         );
-        this.isInMenu     = true;
+        this.isInMenu = true;
         this.menuPointerX = 150;
         this.menuPointerY = 188 + 56 * menuPosition;
         this.repaint();
@@ -116,11 +116,12 @@ public class DrawingPanel extends JPanel {
     public void paint(Graphics graphics) {
         super.paint(graphics);
         graphics.drawImage(this.currentImage, 0, 0, getWidth(), getHeight(), 0, 0,
-                           getWidth(), getHeight(), null
+                getWidth(), getHeight(), null
         );
         if (this.isInMenu) {
             this.menuAnimation += this.menuAnimationAdder;
-            if (this.menuAnimation >= 10f || this.menuAnimation <= 0f) this.menuAnimationAdder = -this.menuAnimationAdder;
+            if (this.menuAnimation >= 10f || this.menuAnimation <= 0f)
+                this.menuAnimationAdder = -this.menuAnimationAdder;
             graphics.setColor(Color.ORANGE);
             graphics.fillPolygon(this.triangle(this.menuPointerX + (int) Math.floor(this.menuAnimation), this.menuPointerY));
             this.isInMenu = false;
@@ -128,15 +129,15 @@ public class DrawingPanel extends JPanel {
     }
 
     private Polygon triangle(int x, int y) {
-        var xs = new int[]{ x, 20 + x, x };
-        var ys = new int[]{ y, 10 + y, 20 + y };
+        var xs = new int[]{x, 20 + x, x};
+        var ys = new int[]{y, 10 + y, 20 + y};
         return new Polygon(xs, ys, 3);
     }
 
     public void drawFin(String name) {
         var graphics = currentImage.getGraphics();
         graphics.drawImage(Fin.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
-                           getWidth(), getHeight(), null
+                getWidth(), getHeight(), null
         );
         var font = new Font("Courier New", Font.BOLD, 28);
         graphics.setFont(font);
@@ -149,7 +150,7 @@ public class DrawingPanel extends JPanel {
     public void drawBestScore() {
         var graphics = currentImage.getGraphics();
         graphics.drawImage(BestScore.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
-                           getWidth(), getHeight(), null
+                getWidth(), getHeight(), null
         );
         var font = new Font("Courier New", Font.BOLD, 32);
         graphics.setFont(font);

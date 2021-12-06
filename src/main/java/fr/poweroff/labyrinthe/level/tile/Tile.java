@@ -29,7 +29,7 @@ public abstract class Tile {
      * @param sprites Array of sprite
      */
     public Tile(int x, int y, BufferedImage... sprites) {
-        this.sprites    = sprites;
+        this.sprites = sprites;
         this.coordinate = new Coordinate(x, y);
     }
 
@@ -51,7 +51,7 @@ public abstract class Tile {
      * @param sprite Array of sprite
      */
     public Tile(int x, int y, BufferedImage sprite) {
-        this.sprites    = new BufferedImage[]{ sprite };
+        this.sprites = new BufferedImage[]{sprite};
         this.coordinate = new Coordinate(x, y);
     }
 
@@ -101,7 +101,6 @@ public abstract class Tile {
      * Function used to check if a tile is equals to another
      *
      * @param o Tile to compare
-     *
      * @return <ul><li>True if this is equals to o</li><li>False if this is not equals to o</li></ul>
      */
     @Override
@@ -128,6 +127,6 @@ public abstract class Tile {
     public enum Type {
         GROUND, WALL, START, END, BONUS,
         ADDLIFE, ADDMUNITION, ADDTIME, TRAP, ADDTREASURE, RAILGUN,
-        M, FM, GLUE,LIGHTTRAP
+        M, FM, GLUE, LIGHTTRAP
     }
 }

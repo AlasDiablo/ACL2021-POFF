@@ -17,19 +17,19 @@ public class RailGunProjectile extends Entity {
     /**
      * Speed of the projectile
      */
-    private static final int    PROJECTILE_SPEED = 20;
+    private static final int PROJECTILE_SPEED = 20;
     /**
      * The Projectile sprite path
      */
-    private static final String SPRITE_PATH      = "assets/textures/projectiles/";
+    private static final String SPRITE_PATH = "assets/textures/projectiles/";
     /**
      * Direction of the projectile
      */
-    protected            Cmd    direction;
+    protected Cmd direction;
     /**
      * The current player sprite
      */
-    private              int    spriteIndex;
+    private int spriteIndex;
 
     /**
      * Default constructor of the player
@@ -43,14 +43,13 @@ public class RailGunProjectile extends Entity {
                 RailGunProjectile.getSprite("projectile_up.png")
         );
         this.spriteIndex = 0;
-        this.direction   = direction;
+        this.direction = direction;
     }
 
     /**
      * Funcion use to get the player sprite
      *
      * @param name the name of the sprite
-     *
      * @return the sprite as a buffered image
      */
     private static BufferedImage getSprite(String name) {
@@ -81,8 +80,8 @@ public class RailGunProjectile extends Entity {
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         //System.out.println("Player direction: " + this.direction.toString());
-        var x    = this.coordinate.getX();
-        var y    = this.coordinate.getY();
+        var x = this.coordinate.getX();
+        var y = this.coordinate.getY();
         var newx = x;
         var newy = y;
 

@@ -13,6 +13,7 @@ public class TileGlue extends Tile {
     public TileGlue(int x, int y) {
         super(x, y, FilesUtils.getImage("assets/textures/tile/TileGlue.png"));
     }
+
     public TileGlue(Coordinate coordinate) {
         super(coordinate, FilesUtils.getImage("assets/textures/tile/TileGlue.png"));
     }
