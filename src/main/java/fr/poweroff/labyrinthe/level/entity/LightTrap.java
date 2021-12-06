@@ -4,15 +4,12 @@ import fr.poweroff.labyrinthe.engine.Cmd;
 import fr.poweroff.labyrinthe.level.Level;
 import fr.poweroff.labyrinthe.level.tile.special.TileLightTrap;
 import fr.poweroff.labyrinthe.utils.Coordinate;
-import fr.poweroff.labyrinthe.utils.Segment;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class LightTrap extends Entity {
-    int w;
-    int h;
-    private final ArrayList<Segment> rayLight;
+    private int w;
+    private int h;
     private final int direction;
 
     public LightTrap(Coordinate coordinate, int direction) {
@@ -35,7 +32,6 @@ public class LightTrap extends Entity {
         this.direction = direction;
         this.coordinate.setX(x);
         this.coordinate.setY(y);
-        rayLight = null;
         this.w = 0;
         this.h = 0;
     }
@@ -49,6 +45,12 @@ public class LightTrap extends Entity {
         return null;
     }
 
+    @Override
+    public void drawHitBox(Graphics2D graphics) {
+        graphics.setColor(Color.MAGENTA);
+        graphics.drawRect(this.coordinate.getX(), this.coordinate.getY(), this.w, this.h);
+    }
+
     public void draw(Graphics2D graph) {
         graph.fillRect(this.coordinate.getX(), this.coordinate.getY(), this.w, this.h);
         graph.setColor(Color.YELLOW);
@@ -58,7 +60,17 @@ public class LightTrap extends Entity {
         graph.setColor(Color.WHITE);
     }
 
-    public void set_rayLight(Level.LevelEvolve levelEvolve) {
+    @Override
+    public int getH() {
+        return h;
+    }
+
+    @Override
+    public int getW() {
+        return w;
+    }
+
+    public void setRayLight(Level.LevelEvolve levelEvolve) {
         int x = coordinate.getX();
         int y = coordinate.getY();
         if (direction == TileLightTrap.UP) {
@@ -80,7 +92,7 @@ public class LightTrap extends Entity {
         coordinate.setY(y);
         int tmpW = this.w;
         int tmpH = this.h;
-        while (levelEvolve.notOverlap(x, y, w, h)) {
+        while (levelEvolve.notOverlapUnRemovable(x, y, w, h)) {
             coordinate.setX(x);
             coordinate.setY(y);
             this.w = tmpW - 1;
@@ -108,8 +120,5 @@ public class LightTrap extends Entity {
             this.h += 21;
         } else if (direction == TileLightTrap.DOWN)
             this.h -= 21;
-
     }
-
-
 }

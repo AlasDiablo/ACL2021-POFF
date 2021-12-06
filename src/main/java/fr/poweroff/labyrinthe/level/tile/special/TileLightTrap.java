@@ -1,7 +1,6 @@
 package fr.poweroff.labyrinthe.level.tile.special;
 
 import fr.poweroff.labyrinthe.level.Level;
-import fr.poweroff.labyrinthe.level.entity.LightTrap;
 import fr.poweroff.labyrinthe.level.tile.Tile;
 import fr.poweroff.labyrinthe.model.PacmanGame;
 import fr.poweroff.labyrinthe.utils.Coordinate;
@@ -14,10 +13,6 @@ public class TileLightTrap extends Tile {
     public static final int DOWN = 1;
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
-    /**
-     * Trap with launcher of raylight
-     */
-    private LightTrap rayLight;
     private final int direction;
 
     /**
@@ -32,7 +27,6 @@ public class TileLightTrap extends Tile {
                 FilesUtils.getImage("assets/textures/tile/lightTrapLeft.png"),
                 FilesUtils.getImage("assets/textures/tile/lightTrapRight.png"));
         direction = PacmanGame.RANDOM.nextInt(4);
-        rayLight = null;
     }
 
     /**
@@ -70,9 +64,6 @@ public class TileLightTrap extends Tile {
         return Type.LIGHTTRAP;
     }
 
-    public void construct_rayLight(LightTrap ltAssocied) {
-
-    }
 
     public int getDirection() {
         return direction;

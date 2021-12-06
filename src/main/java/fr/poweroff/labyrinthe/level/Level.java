@@ -58,7 +58,6 @@ public class Level {
      * Level evolve used to check tile and entities overlapping and more
      */
     private final LevelEvolve levelEvolve;
-    ArrayList<LightTrap> ligthTrapList;
     /**
      * List of all level tiles
      */
@@ -168,7 +167,7 @@ public class Level {
         this.init();
 
         // Create list of light trap entity
-        ligthTrapList = new ArrayList<LightTrap>();
+        List<LightTrap> lightTrapList = Lists.newArrayList();
         // Create level tile list
         ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder = new ImmutableList.Builder<>();
@@ -223,7 +222,7 @@ public class Level {
                 case LIGHTTRAP: {
                     TileLightTrap tmp = new TileLightTrap(rx, ry);
                     currentTile = tmp;
-                    ligthTrapList.add(new LightTrap(currentTile.getCoordinate(), tmp.getDirection()));
+                    lightTrapList.add(new LightTrap(currentTile.getCoordinate(), tmp.getDirection()));
                     lightTrapBuilder.add(currentTile);
                     break;
                 }
@@ -263,6 +262,7 @@ public class Level {
             entitiesBuilder.add(entity);
         });
         entitiesBuilder.add(player);
+        entitiesBuilder.addAll(lightTrapList);
 
 
         // Store all local variable into the level
@@ -288,7 +288,7 @@ public class Level {
         interactionTiles.addAll(this.levelEvolve.lightTrapTiles);
         interactionTiles.addAll(this.levelEvolve.glueTiles);
         this.levelEvolve.interactionTiles = interactionTiles.build();
-        this.initLightTrap(ligthTrapList);
+        this.initLightTrap(lightTrapList);
     }
 
     /**
@@ -348,7 +348,7 @@ public class Level {
 
         }
         // Create list of light trap entity
-        ligthTrapList = new ArrayList<LightTrap>();
+        List<LightTrap> lightTrapList = Lists.newArrayList();
         // Create level tile list
         ImmutableList.Builder<Tile> levelBuilder = new ImmutableList.Builder<>();
         ImmutableList.Builder<Tile> wallBuilder = new ImmutableList.Builder<>();
@@ -487,7 +487,7 @@ public class Level {
                                 TileLightTrap tmp = new TileLightTrap(rx, ry);
                                 currentTile = tmp;
                                 lightTrapBuilder.add(currentTile);
-                                ligthTrapList.add(new LightTrap(currentTile.getCoordinate(), tmp.getDirection()));
+                                lightTrapList.add(new LightTrap(currentTile.getCoordinate(), tmp.getDirection()));
                                 break;
                             }
                             case RAILGUN: {
@@ -521,9 +521,9 @@ public class Level {
         }
         // Store all local variable into the level
         this.player = player;
-        this.entities = new ArrayList<>(List.of(entities));
+        this.entities = Lists.newArrayList(entities);
         this.entities.add(player);
-
+        this.entities.addAll(lightTrapList);
         this.levelDisposition = levelBuilder.build();
         this.levelEvolve.wallTiles = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
@@ -545,7 +545,7 @@ public class Level {
         interactionTiles.addAll(this.levelEvolve.glueTiles);
         this.levelEvolve.interactionTiles = interactionTiles.build();
         this.initMonster(width, height, levelDisposition, entities);
-        this.initLightTrap(ligthTrapList);
+        this.initLightTrap(lightTrapList);
     }
 
     private void createRandomIndexList(int number, Map<Integer, Tile.Type> innerTiles, Tile.Type type, int surface, int perimeter) {
@@ -558,8 +558,8 @@ public class Level {
         }
     }
 
-    public void initLightTrap(ArrayList<LightTrap> lightTrapArrayList) {
-        lightTrapArrayList.forEach(lightTrap -> lightTrap.set_rayLight(levelEvolve));
+    public void initLightTrap(List<LightTrap> lightTrapArrayList) {
+        lightTrapArrayList.forEach(lightTrap -> lightTrap.setRayLight(levelEvolve));
     }
 
     public void initMonster(int width, int height, List<Tile> levelDisposition, Entity... entities) {
@@ -603,8 +603,7 @@ public class Level {
         this.levelDisposition.forEach(tile -> tile.draw(graphics));
         // Draw all entities
         this.entities.forEach(entity -> entity.draw(graphics));
-        // this.drawHitBox(graphics);
-        this.ligthTrapList.forEach(lightTrap -> lightTrap.draw(graphics));
+        this.drawHitBox(graphics);
     }
 
     /**
@@ -691,10 +690,10 @@ public class Level {
             }
         });
 
-        List<Entity> listeProjectile = new ArrayList<>();
+        List<Entity> listProjectile = new ArrayList<>();
         for (Entity entity : this.entities) {
             if (entity instanceof RailGunProjectile) {
-                listeProjectile.add(entity);
+                listProjectile.add(entity);
             }
         }
 
@@ -703,7 +702,7 @@ public class Level {
                 this.levelEvolve.overlapEntity(
                         entity.getCoordinate().getX(),
                         entity.getCoordinate().getY(),
-                        Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, listeProjectile
+                        Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, listProjectile
                 ).ifPresent(t -> {
                     PacmanGame.onEvent(new ProjectileOnSomethingEvent((RailGunProjectile) t));
                     this.removeEntity(entity);
@@ -890,12 +889,20 @@ public class Level {
         public Optional<Entity> overlapEntity(int x, int y, int w, int h, List<Entity> entities) {
             return entities
                     .stream()
-                    .filter(entitie -> !(x + w < entitie.getCoordinate().getX() ||
-                            entitie.getCoordinate().getX() + Entity.ENTITY_SIZE < x ||
-                            y + h < entitie.getCoordinate().getY() ||
-                            entitie.getCoordinate().getY() + Entity.ENTITY_SIZE < y)
+                    .filter(entity -> !(x + w < entity.getCoordinate().getX() ||
+                            entity.getCoordinate().getX() + entity.getW() < x ||
+                            y + h < entity.getCoordinate().getY() ||
+                            entity.getCoordinate().getY() + entity.getH() < y)
                     )
                     .findAny();
+        }
+
+        public boolean notOverlapUnRemovable(int x, int y, int w, int h) {
+            List<Tile> list = Lists.newArrayList();
+            list.addAll(this.wallTiles);
+            list.addAll(this.glueTiles);
+            list.add(Level.this.endTile);
+            return !overlap(x, y, w, h, list);
         }
     }
 }

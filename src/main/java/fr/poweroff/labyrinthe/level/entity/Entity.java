@@ -91,9 +91,17 @@ public abstract class Entity {
      */
     public abstract void evolve(Cmd cmd, LevelEvolve levelEvolve);
 
+    public int getH() {
+        return ENTITY_SIZE;
+    }
+
+    public int getW() {
+        return ENTITY_SIZE;
+    }
+
 
     public void drawHitBox(Graphics2D graphics) {
         graphics.setColor(Color.BLUE);
-        graphics.drawRect(this.getCoordinate().getX(), this.getCoordinate().getY(), ENTITY_SIZE, ENTITY_SIZE);
+        graphics.drawRect(this.getCoordinate().getX(), this.getCoordinate().getY(), this.getH(), this.getW());
     }
 }
