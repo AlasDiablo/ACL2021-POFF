@@ -268,6 +268,8 @@ public class Level {
         // Store all local variable into the level
         this.player = player;
         this.entities = entitiesBuilder;
+        this.levelEvolve.lightTrapEntities = Lists.newArrayList();
+        this.levelEvolve.lightTrapEntities.addAll(lightTrapList);
         this.levelDisposition = levelBuilder.build();
         this.levelEvolve.wallTiles = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
@@ -524,6 +526,8 @@ public class Level {
         this.entities = Lists.newArrayList(entities);
         this.entities.add(player);
         this.entities.addAll(lightTrapList);
+        this.levelEvolve.lightTrapEntities = Lists.newArrayList();
+        this.levelEvolve.lightTrapEntities.addAll(lightTrapList);
         this.levelDisposition = levelBuilder.build();
         this.levelEvolve.wallTiles = wallBuilder.build();
         this.levelEvolve.bonusTiles = bonusBuilder.build();
@@ -690,6 +694,18 @@ public class Level {
             }
         });
 
+        //check if player touch a light trap
+        this.levelEvolve.overlapEntity(
+                this.player.getCoordinate().getX(),
+                this.player.getCoordinate().getY(),
+                Entity.ENTITY_SIZE, Entity.ENTITY_SIZE, this.levelEvolve.lightTrapEntities
+        ).ifPresent(entity -> {
+            if (entity != this.player && this.ticksCounterLastDamage > INVINCIBILITY_TICKS) {
+                PacmanGame.onEvent(new PlayerOnMonsterEvent());
+                this.ticksCounterLastDamage = 0;
+            }
+        });
+
         List<Entity> listProjectile = new ArrayList<>();
         for (Entity entity : this.entities) {
             if (entity instanceof RailGunProjectile) {
@@ -789,6 +805,8 @@ public class Level {
          * Liste of glue tiles
          */
         private List<Tile> glueTiles;
+
+        private List<Entity> lightTrapEntities;
 
         /**
          * Check if a custom rectangle is not overlapping a wall
