@@ -12,16 +12,18 @@ import java.awt.image.BufferedImage;
  * Class how define the player entity
  */
 public class Player extends Entity {
-
     /**
      * The player sprite path
      */
     private static final String SPRITE_PATH = "assets/textures/player/";
-
+    /**
+     * Current direction of the player
+     */
+    protected            Cmd    direction;
     /**
      * The current player sprite
      */
-    private int spriteIndex;
+    private              int    spriteIndex;
 
     /**
      * Default constructor of the player
@@ -36,7 +38,9 @@ public class Player extends Entity {
                 Player.getSprite("pacman_right_up.png"),
                 Player.getSprite("pacman_right_down.png"),
                 Player.getSprite("pacman_left_up.png"),
-                Player.getSprite("pacman_left_down.png")
+                Player.getSprite("pacman_left_down.png"),
+                Player.getSprite("pacman_railgun_right.png")
+
         );
         this.spriteIndex = 0;
     }
@@ -75,33 +79,42 @@ public class Player extends Entity {
      */
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
+
         var x = this.coordinate.getX();
         var y = this.coordinate.getY();
 
         switch (cmd) {
             case DOWN:
                 this.spriteIndex = 1;
+                this.direction = cmd;
                 break;
             case RIGHT:
                 this.spriteIndex = 0;
+                this.direction = cmd;
                 break;
             case LEFT:
                 this.spriteIndex = 2;
+                this.direction = cmd;
                 break;
             case UP:
                 this.spriteIndex = 3;
+                this.direction = cmd;
                 break;
             case LEFT_DOWN:
                 this.spriteIndex = 7;
+                this.direction = cmd;
                 break;
             case LEFT_UP:
                 this.spriteIndex = 6;
+                this.direction = cmd;
                 break;
             case RIGHT_DOWN:
                 this.spriteIndex = 5;
+                this.direction = cmd;
                 break;
             case RIGHT_UP:
                 this.spriteIndex = 4;
+                this.direction = cmd;
                 break;
         }
         var currentMoveSpeed = MOVE_SPEED;
@@ -133,5 +146,10 @@ public class Player extends Entity {
             if (levelEvolve.notOverlap(newX, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(newX);
             else if (levelEvolve.notOverlap(x + 1, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(x + 1);
         }
+    }
+
+
+    public Cmd getDirection() {
+        return direction;
     }
 }

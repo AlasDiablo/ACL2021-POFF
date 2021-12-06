@@ -20,6 +20,7 @@ public class PacmanController implements GameController {
      */
     private boolean menu;
     private boolean niveaux;
+    private boolean bestScore;
     private boolean left;
     private boolean right;
     private boolean up;
@@ -27,16 +28,19 @@ public class PacmanController implements GameController {
     private Cmd     other;
     private Cmd     pause;
 
+    private char rawCommand;
+
     /**
      * construction du controleur par defaut le controleur n'a pas de commande
      */
     public PacmanController() {
-        this.left  = false;
-        this.right = false;
-        this.up    = false;
-        this.down  = false;
-        this.other = null;
-        this.pause = null;
+        this.left       = false;
+        this.right      = false;
+        this.up         = false;
+        this.down       = false;
+        this.other      = null;
+        this.pause      = null;
+        this.rawCommand = (char) -1;
     }
 
     /**
@@ -63,6 +67,13 @@ public class PacmanController implements GameController {
     }
 
     @Override
+    public char getRawCommand() {
+        var tmp = this.rawCommand;
+        this.rawCommand = (char) -1;
+        return tmp;
+    }
+
+    @Override
     public boolean menu() {
         return menu;
     }
@@ -83,7 +94,11 @@ public class PacmanController implements GameController {
     }
 
     @Override
+    public void setBestScore(boolean s) {this.bestScore = s;}
+
+    @Override
     public void keyPressed(KeyEvent e) {
+        this.rawCommand = e.getKeyChar();
         switch (e.getKeyCode()) {
             case KeyEvent.VK_Q: // azerty
             case KeyEvent.VK_A: // qwerty
@@ -111,6 +126,12 @@ public class PacmanController implements GameController {
                 break;
             case KeyEvent.VK_ENTER:
                 this.other = Cmd.ENTER;
+                break;
+            case KeyEvent.VK_I:
+                this.other = Cmd.SHOT;
+                break;
+            case KeyEvent.VK_BACK_SPACE:
+                this.other = Cmd.RETURN;
                 break;
         }
     }
@@ -202,6 +223,13 @@ public class PacmanController implements GameController {
             if (x > 193 && y > 375 && x < 367 && y < 416) {
                 this.other = Cmd.LEVEL4;
                 AudioDriver.playSelect();
+            }
+        }
+
+        if (bestScore) {
+            //Clic sur retour
+            if (x > 200 && y > 462 && x < 366 && y < 510) {
+                this.other = Cmd.RETOUR;
             }
         }
     }

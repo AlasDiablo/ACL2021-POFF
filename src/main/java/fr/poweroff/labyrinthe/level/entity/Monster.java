@@ -72,6 +72,11 @@ public class Monster extends Entity {
     }
 
     @Override
+    public Cmd getDirection() {
+        return null;
+    }
+
+    @Override
     public void draw(Graphics2D graphics) {
         graphics.drawImage(this.getSprite()[this.spriteIndex], this.getCoordinate().getX(), this.getCoordinate().getY(), ENTITY_SIZE, ENTITY_SIZE, null);
     }
@@ -79,6 +84,7 @@ public class Monster extends Entity {
     @Override
     public void evolve(Cmd cmd, LevelEvolve levelEvolve) {
         this.changeDirectionRandomly();
+
         this.move(levelEvolve);
     }
 

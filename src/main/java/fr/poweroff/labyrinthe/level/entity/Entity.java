@@ -70,6 +70,13 @@ public abstract class Entity {
     }
 
     /**
+     * Current direction of the entity
+     *
+     * @return Command
+     */
+    public abstract Cmd getDirection();
+
+    /**
      * Function used to draw the enetity
      *
      * @param graphics Drawing object

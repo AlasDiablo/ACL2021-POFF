@@ -1,12 +1,16 @@
 package fr.poweroff.labyrinthe.engine;
 
+import fr.poweroff.labyrinthe.engine.menu.BestScore;
+import fr.poweroff.labyrinthe.engine.menu.Fin;
+import fr.poweroff.labyrinthe.engine.menu.Level;
 import fr.poweroff.labyrinthe.engine.menu.Menu;
-import fr.poweroff.labyrinthe.engine.menu.*;
 import fr.poweroff.labyrinthe.model.PacmanPainter;
+import fr.poweroff.labyrinthe.utils.Score;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DrawingPanel extends JPanel {
 
@@ -36,27 +40,6 @@ public class DrawingPanel extends JPanel {
     private       int           menuPointerX;
     private       int           menuPointerY;
     private       float         menuAnimation;
-
-    /**
-     * demande de mettre a jour le rendu de l'image sur le Panel. Creer une
-     * nouvelle image vide sur laquelle dessiner
-     */
-    public void drawGame() {
-        // generer la nouvelle image
-        this.painter.draw(this.nextImage);
-
-        // inverses les images doublebuffereing
-        BufferedImage temp = this.currentImage;
-        // l'image a dessiner est celle qu'on a construite
-        this.currentImage = this.nextImage;
-        // l'ancienne image est videe
-        this.nextImage = temp;
-        this.nextImage.getGraphics()
-                .fillRect(0, 0, this.width, this.height);
-        // met a jour l'image a afficher sur le panel
-        this.repaint();
-    }
-
     private float menuAnimationAdder;
 
     /**
@@ -83,8 +66,31 @@ public class DrawingPanel extends JPanel {
         );
     }
 
+    /**
+     * demande de mettre a jour le rendu de l'image sur le Panel. Creer une
+     * nouvelle image vide sur laquelle dessiner
+     */
+    public void drawGame() {
+        // generer la nouvelle image
+        this.painter.draw(this.nextImage);
+
+        // inverses les images doublebuffereing
+        BufferedImage temp = this.currentImage;
+        // l'image a dessiner est celle qu'on a construite
+        this.currentImage = this.nextImage;
+        // l'ancienne image est videe
+        this.nextImage = temp;
+        this.nextImage.getGraphics()
+                .fillRect(0, 0, this.width, this.height);
+        // met a jour l'image a afficher sur le panel
+        this.repaint();
+    }
+
     public void drawNiveau(int menuPosition) {
-        this.currentImage = Level.getSprites();
+        var graphics = currentImage.getGraphics();
+        graphics.drawImage(Level.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
+                           getWidth(), getHeight(), null
+        );
         this.isInMenu     = true;
         this.menuPointerX = 150;
         this.menuPointerY = 174 + 70 * menuPosition;
@@ -92,7 +98,10 @@ public class DrawingPanel extends JPanel {
     }
 
     public void drawMenu(int menuPosition) {
-        this.currentImage = Menu.getSprites();
+        var graphics = currentImage.getGraphics();
+        graphics.drawImage(Menu.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
+                           getWidth(), getHeight(), null
+        );
         this.isInMenu     = true;
         this.menuPointerX = 150;
         this.menuPointerY = 188 + 56 * menuPosition;
@@ -124,23 +133,34 @@ public class DrawingPanel extends JPanel {
         return new Polygon(xs, ys, 3);
     }
 
-
-    public void drawPerdu() {
-        currentImage = Perdu.getSprites();
-        this.repaint();
-    }
-
-    public void drawGagne() {
-        currentImage = Gagne.getSprites();
+    public void drawFin(String name) {
         var graphics = currentImage.getGraphics();
-        var font     = new Font("Courier New", Font.BOLD, 28);
+        graphics.drawImage(Fin.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
+                           getWidth(), getHeight(), null
+        );
+        var font = new Font("Courier New", Font.BOLD, 28);
         graphics.setFont(font);
-        graphics.drawString(String.valueOf(((PacmanPainter) this.painter).pacmanGame.getScore()), 300, 410);
+        graphics.drawString(name, 217, 378);
+
+        graphics.drawString(String.valueOf(((PacmanPainter) this.painter).pacmanGame.getScore()), 217, 430);
         this.repaint();
     }
 
-    public void drawPause() {
-        currentImage = Pause.getSprites();
+    public void drawBestScore() {
+        var graphics = currentImage.getGraphics();
+        graphics.drawImage(BestScore.getSprites(), 0, 0, getWidth(), getHeight(), 0, 0,
+                           getWidth(), getHeight(), null
+        );
+        var font = new Font("Courier New", Font.BOLD, 32);
+        graphics.setFont(font);
+        var i = new AtomicInteger(0);
+        Score.getScores().forEach(jsonObject -> {
+            var score = jsonObject.get("name").getAsString();
+            score += " - ";
+            score += jsonObject.get("score").getAsInt();
+            graphics.drawString(score, 180, 280 + 42 * i.getAndIncrement());
+        });
+        //graphics.drawString(String.valueOf(score.getBestScore()), 250, 300);
         this.repaint();
     }
 }
