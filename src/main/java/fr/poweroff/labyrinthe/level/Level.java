@@ -607,7 +607,7 @@ public class Level {
         this.levelDisposition.forEach(tile -> tile.draw(graphics));
         // Draw all entities
         this.entities.forEach(entity -> entity.draw(graphics));
-        this.drawHitBox(graphics);
+        // this.drawHitBox(graphics);
     }
 
     /**
