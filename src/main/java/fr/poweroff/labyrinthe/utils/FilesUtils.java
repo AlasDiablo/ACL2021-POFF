@@ -49,7 +49,6 @@ public class FilesUtils {
      * Function used to load an image from the ressource or to get the loaded version
      *
      * @param url The path to the sprite
-     *
      * @return Return a buffered image containing the sprite
      */
     public static BufferedImage getImage(String url) {
@@ -68,12 +67,11 @@ public class FilesUtils {
      * Function used to get a json element from the ressource
      *
      * @param url The path to the json file
-     *
      * @return Return a parsed json element
      */
     public static JsonElement getJson(String url) {
         JsonElement json;
-        var         inputStream = classLoader.getResourceAsStream(url);
+        var inputStream = classLoader.getResourceAsStream(url);
         if (inputStream == null)
             json = new JsonObject();
         else {

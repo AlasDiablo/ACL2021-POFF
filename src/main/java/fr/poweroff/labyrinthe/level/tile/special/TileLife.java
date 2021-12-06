@@ -28,7 +28,7 @@ public class TileLife extends Tile {
      *     <li>1 when not visited</li>
      * </ul>
      */
-    private int  image;
+    private int image;
 
     /**
      * Constructor how take coordinate

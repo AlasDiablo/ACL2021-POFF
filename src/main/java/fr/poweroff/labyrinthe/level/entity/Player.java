@@ -19,11 +19,11 @@ public class Player extends Entity {
     /**
      * Current direction of the player
      */
-    protected            Cmd    direction;
+    protected Cmd direction;
     /**
      * The current player sprite
      */
-    private              int    spriteIndex;
+    private int spriteIndex;
 
     /**
      * Default constructor of the player
@@ -49,7 +49,6 @@ public class Player extends Entity {
      * Funcion use to get the player sprite
      *
      * @param name the name of the sprite
-     *
      * @return the sprite as a buffered image
      */
     private static BufferedImage getSprite(String name) {
@@ -117,27 +116,32 @@ public class Player extends Entity {
                 this.direction = cmd;
                 break;
         }
+        var currentMoveSpeed = MOVE_SPEED;
+        if (levelEvolve.overlapWithGlue(x, y, ENTITY_SIZE, ENTITY_SIZE))
+            currentMoveSpeed = MOVE_SPEED / 2;
+        else
+            currentMoveSpeed = MOVE_SPEED;
 
         if (cmd == Cmd.UP || cmd == Cmd.LEFT_UP || cmd == Cmd.RIGHT_UP) {
-            var newY = y - MOVE_SPEED;
+            var newY = y - currentMoveSpeed;
             if (levelEvolve.notOverlap(x, newY, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setY(newY);
             else if (levelEvolve.notOverlap(x, y - 1, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setY(y - 1);
         }
 
         if (cmd == Cmd.DOWN || cmd == Cmd.LEFT_DOWN || cmd == Cmd.RIGHT_DOWN) {
-            var newY = y + MOVE_SPEED;
+            var newY = y + currentMoveSpeed;
             if (levelEvolve.notOverlap(x, newY, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setY(newY);
             else if (levelEvolve.notOverlap(x, y + 1, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setY(y + 1);
         }
 
         if (cmd == Cmd.LEFT || cmd == Cmd.LEFT_DOWN || cmd == Cmd.LEFT_UP) {
-            var newX = x - MOVE_SPEED;
+            var newX = x - currentMoveSpeed;
             if (levelEvolve.notOverlap(newX, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(newX);
             else if (levelEvolve.notOverlap(x - 1, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(x - 1);
         }
 
         if (cmd == Cmd.RIGHT || cmd == Cmd.RIGHT_DOWN || cmd == Cmd.RIGHT_UP) {
-            var newX = x + MOVE_SPEED;
+            var newX = x + currentMoveSpeed;
             if (levelEvolve.notOverlap(newX, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(newX);
             else if (levelEvolve.notOverlap(x + 1, y, ENTITY_SIZE, ENTITY_SIZE)) this.coordinate.setX(x + 1);
         }

@@ -16,11 +16,11 @@ public class Monster extends Entity {
     /**
      * The player sprite path
      */
-    private static final String    SPRITE_PATH = "assets/textures/ghost/";
-    private final        int       spriteIndex;
-    private final        List<Cmd> directions  = new ArrayList<>(List.of(Cmd.RIGHT, Cmd.LEFT, Cmd.DOWN, Cmd.UP));
-    protected            boolean   vertical;
-    protected            Cmd       direction;
+    private static final String SPRITE_PATH = "assets/textures/ghost/";
+    private final int spriteIndex;
+    private final List<Cmd> directions = new ArrayList<>(List.of(Cmd.RIGHT, Cmd.LEFT, Cmd.DOWN, Cmd.UP));
+    protected boolean vertical;
+    protected Cmd direction;
 
     public Monster(Coordinate coordinate) {
         super(
@@ -32,7 +32,7 @@ public class Monster extends Entity {
                 Monster.getSprite("monster_blue.png")
         );
         this.spriteIndex = PacmanGame.RANDOM.ints(0, this.sprite.length - 1).findAny().orElse(0);
-        this.vertical    = PacmanGame.RANDOM.nextBoolean();
+        this.vertical = PacmanGame.RANDOM.nextBoolean();
         var bool = PacmanGame.RANDOM.nextBoolean();
         if (this.vertical) {
             this.direction = bool ? Cmd.DOWN : Cmd.UP;
@@ -51,7 +51,7 @@ public class Monster extends Entity {
                 Monster.getSprite("monster_blue.png")
         );
         this.spriteIndex = spriteIndex;
-        this.vertical    = PacmanGame.RANDOM.nextBoolean();
+        this.vertical = PacmanGame.RANDOM.nextBoolean();
         var bool = PacmanGame.RANDOM.nextBoolean();
         if (this.vertical) {
             this.direction = bool ? Cmd.DOWN : Cmd.UP;
@@ -64,7 +64,6 @@ public class Monster extends Entity {
      * Funcion use to get the player sprite
      *
      * @param name the name of the sprite
-     *
      * @return the sprite as a buffered image
      */
     private static BufferedImage getSprite(String name) {
@@ -119,6 +118,6 @@ public class Monster extends Entity {
     private void changeDirection() {
         var dir = PacmanGame.RANDOM.nextInt(4);
         this.direction = this.directions.get(dir);
-        this.vertical  = this.direction == Cmd.UP || this.direction == Cmd.DOWN;
+        this.vertical = this.direction == Cmd.UP || this.direction == Cmd.DOWN;
     }
 }

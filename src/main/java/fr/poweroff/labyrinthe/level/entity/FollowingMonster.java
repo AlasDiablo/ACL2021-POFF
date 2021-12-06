@@ -28,19 +28,19 @@ public class FollowingMonster extends Monster {
 
         if (top) {
             this.direction = Cmd.UP;
-            this.vertical  = true;
+            this.vertical = true;
         }
         if (right) {
             this.direction = Cmd.RIGHT;
-            this.vertical  = false;
+            this.vertical = false;
         }
         if (bottom) {
             this.direction = Cmd.DOWN;
-            this.vertical  = true;
+            this.vertical = true;
         }
         if (left) {
             this.direction = Cmd.LEFT;
-            this.vertical  = false;
+            this.vertical = false;
         }
 
         this.move(levelEvolve);

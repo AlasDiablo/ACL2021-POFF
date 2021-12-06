@@ -25,8 +25,8 @@ public class PacmanController implements GameController {
     private boolean right;
     private boolean up;
     private boolean down;
-    private Cmd     other;
-    private Cmd     pause;
+    private Cmd other;
+    private Cmd pause;
 
     private char rawCommand;
 
@@ -34,12 +34,12 @@ public class PacmanController implements GameController {
      * construction du controleur par defaut le controleur n'a pas de commande
      */
     public PacmanController() {
-        this.left       = false;
-        this.right      = false;
-        this.up         = false;
-        this.down       = false;
-        this.other      = null;
-        this.pause      = null;
+        this.left = false;
+        this.right = false;
+        this.up = false;
+        this.down = false;
+        this.other = null;
+        this.pause = null;
         this.rawCommand = (char) -1;
     }
 
@@ -94,7 +94,9 @@ public class PacmanController implements GameController {
     }
 
     @Override
-    public void setBestScore(boolean s) {this.bestScore = s;}
+    public void setBestScore(boolean s) {
+        this.bestScore = s;
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {

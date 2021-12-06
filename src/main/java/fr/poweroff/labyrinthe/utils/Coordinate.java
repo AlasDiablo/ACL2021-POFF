@@ -22,6 +22,11 @@ public class Coordinate {
         this.y = y;
     }
 
+    public Coordinate(Coordinate other) {
+        this.x = other.getX();
+        this.y = other.getY();
+    }
+
     /**
      * Renvoie de la propriete de position horizontale
      *

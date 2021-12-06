@@ -16,8 +16,8 @@ public class Labyrinthe {
     public static void main(String[] args) throws InterruptedException, IOException {
 
         // creation du jeu particulier et de son afficheur
-        PacmanGame       game       = new PacmanGame();
-        PacmanPainter    painter    = new PacmanPainter(game);
+        PacmanGame game = new PacmanGame();
+        PacmanPainter painter = new PacmanPainter(game);
         PacmanController controller = new PacmanController();
 
         // classe qui lance le moteur de jeu generique

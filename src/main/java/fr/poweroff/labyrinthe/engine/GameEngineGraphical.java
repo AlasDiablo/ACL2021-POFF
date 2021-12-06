@@ -31,13 +31,13 @@ public class GameEngineGraphical {
      */
     private GraphicalInterface gui;
 
-    private int       menuPosition = 0;
-    private boolean   keyInputWait = false;
-    private boolean   quitGame     = false;
+    private int menuPosition = 0;
+    private boolean keyInputWait = false;
+    private boolean quitGame = false;
     private GameState currentGameState;
 
     private boolean cleanNextUnprocessedFrame;
-    private String  name;
+    private String name;
 
     /**
      * construit un moteur
@@ -48,17 +48,17 @@ public class GameEngineGraphical {
      */
     public GameEngineGraphical(Game game, GamePainter gamePainter, GameController gameController) {
         // creation du game
-        this.game                      = game;
-        this.gamePainter               = gamePainter;
-        this.gameController            = gameController;
+        this.game = game;
+        this.gamePainter = gamePainter;
+        this.gameController = gameController;
         this.cleanNextUnprocessedFrame = false;
-        this.name                      = "";
+        this.name = "";
         this.setCurrentGameState(GameState.IN_MENU);
     }
 
     private void setCurrentGameState(GameState currentGameState) {
         this.currentGameState = currentGameState;
-        this.menuPosition     = 0;
+        this.menuPosition = 0;
         if (currentGameState == GameState.IN_GAME) {
             this.gameController.setMenu(false);
             this.gameController.setNiveau(false);
@@ -131,24 +131,24 @@ public class GameEngineGraphical {
         // creation de l'interface graphique
         this.gui = new GraphicalInterface(this.gamePainter, this.gameController);
 
-        var frameTime   = 1.0 / 30.0;
-        var time        = (double) System.nanoTime() / (double) 1000000000L;
+        var frameTime = 1.0 / 30.0;
+        var time = (double) System.nanoTime() / (double) 1000000000L;
         var unprocessed = 0.0;
 
         var cleanUnprocessedFrame = this.cleanNextUnprocessedFrame;
 
         while (!this.quitGame) {
             var currentTime = (double) System.nanoTime() / (double) 1000000000L;
-            var passed      = currentTime - time;
+            var passed = currentTime - time;
             unprocessed += passed;
             time = currentTime;
             if (this.cleanNextUnprocessedFrame) {
                 this.cleanNextUnprocessedFrame = false;
-                cleanUnprocessedFrame          = true;
+                cleanUnprocessedFrame = true;
             }
             if (cleanUnprocessedFrame) {
                 cleanUnprocessedFrame = false;
-                unprocessed           = 0.0;
+                unprocessed = 0.0;
             }
             while (unprocessed >= frameTime) {
                 unprocessed -= frameTime;

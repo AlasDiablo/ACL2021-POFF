@@ -25,7 +25,7 @@ import java.util.Random;
  */
 public class PacmanGame implements Game {
 
-    public static  Random     RANDOM;
+    public static Random RANDOM;
     private static PacmanGame INSTANCE;
 
     static {
@@ -36,17 +36,17 @@ public class PacmanGame implements Game {
      * Minuteur du niveau
      */
     public final Countdown countdown;
-    final        Level     level;
-    protected    int       score;
-    protected    int       life; //nb de vie
-    protected    int       munition; //Nombre de munition qu'a le joueur
-    protected    int       counterLastShot; //Nombre de munition qu'a le joueur
-    protected    boolean   got_railgun;
-    private      boolean   finish;
-    private      boolean   win;
-    private      boolean   pause; //Vérifie si le jeu est en pause
-    private      int       difficult;
-    private      int       stage;
+    final Level level;
+    protected int score;
+    protected int life; //nb de vie
+    protected int munition; //Nombre de munition qu'a le joueur
+    protected int counterLastShot; //Nombre de munition qu'a le joueur
+    protected boolean got_railgun;
+    private boolean finish;
+    private boolean win;
+    private boolean pause; //Vérifie si le jeu est en pause
+    private int difficult;
+    private int stage;
 
     /**
      * constructeur avec fichier source pour le help
@@ -54,14 +54,14 @@ public class PacmanGame implements Game {
     public PacmanGame() {
         FilesUtils.setClassLoader(this.getClass().getClassLoader());
         Score.init();
-        INSTANCE             = this;
-        this.level           = new Level();
-        countdown            = new Countdown(60);
-        score                = 0;
-        this.got_railgun     = false;
-        this.pause           = false; //Met le jeu non en pause au départ
-        this.life            = 3; //Mettre un max de 10 environ
-        this.munition        = 0;
+        INSTANCE = this;
+        this.level = new Level();
+        countdown = new Countdown(60);
+        score = 0;
+        this.got_railgun = false;
+        this.pause = false; //Met le jeu non en pause au départ
+        this.life = 3; //Mettre un max de 10 environ
+        this.munition = 0;
         this.counterLastShot = 0;
 
     }
@@ -84,7 +84,6 @@ public class PacmanGame implements Game {
             tb.changeType();
             return;
         }
-
         if (event instanceof PlayerOnLifeBonusTileEvent) {
             AudioDriver.playPowerup();
             INSTANCE.life++;
@@ -163,14 +162,14 @@ public class PacmanGame implements Game {
 
     public void preStart() {
         initRandomGenerator();
-        this.score       = 0;
-        this.pause       = false; //Met le jeu non en pause au départ
-        this.life        = 3; //Mettre un max de 10 environ
-        this.munition    = 0;
-        this.finish      = false;
-        this.win         = false;
+        this.score = 0;
+        this.pause = false; //Met le jeu non en pause au départ
+        this.life = 3; //Mettre un max de 10 environ
+        this.munition = 0;
+        this.finish = false;
+        this.win = false;
         this.got_railgun = false;
-        this.stage       = 0;
+        this.stage = 0;
         this.countdown.pause();
         this.countdown.setTime(60);
     }
@@ -190,7 +189,7 @@ public class PacmanGame implements Game {
                 monsters.add(new FollowingMonster(new Coordinate(0, 0)));
             }
             this.level.init(
-                    PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, new Player(), monsters.toArray(new Entity[]{ })
+                    PacmanPainter.WIDTH, PacmanPainter.HEIGHT, difficult, new Player(), monsters.toArray(new Entity[]{})
             );
         }
         this.pause(); //Met en pause
